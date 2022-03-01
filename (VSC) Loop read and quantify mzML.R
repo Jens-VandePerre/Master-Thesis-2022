@@ -18,8 +18,6 @@ getwd() #the first 4 mzML files of CPTAC
 
 
 # Loading in multiple mzML files
-
-    #Method 1: for loop 1
 (file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML"))
 file_paths #The first 4 mzML files of CPTAC
 
@@ -32,13 +30,6 @@ for (i in seq_along(file_paths)) {
 mzML_4files2 <- set_names(mzML_4files, file_paths) #names each file by file path
 mzML_4files2
 
-    #Method 2: purrr map
-      #Automatically names the files
-      #LONGER LOADING TIME
-mzML_4files_purrr <- file_paths %>%
-  map(function(path) {
-    readMSData(path)
-  })
 
 #Loop extracting TMT intensities + Printing TMT intensities
 mzML_4files_qnt2 <- list() #empty list
@@ -64,6 +55,14 @@ data_names_qnt <- c("mzML.qnt1", "mzML.qnt2", "mzML.qnt3", "mzML.qnt4")
 TMT_intensities2 <- set_names(TMT_intensities, data_names_qnt) #names each file
 TMT_intensities2
 
+# Loading in multiple mzML files
+   #Method 2: purrr map
+      #Automatically names the files
+      #LONGER LOADING TIME
+mzML_4files_purrr <- file_paths %>%
+  map(function(path) {
+    readMSData(path)
+  })
 
 #Two seperate loops for extracting and printing intensities
     #Loop extracting TMT intensities
