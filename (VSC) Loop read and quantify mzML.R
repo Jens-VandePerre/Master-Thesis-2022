@@ -25,7 +25,6 @@ for (i in seq_along(file_paths)) {
   mzML_4files[[i]] <- readMSData(file_paths [[i]],
                                    msLevel = 2, verbose = FALSE, mode = "onDisk")
 }
-
 mzML_4files2 <- set_names(mzML_4files, file_paths) #names each file by file path
 mzML_4files2
 
