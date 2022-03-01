@@ -37,9 +37,9 @@ mzML_4files_qnt2
 TMT_intensities <- list() #empty list
 TMT_intensities
 
-for (i in seq_along(mzML_4files)) {
+for (i in seq_along(mzML_4files2)) {
   mzML_4files_qnt[[i]] <- 
-    quantify(mzML_4files[[i]] ,method = "max", #max is the only working method
+    quantify(mzML_4files[[i]], method = "max", #max is the only working method
              reporters = TMT10,
              strict = FALSE,
              verbose = FALSE) %>%
@@ -51,9 +51,8 @@ for (i in seq_along(mzML_4files)) {
     TMT_intensities[[j]] <- exprs(mzML_4files_qnt[[j]])) #all spectra, intensities for each TMT
   }
 }
-data_names_qnt <- c("mzML.qnt1", "mzML.qnt2", "mzML.qnt3", "mzML.qnt4")    
-TMT_intensities2 <- set_names(TMT_intensities, data_names_qnt) #names each file
-TMT_intensities2
+TMT_intensities <- set_names(TMT_intensities, data_names_qnt) #names each file by filepath
+TMT_intensities
 
 # Loading in multiple mzML files
    #Method 2: purrr map
