@@ -15,7 +15,7 @@ library(fs)
 
 wd <- setwd("~/Desktop/Read raw file/Data mzML")
 getwd() #the first 4 mzML files of CPTAC
-
+list.files(wd)
 # Loading in multiple mzML files
 (file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML"))
 file_paths #The first 4 mzML files of CPTAC
@@ -28,10 +28,13 @@ file_names <- c("01CPTAC_COprospective_W_PNNL_20170123_B1S1_f10.mzML",
 "08CPTAC_COprospective_W_PNNL_20170123_B2S4_f10.mzML",
 "18CPTAC_COprospective_W_PNNL_20170123_B5S2_f07.mzML",
 "21CPTAC_COprospective_W_PNNL_20170123_B5S5_f08.mzML")
-mzML_4files2 <- set_names(mzML_4files, file_names) #names each file by file path
+file_names_wd <- list.files(wd)
+file_names_wd
+mzML_4files2 <- set_names(mzML_4files, file_names_wd) #names each file by file_names
 mzML_4files2
 
 #Loop extracting TMT intensities + Printing TMT intensities
+    #Loop that outputs intensities for the 10 first spectra
 mzML_4files_qnt <- list() #empty list
 TMT_intensities <- list() #empty list
 for (i in seq_along(mzML_4files2)) {
@@ -45,13 +48,32 @@ for (i in seq_along(mzML_4files2)) {
     normalise("max")
   
   for (j in seq_along(mzML_4files_qnt)) {
-    TMT_intensities[[j]] <- exprs(mzML_4files_qnt[[j]]) #all spectra, intensities for each TMT
+    TMT_intensities[[j]] <- head(exprs(mzML_4files_qnt[[j]]),n=10) #all spectra, intensities for each TMT
   }
 }
-TMT_intensities <- set_names(TMT_intensities, file_paths) #names each file by filepath
-head(exprs(TMT_intensities))
+TMT_intensities2 <- set_names(TMT_intensities, file_names) #names each file by file_names
+TMT_intensities2
 
-
+    #Loop that outputs intensities for all spectra
+        #The Terminal output is unclear
+mzML_4files_qnt_2 <- list() #empty list
+TMT_intensities_2 <- list() #empty list
+for (i in seq_along(mzML_4files2)) {
+  mzML_4files_qnt_2[[i]] <- 
+    quantify(mzML_4files2[[i]], method = "max", #max is the only working method
+             reporters = TMT10,
+             strict = FALSE,
+             verbose = FALSE) %>%
+    filterNA(pNA = 0) %>%
+    purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
+    normalise("max")
+  
+  for (j in seq_along(mzML_4files_qnt_2)) {
+    TMT_intensities_2[[j]] <- exprs(mzML_4files_qnt_2[[j]]) #all spectra, intensities for each TMT
+  }
+}
+TMT_intensities3 <- set_names(TMT_intensities_2, file_names) #names each file by file_names
+TMT_intensities3 #The Terminal output is unclear
 
 #####
 #Extra's
