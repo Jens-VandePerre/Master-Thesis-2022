@@ -48,8 +48,7 @@ for (i in seq_along(mzML_4files2)) {
     normalise("max")
   
   for (j in seq_along(mzML_4files_qnt)) {
-    TMT_intensities[[j]] <- head(exprs(mzML_4files_qnt[[j]]),n=10) #all spectra, intensities for each TMT
-  }
+    TMT_intensities[[j]] <- head(exprs(mzML_4files_qnt[[j]]),n=10) #only 10 first spectra
 }
 TMT_intensities2 <- set_names(TMT_intensities, file_names) #names each file by file_names
 TMT_intensities2
@@ -67,9 +66,10 @@ for (i in seq_along(mzML_4files2)) {
     filterNA(pNA = 0) %>%
     purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
     normalise("max")
-  
+
   for (j in seq_along(mzML_4files_qnt_2)) {
-    TMT_intensities_2[[j]] <- exprs(mzML_4files_qnt_2[[j]]) #all spectra, intensities for each TMT
+    TMT_intensities_2[[j]] <- exprs(mzML_4files_qnt_2[[j]]) 
+    #all spectra, intensities for each TMT
   }
 }
 TMT_intensities3 <- set_names(TMT_intensities_2, file_names) #names each file by file_names
