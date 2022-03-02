@@ -1,0 +1,83 @@
+library(rpx)
+library(mzR)
+library("OrgMassSpecR")
+library("biomaRt")
+library("Hmisc")
+library("gplots")
+library("limma")
+library(isobar)
+library(devtools)
+library(MSnbase)
+library(Biobase)
+library(dplyr)
+library(tidyverse)
+library(fs)
+
+wd <- setwd("~/Desktop/Read raw file/Data MGF")
+getwd()
+list.files(wd)
+#Read 1 file
+MGF <- readMgfData("20CPTAC_COprospective_W_PNNL_20170123_B5S4_f02.mgf", centroided = TRUE, 
+                    cache = 1) #No mode = onDisk, file doesn't load
+
+#Read in 6 MGF files
+file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data MGF")
+file_paths #run code on 6 MGF files
+MGF_6files <- list() #empty list
+for (i in seq_along(file_paths)) {
+  MGF_6files[[i]] <- readMgfData(file = file_paths [[i]], 
+                                  pdata = NULL, centroided = TRUE, smoothed = FALSE,
+                                  verbose = isMSnbaseVerbose(), cache = 1) 
+}
+file_names_wd <- list.files(wd)
+file_names_wd
+MGF_6files2 <- set_names(MGF_6files, file_names_wd) #names each file
+MGF_6files2
+
+#Loop extracting TMT intensities + Printing TMT intensities
+    #Only output the first 10 specgtra
+MGF_6files3 <- list() #empty list
+MGF_6files3
+TMT_intensities <- list() #empty list
+TMT_intensities
+for (i in seq_along(MGF_6files)) {
+  MGF_6files3[[i]] <- 
+    quantify(MGF_6files[[i]] , method = "max", #max is the only working method
+             reporters = TMT10,
+             strict = FALSE,
+             verbose = FALSE) %>%
+    filterNA(pNA = 0) %>%
+    purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
+    normalise("max")
+
+  for (j in seq_along(MGF_6files3)) {
+    TMT_intensities[[j]] <-
+      head(exprs(MGF_6files3[[j]]), n=10)
+  }
+}
+TMT_intensities2 <- set_names(TMT_intensities, file_names_wd) #names each file
+TMT_intensities2
+
+    #Output for all specgtra
+        #Unclear output in terminal
+MGF_6files_2 <- list() #empty list
+MGF_6files_2
+TMT_intensities_2 <- list() #empty list
+TMT_intensities_2
+for (i in seq_along()) {
+  MGF_6files_2[[i]] <- 
+    quantify(MGF_6files[[i]] , method = "max", #max is the only working method
+             reporters = TMT10,
+             strict = FALSE,
+             verbose = FALSE) %>%
+    filterNA(pNA = 0) %>%
+    purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
+    normalise("max")
+
+  for (j in seq_along(MGF_6files3)) {
+    TMT_intensities[[j]] <-
+      head(exprs(MGF_6files3[[j]]), n=10)
+  }
+}
+TMT_intensities_3 <- set_names(TMT_intensities_2, file_names_wd) #names each file
+TMT_intensities_3 #Unclear output in terminal
