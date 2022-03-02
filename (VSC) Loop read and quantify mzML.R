@@ -19,25 +19,24 @@ getwd() #the first 4 mzML files of CPTAC
 # Loading in multiple mzML files
 (file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML"))
 file_paths #The first 4 mzML files of CPTAC
-
 mzML_4files <- list() #empty list
 for (i in seq_along(file_paths)) {
   mzML_4files[[i]] <- readMSData(file_paths [[i]],
                                    msLevel = 2, verbose = FALSE, mode = "onDisk")
 }
-mzML_4files2 <- set_names(mzML_4files, file_paths) #names each file by file path
+file_names <- c("01CPTAC_COprospective_W_PNNL_20170123_B1S1_f10.mzML",
+"08CPTAC_COprospective_W_PNNL_20170123_B2S4_f10.mzML",
+"18CPTAC_COprospective_W_PNNL_20170123_B5S2_f07.mzML",
+"21CPTAC_COprospective_W_PNNL_20170123_B5S5_f08.mzML")
+mzML_4files2 <- set_names(mzML_4files, file_names) #names each file by file path
 mzML_4files2
-
 
 #Loop extracting TMT intensities + Printing TMT intensities
 mzML_4files_qnt <- list() #empty list
-mzML_4files_qnt
 TMT_intensities <- list() #empty list
-TMT_intensities
-
 for (i in seq_along(mzML_4files2)) {
   mzML_4files_qnt[[i]] <- 
-    quantify(mzML_4files[[i]], method = "max", #max is the only working method
+    quantify(mzML_4files2[[i]], method = "max", #max is the only working method
              reporters = TMT10,
              strict = FALSE,
              verbose = FALSE) %>%
@@ -79,7 +78,7 @@ for (i in seq_along(mzML_4files)) {
     normalise("max")
 }
 data_names_qnt <- c("mzML.qnt1", "mzML.qnt2", "mzML.qnt3", "mzML.qnt4")    
-mzML_4files_qnt2 <- set_names(mzML_4files_qnt, data_names_qnt) #names each file
+mzML_4files_qnt2 <- set_names(mzML_4files_qnt, file_paths) #names each file
 mzML_4files_qnt2
     #Printing TMT intensities
 intensities <- list() #empty list
