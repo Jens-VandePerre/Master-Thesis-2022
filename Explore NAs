@@ -20,35 +20,70 @@ list.files(wd)
 # Loading in multiple mzML files
 (file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML"))
 file_paths #The first 10 mzML files of CPTAC
-mzML_4files <- list() #empty list
+mzML_10files <- list() #empty list
 for (i in seq_along(file_paths)) {
-  mzML_4files[[i]] <- readMSData(file_paths [[i]],
+  mzML_10files[[i]] <- readMSData(file_paths [[i]],
                                    msLevel = 2, verbose = FALSE, mode = "onDisk")
 }
 file_names_wd <- list.files(wd)
 file_names_wd
-mzML_4files2 <- set_names(mzML_4files, file_names_wd) #names each file by file_names
-mzML_4files2
+mzML_10files2 <- set_names(mzML_10files, file_names_wd) #names each file by file_names
+mzML_10files2
 
 #Loop extracting TMT intensities + Printing TMT intensities
     #Loops only the extracting TMTs
     #Loop that outputs intensities for all spectra
         #The Terminal output is unclear
-mzML_4files_qnt <- list() #empty list
+mzML_10files_qnt <- list() #empty list
 TMT_intensities <- list() #empty list
-for (i in seq_along(mzML_4files2)) {
-  mzML_4files_qnt[[i]] <- 
-    quantify(mzML_4files2[[i]], method = "max", #max is the only working method
+for (i in seq_along(mzML_10files2)) {
+  mzML_10files_qnt[[i]] <- 
+    quantify(mzML_10files2[[i]], method = "max", #max is the only working method
              reporters = TMT10,
              strict = FALSE,
              verbose = FALSE) 
-  for (j in seq_along(mzML_4files_qnt)) {
-    TMT_intensities[[j]] <- exprs(mzML_4files_qnt[[j]]) #outputs intensities for all spectra
+  for (j in seq_along(mzML_10files_qnt)) {
+    TMT_intensities[[j]] <- exprs(mzML_10files_qnt[[j]]) #outputs intensities for all spectra
 }
 }
 TMT_intensities2 <- set_names(TMT_intensities, file_names_wd) #names each file by file_names
 TMT_intensities2
 
-   
+#######################
 #Exploring missing data
-is.na("08CPTAC_COprospective_W_PNNL_20170123_B2S4_f10.mzML")
+#######################
+
+#Missing per spectrum
+missing_spec <- list () #empty list
+for (i in seq_along(TMT_intensities2)) {
+   missing_spec <- is.na(TMT_intensities2[[i]])
+}
+missing_spec #for ALL spectra, prints TRUE/FALSE per chanel
+
+#Missing total over 10 files
+missing_file_tot <- list () #empty list
+for (i in seq_along(TMT_intensities2)) {
+   missing_file_tot <- sum(is.na(TMT_intensities2[[i]]))
+}
+missing_file_tot #7404 missing values combined over the 10 files
+
+
+
+
+
+#Missing total over 10 files
+missing_file_tot <- list () #empty list
+for (i in seq_along(missing_spec)) {
+   missing_file_tot <- sum(missing_spec[[i]]==TRUE)
+}
+missing_file_tot #7404 missing values combined over the 10 files
+
+
+
+
+
+missing_file_mean <- list () #empty list
+for (i in seq_along(TMT_intensities2)) {
+   missing_file_mean <- mean(is.na(TMT_intensities2[[i]]))
+}
+missing_file_mean #mean missing values per file
