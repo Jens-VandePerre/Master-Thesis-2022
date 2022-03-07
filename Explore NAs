@@ -1,0 +1,54 @@
+library(rpx)
+library(mzR)
+library("OrgMassSpecR")
+library("biomaRt")
+library("Hmisc")
+library("gplots")
+library("limma")
+library(isobar)
+library(devtools)
+library(MSnbase)
+library(Biobase)
+library(dplyr)
+library(tidyverse)
+library(fs)
+
+#Loop code to import files
+wd <- setwd("~/Desktop/Read raw file/Data mzML")
+getwd() #the first 10 mzML files of CPTAC
+list.files(wd)
+# Loading in multiple mzML files
+(file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML"))
+file_paths #The first 10 mzML files of CPTAC
+mzML_4files <- list() #empty list
+for (i in seq_along(file_paths)) {
+  mzML_4files[[i]] <- readMSData(file_paths [[i]],
+                                   msLevel = 2, verbose = FALSE, mode = "onDisk")
+}
+file_names_wd <- list.files(wd)
+file_names_wd
+mzML_4files2 <- set_names(mzML_4files, file_names_wd) #names each file by file_names
+mzML_4files2
+
+#Loop extracting TMT intensities + Printing TMT intensities
+    #Loops only the extracting TMTs
+    #Loop that outputs intensities for all spectra
+        #The Terminal output is unclear
+mzML_4files_qnt <- list() #empty list
+TMT_intensities <- list() #empty list
+for (i in seq_along(mzML_4files2)) {
+  mzML_4files_qnt[[i]] <- 
+    quantify(mzML_4files2[[i]], method = "max", #max is the only working method
+             reporters = TMT10,
+             strict = FALSE,
+             verbose = FALSE) 
+  for (j in seq_along(mzML_4files_qnt)) {
+    TMT_intensities[[j]] <- exprs(mzML_4files_qnt[[j]]) #outputs intensities for all spectra
+}
+}
+TMT_intensities2 <- set_names(TMT_intensities, file_names_wd) #names each file by file_names
+TMT_intensities2
+
+   
+#Exploring missing data
+is.na("08CPTAC_COprospective_W_PNNL_20170123_B2S4_f10.mzML")
