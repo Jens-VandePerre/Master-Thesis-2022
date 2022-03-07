@@ -91,16 +91,16 @@ for (i in seq_along(TMT_intensities2)) {
 missing_row_mean <- set_names(missing6, file_names_wd) #names each file by file_names_wd
 missing_row_mean #missing for each row
 
-#Missing per column 
+#Missing per column/TMT chanel
 missing5 <- list () #empty list
 for (i in seq_along(TMT_intensities2)) {
    missing5[[i]] <- colSums(is.na(TMT_intensities2[[i]]))}
 missing_col <- set_names(missing5, file_names_wd) #names each file by file_names_wd
-missing_col #missing for each row
+missing_col #missing for each col
 
 #Mean missing per column 
 missing7 <- list () #empty list
 for (i in seq_along(TMT_intensities2)) {
    missing7[[i]] <- mean(colSums(is.na(TMT_intensities2[[i]])))}
 missing_col_mean <- set_names(missing7, file_names_wd) #names each file by file_names_wd
-missing_col_mean #missing for each row
+missing_col_mean #mean missing for each col
