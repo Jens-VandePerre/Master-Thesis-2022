@@ -74,12 +74,33 @@ missing3 <- list () #empty list
 for (i in seq_along(TMT_intensities2)) {
    missing3[[i]] <- mean(is.na(TMT_intensities2[[i]]))
 }
-missing_file_mean <- set_names(missing3, file_names_wd) #names each file by file_names_wd #mean missing values per file
-missing_file_mean
+missing_file_mean <- set_names(missing3, file_names_wd) #names each file by file_names_wd 
+missing_file_mean #mean missing values per file
 
 #Missing per row 
 missing4 <- list () #empty list
 for (i in seq_along(TMT_intensities2)) {
    missing4[[i]] <- rowSums(is.na(TMT_intensities2[[i]]))}
 missing_row <- set_names(missing4, file_names_wd) #names each file by file_names_wd
-missing_row # Total missing for each file
+missing_row #missing for each row
+
+#Mean missing per row 
+missing6 <- list () #empty list
+for (i in seq_along(TMT_intensities2)) {
+   missing6[[i]] <- mean(rowSums(is.na(TMT_intensities2[[i]])))}
+missing_row_mean <- set_names(missing6, file_names_wd) #names each file by file_names_wd
+missing_row_mean #missing for each row
+
+#Missing per column 
+missing5 <- list () #empty list
+for (i in seq_along(TMT_intensities2)) {
+   missing5[[i]] <- colSums(is.na(TMT_intensities2[[i]]))}
+missing_col <- set_names(missing5, file_names_wd) #names each file by file_names_wd
+missing_col #missing for each row
+
+#Mean missing per column 
+missing7 <- list () #empty list
+for (i in seq_along(TMT_intensities2)) {
+   missing7[[i]] <- mean(colSums(is.na(TMT_intensities2[[i]])))}
+missing_col_mean <- set_names(missing7, file_names_wd) #names each file by file_names_wd
+missing_col_mean #missing for each row
