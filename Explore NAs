@@ -69,13 +69,17 @@ for (i in seq_along(TMT_intensities2)) {
 missing_file_tot <- set_names(missing2, file_names_wd) #names each file by file_names_wd
 missing_file_tot # Total missing for each file
 
-
-
-
-
-
-missing_file_mean <- list () #empty list
+#Mean missing values over 10 files
+missing3 <- list () #empty list
 for (i in seq_along(TMT_intensities2)) {
-   missing_file_mean[[i]] <- mean(is.na(TMT_intensities2[[i]]))
+   missing3[[i]] <- mean(is.na(TMT_intensities2[[i]]))
 }
-missing_file_mean #mean missing values per file
+missing_file_mean <- set_names(missing3, file_names_wd) #names each file by file_names_wd #mean missing values per file
+missing_file_mean
+
+#Missing per row 
+missing4 <- list () #empty list
+for (i in seq_along(TMT_intensities2)) {
+   missing4[[i]] <- rowSums(is.na(TMT_intensities2[[i]]))}
+missing_row <- set_names(missing4, file_names_wd) #names each file by file_names_wd
+missing_row # Total missing for each file
