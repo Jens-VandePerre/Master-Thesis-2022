@@ -46,6 +46,7 @@ for (i in seq_along(mzML_10files2)) {
   for (j in seq_along(mzML_10files_qnt)) {
     TMT_intensities[[j]] <- head(exprs(mzML_10files_qnt[[j]]),n=10) #only 10 first SPECTRA
 }
+}
 TMT_intensities2 <- set_names(TMT_intensities, file_names_wd) #names each file by file_names_wd
 TMT_intensities2
 
