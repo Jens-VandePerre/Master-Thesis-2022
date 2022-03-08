@@ -128,7 +128,7 @@ for (i in seq_along(TMT_intensities2)) {
     missing10[[i]] <- colZeros(TMT_intensities2[[i]])
 }
 zero_col <- set_names(missing10, file_names_wd) #names each file by file_names_wd
-zero_col #There are no zero intensities for the TMTs
+zero_col #There are no zero intensities for the TMTs, so NA = 0. 
 
     #Not really need to run
 missing11 <- list()
