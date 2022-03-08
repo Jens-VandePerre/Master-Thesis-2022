@@ -32,6 +32,7 @@ mzML_10files2
 
 #Loop extracting TMT intensities + Printing TMT intensities
     #Loop that outputs intensities for the 10 first spectra
+      #not removing NAs
 mzML_10files_qnt <- list() #empty list
 TMT_intensities <- list() #empty list
 for (i in seq_along(mzML_10files2)) {
@@ -40,9 +41,27 @@ for (i in seq_along(mzML_10files2)) {
              reporters = TMT10,
              strict = FALSE,
              verbose = FALSE) %>%
-    filterNA(pNA = 0) %>%
     purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
     normalise("max")
+  for (j in seq_along(mzML_10files_qnt)) {
+    TMT_intensities[[j]] <- head(exprs(mzML_10files_qnt[[j]]),n=10) #only 10 first SPECTRA
+  }
+}
+TMT_intensities2 <- set_names(TMT_intensities, file_names_wd) #names each file by file_names_wd
+TMT_intensities2
+
+  #Use center.median as normalization + imputation MLE
+mzML_10files_qnt2 <- list() #empty list
+TMT_intensities2 <- list() #empty list
+for (i in seq_along(mzML_10files2)) {
+  mzML_10files_qnt2[[i]] <- 
+    quantify(mzML_10files2[[i]], method = "max", #max is the only working method
+             reporters = TMT10,
+             strict = FALSE,
+             verbose = FALSE) %>%
+    impute(method="MLE") %>%
+    purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
+    normalise(method="center.median")
   for (j in seq_along(mzML_10files_qnt)) {
     TMT_intensities[[j]] <- head(exprs(mzML_10files_qnt[[j]]),n=10) #only 10 first SPECTRA
   }
@@ -62,7 +81,7 @@ for (i in seq_along(mzML_10files2)) {
              verbose = FALSE) %>%
     filterNA(pNA = 0) %>%
     purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
-    normalise("max")
+    normalise("center.median")
 
   for (j in seq_along(mzML_10files_qnt_2)) {
     TMT_intensities_2[[j]] <- exprs(mzML_10files_qnt_2[[j]]) 
