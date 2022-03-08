@@ -50,6 +50,12 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities1 <- set_names(TMT1, file_names_wd) #names each file by file_names_wd
 TMT_intensities1
+        #Check missing data before imputation
+missing1 <- list () #empty list
+for (i in seq_along(TMT_intensities2)) {
+   missing1[[i]] <- sum(is.na(TMT_intensities2[[i]]))}
+missing_tot1 <- set_names(missing1, file_names_wd) #names each file by file_names_wd
+missing_tot1 # Total missing for each file
 
   #Loop that outputs intensities for the 10 first SPECTRA
     #impute(method="MLE")
@@ -66,33 +72,38 @@ for (i in seq_along(mzML)) {
     purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
     normalise(method="center.median")
   for (j in seq_along(mzML_qnt2)) {
-    TMT_intensities2[[j]] <- head(exprs(mzML_qnt2[[j]]),n=10) #only 10 first SPECTRA
+    TMT2[[j]] <- head(exprs(mzML_qnt2[[j]]),n=10) #only 10 first SPECTRA
   }
 }
 TMT_intensities2 <- set_names(TMT2, file_names_wd) #names each file by file_names_wd
 TMT_intensities2
+        #Check missing data after imputation
+missing2 <- list () #empty list
+for (i in seq_along(TMT_intensities2)) {
+   missing2[[i]] <- sum(is.na(TMT_intensities2[[i]]))}
+missing_tot2 <- set_names(missing2, file_names_wd) #names each file by file_names_wd
+missing_tot2 # Total missing for each file
 
     #Loop that outputs intensities for all spectra
         #Output for later analysis
         #The Terminal output is unclear
-mzML_qnt_2 <- list() #empty list
-TMT_intensities_2 <- list() #empty list
+mzML_qnt3 <- list() #empty list
+TMT3 <- list() #empty list
 for (i in seq_along(mzML)) {
-  mzML_qnt_2[[i]] <- 
+  mzML_qnt3[[i]] <- 
     quantify(mzML[[i]], method = "max", #max is the only working method
              reporters = TMT10,
              strict = FALSE,
              verbose = FALSE) %>%
-    filterNA(pNA = 0) %>%
+    impute(method="MLE") %>%
     purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
     normalise("center.median")
-
   for (j in seq_along(mzML_qnt_2)) {
-    TMT_intensities_2[[j]] <- exprs(mzML_qnt_2[[j]]) 
+    TMT3[[j]] <- exprs(mzML_qnt_2[[j]]) 
     #all spectra, intensities for each TMT
   }
 }
-TMT_intensities3 <- set_names(TMT_intensities_2, file_names_wd) #names each file by file_names_wd
+TMT_intensities3 <- set_names(TMT3, file_names_wd) #names each file by file_names_wd
 TMT_intensities3 #The Terminal output is unclear
 
 ########
