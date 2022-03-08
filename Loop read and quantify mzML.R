@@ -36,9 +36,9 @@ mzML2
       #normalise("max")
 mzML_qnt1 <- list() #empty list
 TMT1 <- list() #empty list
-for (i in seq_along(mzML_10files2)) {
+for (i in seq_along(mzML2)) {
   mzML_qnt1[[i]] <- 
-    quantify(mzML_10files2[[i]], method = "max", #max is the only working method
+    quantify(mzML2[[i]], method = "max", #max is the only working method
              reporters = TMT10,
              strict = FALSE,
              verbose = FALSE) %>%
@@ -56,9 +56,9 @@ TMT_intensities1
     #normalise(method="center.median")
 mzML_qnt2 <- list() #empty list
 TMT2 <- list() #empty list
-for (i in seq_along(mzML_10files2)) {
+for (i in seq_along(mzML2)) {
   mzML_qnt2[[i]] <- 
-    quantify(mzML_10files2[[i]], method = "max", #max is the only working method
+    quantify(mzML2[[i]], method = "max", #max is the only working method
              reporters = TMT10,
              strict = FALSE,
              verbose = FALSE) %>%
@@ -75,11 +75,11 @@ TMT_intensities2
     #Loop that outputs intensities for all spectra
         #Output for later analysis
         #The Terminal output is unclear
-mzML_10files_qnt_2 <- list() #empty list
+mzML_qnt_2 <- list() #empty list
 TMT_intensities_2 <- list() #empty list
-for (i in seq_along(mzML_10files2)) {
-  mzML_10files_qnt_2[[i]] <- 
-    quantify(mzML_10files2[[i]], method = "max", #max is the only working method
+for (i in seq_along(mzML2)) {
+  mzML_qnt_2[[i]] <- 
+    quantify(mzML2[[i]], method = "max", #max is the only working method
              reporters = TMT10,
              strict = FALSE,
              verbose = FALSE) %>%
@@ -87,8 +87,8 @@ for (i in seq_along(mzML_10files2)) {
     purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
     normalise("center.median")
 
-  for (j in seq_along(mzML_10files_qnt_2)) {
-    TMT_intensities_2[[j]] <- exprs(mzML_10files_qnt_2[[j]]) 
+  for (j in seq_along(mzML_qnt_2)) {
+    TMT_intensities_2[[j]] <- exprs(mzML_qnt_2[[j]]) 
     #all spectra, intensities for each TMT
   }
 }
@@ -102,16 +102,16 @@ TMT_intensities3 #The Terminal output is unclear
    #Method 2: purrr map
       #Automatically names the files
       #LONGER LOADING TIME
-mzML_10files_purrr <- file_paths %>%
+mzML_purrr <- file_paths %>%
   map(function(path) {
     readMSData(path)
   })
 #Two seperate loops for extracting and printing intensities
     #Loop extracting TMT intensities
-mzML_10files_qnt <- list() #empty list
-for (i in seq_along(mzML_10files)) {
-  mzML_10files.qnt[[i]] <- 
-    quantify(mzML_10files[[i]] ,method = "max", #max is the only working method
+mzML_qnt <- list() #empty list
+for (i in seq_along(mzML)) {
+  mzML.qnt[[i]] <- 
+    quantify(mzML[[i]] ,method = "max", #max is the only working method
                                    reporters = TMT10,
                                    strict = FALSE,
                                    verbose = FALSE) %>%
@@ -120,13 +120,13 @@ for (i in seq_along(mzML_10files)) {
     normalise("max")
 }
 data_names_qnt <- c("mzML.qnt1", "mzML.qnt2", "mzML.qnt3", "mzML.qnt4")    
-mzML_10files_qnt2 <- set_names(mzML_10files_qnt, file_names_wd) #names each file
-mzML_10files_qnt2
+mzML_qnt2 <- set_names(mzML_qnt, file_names_wd) #names each file
+mzML_qnt2
     #Printing TMT intensities
 intensities <- list() #empty list
-for (i in seq_along(mzML_10files_qnt)) {
+for (i in seq_along(mzML_qnt)) {
   intensities[[i]] <-
-  head(exprs(mzML_10files_qnt[[i]]))
+  head(exprs(mzML_qnt[[i]]))
 } 
 intensities2 <- set_names(intensities, file_names_wd) #names each file
 intensities2
