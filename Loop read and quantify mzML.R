@@ -12,6 +12,8 @@ library(Biobase)
 library(dplyr)
 library(tidyverse)
 library(fs)
+library(proxyC)
+
 
 wd <- setwd("~/Desktop/Read raw file/Data mzML")
 getwd() #the first 4 mzML files of CPTAC
