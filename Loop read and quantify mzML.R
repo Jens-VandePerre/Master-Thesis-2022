@@ -18,17 +18,17 @@ wd <- setwd("~/Desktop/Read raw file/Data mzML")
 getwd() 
 list.files(wd) #The first 10 mzML files of CPTAC
 # Loading in multiple mzML files
-(file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML"))
+file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML")
 file_paths #The first 10 mzML files paths of CPTAC
-mzML <- list() #empty list
+mzML_files <- list() #empty list
 for (i in seq_along(file_paths)) {
-  mzML[[i]] <- readMSData(file_paths [[i]],
+  mzML_files[[i]] <- readMSData(file_paths[[i]],
                                    msLevel = 2, verbose = FALSE, mode = "onDisk")
 }
 file_names_wd <- list.files(wd)
 file_names_wd
-mzML2 <- set_names(mzML, file_names_wd) #names each file by file_names_wd
-mzML2
+mzML <- set_names(mzML_files, file_names_wd) #names each file by file_names_wd
+mzML
 
 #Loop extracting TMT intensities + Printing TMT intensities
     #Loop that outputs intensities for the 10 first SPECTRA
@@ -36,9 +36,9 @@ mzML2
       #normalise("max")
 mzML_qnt1 <- list() #empty list
 TMT1 <- list() #empty list
-for (i in seq_along(mzML2)) {
+for (i in seq_along(mzML)) {
   mzML_qnt1[[i]] <- 
-    quantify(mzML2[[i]], method = "max", #max is the only working method
+    quantify(mzML[[i]], method = "max", #max is the only working method
              reporters = TMT10,
              strict = FALSE,
              verbose = FALSE) %>%
@@ -56,9 +56,9 @@ TMT_intensities1
     #normalise(method="center.median")
 mzML_qnt2 <- list() #empty list
 TMT2 <- list() #empty list
-for (i in seq_along(mzML2)) {
+for (i in seq_along(mzML)) {
   mzML_qnt2[[i]] <- 
-    quantify(mzML2[[i]], method = "max", #max is the only working method
+    quantify(mzML[[i]], method = "max", #max is the only working method
              reporters = TMT10,
              strict = FALSE,
              verbose = FALSE) %>%
@@ -77,9 +77,9 @@ TMT_intensities2
         #The Terminal output is unclear
 mzML_qnt_2 <- list() #empty list
 TMT_intensities_2 <- list() #empty list
-for (i in seq_along(mzML2)) {
+for (i in seq_along(mzML)) {
   mzML_qnt_2[[i]] <- 
-    quantify(mzML2[[i]], method = "max", #max is the only working method
+    quantify(mzML[[i]], method = "max", #max is the only working method
              reporters = TMT10,
              strict = FALSE,
              verbose = FALSE) %>%
