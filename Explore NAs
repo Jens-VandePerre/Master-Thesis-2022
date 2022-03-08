@@ -12,6 +12,7 @@ library(Biobase)
 library(dplyr)
 library(tidyverse)
 library(fs)
+library(proxyC)
 
 #Loop code to import files
 wd <- setwd("~/Desktop/Read raw file/Data mzML")
@@ -104,3 +105,37 @@ for (i in seq_along(TMT_intensities2)) {
    missing7[[i]] <- mean(colSums(is.na(TMT_intensities2[[i]])))}
 missing_col_mean <- set_names(missing7, file_names_wd) #names each file by file_names_wd
 missing_col_mean #mean missing for each col
+
+#Min TMT intensity
+missing8 <- list()
+for (i in seq_along(TMT_intensities2)) {
+    missing8[[i]] <- max(TMT_intensities2[[i]], na.rm=TRUE)
+}
+max <- set_names(missing8, file_names_wd) #names each file by file_names_wd
+max
+
+#Max TMT intensity
+missing9 <- list()
+for (i in seq_along(TMT_intensities2)) {
+    missing9[[i]] <- min(TMT_intensities2[[i]], na.rm=TRUE)
+}
+min <- set_names(missing9, file_names_wd) #names each file by file_names_wd
+min
+
+#How many zero?
+missing10 <- list()
+for (i in seq_along(TMT_intensities2)) {
+    missing10[[i]] <- colZeros(TMT_intensities2[[i]])
+}
+zero_col <- set_names(missing10, file_names_wd) #names each file by file_names_wd
+zero_col #There are no zero intensities for the TMTs
+
+    #Not really need to run
+missing11 <- list()
+for (i in seq_along(TMT_intensities2)) {
+    missing11[[i]] <- rowZeros(TMT_intensities2[[i]])
+}
+zero_row <- set_names(missing11, file_names_wd) #names each file by file_names_wd
+zero_row
+
+#
