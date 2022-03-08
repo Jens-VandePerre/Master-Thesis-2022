@@ -20,41 +20,44 @@ list.files(wd) #The first 10 mzML files of CPTAC
 # Loading in multiple mzML files
 (file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML"))
 file_paths #The first 10 mzML files paths of CPTAC
-mzML_10files <- list() #empty list
+mzML <- list() #empty list
 for (i in seq_along(file_paths)) {
-  mzML_10files[[i]] <- readMSData(file_paths [[i]],
+  mzML[[i]] <- readMSData(file_paths [[i]],
                                    msLevel = 2, verbose = FALSE, mode = "onDisk")
 }
 file_names_wd <- list.files(wd)
 file_names_wd
-mzML_10files2 <- set_names(mzML_10files, file_names_wd) #names each file by file_names_wd
-mzML_10files2
+mzML2 <- set_names(mzML, file_names_wd) #names each file by file_names_wd
+mzML2
 
 #Loop extracting TMT intensities + Printing TMT intensities
-    #Loop that outputs intensities for the 10 first spectra
+    #Loop that outputs intensities for the 10 first SPECTRA
       #not removing NAs
-mzML_10files_qnt <- list() #empty list
-TMT_intensities <- list() #empty list
+      #normalise("max")
+mzML_qnt1 <- list() #empty list
+TMT1 <- list() #empty list
 for (i in seq_along(mzML_10files2)) {
-  mzML_10files_qnt[[i]] <- 
+  mzML_qnt1[[i]] <- 
     quantify(mzML_10files2[[i]], method = "max", #max is the only working method
              reporters = TMT10,
              strict = FALSE,
              verbose = FALSE) %>%
     purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
     normalise("max")
-  for (j in seq_along(mzML_10files_qnt)) {
-    TMT_intensities[[j]] <- head(exprs(mzML_10files_qnt[[j]]),n=10) #only 10 first SPECTRA
+  for (j in seq_along(mzML_qnt1)) {
+    TMT1[[j]] <- head(exprs(mzML_qnt1[[j]]),n=10) #only 10 first SPECTRA
   }
 }
-TMT_intensities2 <- set_names(TMT_intensities, file_names_wd) #names each file by file_names_wd
-TMT_intensities2
+TMT_intensities1 <- set_names(TMT1, file_names_wd) #names each file by file_names_wd
+TMT_intensities1
 
-  #Use center.median as normalization + imputation MLE
-mzML_10files_qnt2 <- list() #empty list
-TMT_intensities2 <- list() #empty list
+  #Loop that outputs intensities for the 10 first SPECTRA
+    #impute(method="MLE")
+    #normalise(method="center.median")
+mzML_qnt2 <- list() #empty list
+TMT2 <- list() #empty list
 for (i in seq_along(mzML_10files2)) {
-  mzML_10files_qnt2[[i]] <- 
+  mzML_qnt2[[i]] <- 
     quantify(mzML_10files2[[i]], method = "max", #max is the only working method
              reporters = TMT10,
              strict = FALSE,
@@ -62,14 +65,15 @@ for (i in seq_along(mzML_10files2)) {
     impute(method="MLE") %>%
     purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
     normalise(method="center.median")
-  for (j in seq_along(mzML_10files_qnt)) {
-    TMT_intensities[[j]] <- head(exprs(mzML_10files_qnt[[j]]),n=10) #only 10 first SPECTRA
+  for (j in seq_along(mzML_qnt2)) {
+    TMT_intensities2[[j]] <- head(exprs(mzML_qnt2[[j]]),n=10) #only 10 first SPECTRA
   }
 }
-TMT_intensities2 <- set_names(TMT_intensities, file_names_wd) #names each file by file_names_wd
+TMT_intensities2 <- set_names(TMT2, file_names_wd) #names each file by file_names_wd
 TMT_intensities2
 
     #Loop that outputs intensities for all spectra
+        #Output for later analysis
         #The Terminal output is unclear
 mzML_10files_qnt_2 <- list() #empty list
 TMT_intensities_2 <- list() #empty list
