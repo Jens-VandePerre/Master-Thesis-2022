@@ -72,7 +72,7 @@ for (i in seq_along(mzML)) {
     purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
     normalise(method="center.median")
   for (j in seq_along(mzML_qnt2)) {
-    TMT2[[j]] <- head(exprs(mzML_qnt2[[j]]),n=10) #only 10 first SPECTRA
+    TMT2[[j]] <- exprs(mzML_qnt2[[j]]) #only 10 first SPECTRA
   }
 }
 TMT_intensities2 <- set_names(TMT2, file_names_wd) #names each file by file_names_wd
