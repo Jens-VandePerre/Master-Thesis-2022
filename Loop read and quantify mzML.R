@@ -107,7 +107,7 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities3 <- set_names(TMT3, file_names_wd) #names each file by file_names_wd
 TMT_intensities3 #The Terminal output is unclear
-          #3. Check missing data after imputation
+          #3. Check missing data after normalization
 missing3 <- list () #empty list
 for (i in seq_along(TMT_intensities3)) {
    missing3[[i]] <- sum(is.na(TMT_intensities3[[i]]))}
@@ -137,7 +137,7 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities4 <- set_names(TMT4, file_names_wd) #names each file by file_names_wd
 TMT_intensities4 #The Terminal output is unclear
-         #4. Check missing data after imputation
+         #4. Check missing data after imputation and normalization
 missing4 <- list () #empty list
 for (i in seq_along(TMT_intensities4)) {
    missing4[[i]] <- sum(is.na(TMT_intensities4[[i]]))}
