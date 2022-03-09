@@ -95,21 +95,25 @@ for (i in seq_along(TMT_intensities1)) {
 missing_row_mean <- set_names(missing6, file_names_wd) #names each file by file_names_wd
 missing_row_mean #missing for each row
 
-#Missing per column/TMT channel
+#Missing total per column/TMT channel
 missing5 <- list () #empty list
 for (i in seq_along(TMT_intensities1)) {
    missing5[[i]] <- colSums(is.na(TMT_intensities1[[i]]))}
 missing_col <- set_names(missing5, file_names_wd) #names each file by file_names_wd
-missing_col #missing for each col
+missing_col #total missing for each col
 
 #Mean missing per column/TMT channel 
 missing7 <- list () #empty list
+means <- list()
 for (i in seq_along(TMT_intensities1)) {
-   missing7[[i]] <- mean(colSums(is.na(TMT_intensities1[[i]])))}
-missing_col_mean <- set_names(missing7, file_names_wd) #names each file by file_names_wd
+   missing7[[i]] <- is.na(TMT_intensities1[[i]])
+   for (j in seq_along(missing7)) { 
+       means[[j]] <- colMeans(missing7[[j]])         
+}}
+missing_col_mean <- set_names(means, file_names_wd) #names each file by file_names_wd
 missing_col_mean #mean missing for each col
 
-#Min TMT intensity
+#Max TMT intensity
 missing8 <- list()
 for (i in seq_along(TMT_intensities1)) {
     missing8[[i]] <- max(TMT_intensities1[[i]], na.rm=TRUE)
@@ -117,7 +121,7 @@ for (i in seq_along(TMT_intensities1)) {
 max <- set_names(missing8, file_names_wd) #names each file by file_names_wd
 max
 
-#Max TMT intensity
+#Min TMT intensity
 missing9 <- list()
 for (i in seq_along(TMT_intensities1)) {
     missing9[[i]] <- min(TMT_intensities1[[i]], na.rm=TRUE)
