@@ -16,40 +16,43 @@ library(proxyC)
 
 #Loop code to import files
 wd <- setwd("~/Desktop/Read raw file/Data mzML")
-getwd() #the first 10 mzML files of CPTAC
-list.files(wd)
+getwd() 
+list.files(wd) #The first 10 mzML files of CPTAC
+# Loading in multiple mzML files
+file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML")
+file_paths #The first 10 mzML files paths of CPTAC
 
-    # Loading in multiple mzML files
-(file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML"))
-file_paths #The first 10 mzML files of CPTAC
-mzML_10files <- list() #empty list
+mzML_files <- list() #empty list
 for (i in seq_along(file_paths)) {
-  mzML_10files[[i]] <- readMSData(file_paths [[i]],
+  mzML_files[[i]] <- readMSData(file_paths[[i]],
                                    msLevel = 2, verbose = FALSE, mode = "onDisk")
 }
 file_names_wd <- list.files(wd)
 file_names_wd
-mzML_10files2 <- set_names(mzML_10files, file_names_wd) #names each file by file_names
-mzML_10files2
+mzML <- set_names(mzML_files, file_names_wd) #names each file by file_names_wd
+mzML
 
-    #Loop extracting TMT intensities + Printing TMT intensities
-        #Loops only the extracting TMTs
-        #Loop that outputs intensities for all spectra
-            #The Terminal output is unclear
-mzML_10files_qnt <- list() #empty list
-TMT_intensities <- list() #empty list
-for (i in seq_along(mzML_10files2)) {
-  mzML_10files_qnt[[i]] <- 
-    quantify(mzML_10files2[[i]], method = "max", #max is the only working method
+#Loop extracting TMT intensities + Printing TMT intensities
+
+  #1. Loop that outputs intensities for ALL SPECTRA
+      #not removing NAs
+      #no imputation
+      #no normalisation
+mzML_qnt1 <- list() #empty list
+TMT1 <- list() #empty list
+for (i in seq_along(mzML)) {
+  mzML_qnt1[[i]] <- 
+    quantify(mzML[[i]], method = "max", #max is the only working method
              reporters = TMT10,
              strict = FALSE,
-             verbose = FALSE) 
-  for (j in seq_along(mzML_10files_qnt)) {
-    TMT_intensities[[j]] <- exprs(mzML_10files_qnt[[j]]) #outputs intensities for all spectra
+             verbose = FALSE) %>%
+    purityCorrect(makeImpuritiesMatrix(10, edit = FALSE))
+  for (j in seq_along(mzML_qnt1)) {
+    TMT1[[j]] <- exprs(mzML_qnt1[[j]]) #outputs all spectra, unclear in terminal
+  }
 }
-}
-TMT_intensities2 <- set_names(TMT_intensities, file_names_wd) #names each file by file_names_wd
-TMT_intensities2
+TMT_intensities1 <- set_names(TMT1, file_names_wd) #names each file by file_names_wd
+TMT_intensities1
 
 
 #######################
@@ -58,84 +61,83 @@ TMT_intensities2
 
 #Missing per spectrum
 missing_spec <- list () #empty list
-for (i in seq_along(TMT_intensities2)) {
-   missing_spec[[i]] <- is.na(TMT_intensities2[[i]])
+for (i in seq_along(TMT_intensities1)) {
+   missing_spec[[i]] <- is.na(TMT_intensities1[[i]])
 }
 missing_spec #for ALL spectra, prints TRUE/FALSE per chanel
 
 #Missing total over 10 files
 missing2 <- list () #empty list
-for (i in seq_along(TMT_intensities2)) {
-   missing2[[i]] <- sum(is.na(TMT_intensities2[[i]]))}
+for (i in seq_along(TMT_intensities1)) {
+   missing2[[i]] <- sum(is.na(TMT_intensities1[[i]]))}
 missing_file_tot <- set_names(missing2, file_names_wd) #names each file by file_names_wd
 missing_file_tot # Total missing for each file
 
 #Mean missing values over 10 files
 missing3 <- list () #empty list
-for (i in seq_along(TMT_intensities2)) {
-   missing3[[i]] <- mean(is.na(TMT_intensities2[[i]]))
+for (i in seq_along(TMT_intensities1)) {
+   missing3[[i]] <- mean(is.na(TMT_intensities1[[i]]))
 }
 missing_file_mean <- set_names(missing3, file_names_wd) #names each file by file_names_wd 
 missing_file_mean #mean missing values per file
 
 #Missing per row 
 missing4 <- list () #empty list
-for (i in seq_along(TMT_intensities2)) {
-   missing4[[i]] <- rowSums(is.na(TMT_intensities2[[i]]))}
+for (i in seq_along(TMT_intensities1)) {
+   missing4[[i]] <- rowSums(is.na(TMT_intensities1[[i]]))}
 missing_row <- set_names(missing4, file_names_wd) #names each file by file_names_wd
 missing_row #missing for each row
 
 #Mean missing per row 
 missing6 <- list () #empty list
-for (i in seq_along(TMT_intensities2)) {
-   missing6[[i]] <- mean(rowSums(is.na(TMT_intensities2[[i]])))}
+for (i in seq_along(TMT_intensities1)) {
+   missing6[[i]] <- mean(rowSums(is.na(TMT_intensities1[[i]])))}
 missing_row_mean <- set_names(missing6, file_names_wd) #names each file by file_names_wd
 missing_row_mean #missing for each row
 
 #Missing per column/TMT chanel
 missing5 <- list () #empty list
-for (i in seq_along(TMT_intensities2)) {
-   missing5[[i]] <- colSums(is.na(TMT_intensities2[[i]]))}
+for (i in seq_along(TMT_intensities1)) {
+   missing5[[i]] <- colSums(is.na(TMT_intensities1[[i]]))}
 missing_col <- set_names(missing5, file_names_wd) #names each file by file_names_wd
 missing_col #missing for each col
 
 #Mean missing per column 
 missing7 <- list () #empty list
-for (i in seq_along(TMT_intensities2)) {
-   missing7[[i]] <- mean(colSums(is.na(TMT_intensities2[[i]])))}
+for (i in seq_along(TMT_intensities1)) {
+   missing7[[i]] <- mean(colSums(is.na(TMT_intensities1[[i]])))}
 missing_col_mean <- set_names(missing7, file_names_wd) #names each file by file_names_wd
 missing_col_mean #mean missing for each col
 
 #Min TMT intensity
 missing8 <- list()
-for (i in seq_along(TMT_intensities2)) {
-    missing8[[i]] <- max(TMT_intensities2[[i]], na.rm=TRUE)
+for (i in seq_along(TMT_intensities1)) {
+    missing8[[i]] <- max(TMT_intensities1[[i]], na.rm=TRUE)
 }
 max <- set_names(missing8, file_names_wd) #names each file by file_names_wd
 max
 
 #Max TMT intensity
 missing9 <- list()
-for (i in seq_along(TMT_intensities2)) {
-    missing9[[i]] <- min(TMT_intensities2[[i]], na.rm=TRUE)
+for (i in seq_along(TMT_intensities1)) {
+    missing9[[i]] <- min(TMT_intensities1[[i]], na.rm=TRUE)
 }
 min <- set_names(missing9, file_names_wd) #names each file by file_names_wd
 min
 
 #How many zero?
 missing10 <- list()
-for (i in seq_along(TMT_intensities2)) {
-    missing10[[i]] <- colZeros(TMT_intensities2[[i]])
+for (i in seq_along(TMT_intensities1)) {
+    missing10[[i]] <- colZeros(TMT_intensities1[[i]])
 }
 zero_col <- set_names(missing10, file_names_wd) #names each file by file_names_wd
 zero_col #There are no zero intensities for the TMTs, so NA = 0. 
 
     #Not really need to run
 missing11 <- list()
-for (i in seq_along(TMT_intensities2)) {
-    missing11[[i]] <- rowZeros(TMT_intensities2[[i]])
+for (i in seq_along(TMT_intensities1)) {
+    missing11[[i]] <- rowZeros(TMT_intensities1[[i]])
 }
 zero_row <- set_names(missing11, file_names_wd) #names each file by file_names_wd
 zero_row
 
-#
