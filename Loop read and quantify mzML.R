@@ -130,11 +130,11 @@ for (i in seq_along(mzML)) {
     impute(method="MLE") %>%
     purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
     normalise(method="center.median")
-  for (j in seq_along(mzML_qnt3)) {
-    TMT3[[j]] <- exprs(mzML_qnt3[[j]]) #output all spectra, unclear in terminal
+  for (j in seq_along(mzML_qnt4)) {
+    TMT4[[j]] <- exprs(mzML_qnt4[[j]]) #output all spectra, unclear in terminal
   }
 }
-TMT_intensities4 <- set_names(TMT3, file_names_wd) #names each file by file_names_wd
+TMT_intensities4 <- set_names(TMT4, file_names_wd) #names each file by file_names_wd
 TMT_intensities4 #The Terminal output is unclear
          #4. Check missing data after imputation
 missing4 <- list () #empty list
