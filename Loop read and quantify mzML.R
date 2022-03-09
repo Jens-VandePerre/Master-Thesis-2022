@@ -32,10 +32,10 @@ mzML <- set_names(mzML_files, file_names_wd) #names each file by file_names_wd
 mzML
 
 #Loop extracting TMT intensities + Printing TMT intensities
-    #Loop that outputs intensities for the 10 first SPECTRA (head function)
+  #Loop that outputs intensities for ALL SPECTRA
       #not removing NAs
       #no imputation
-      #normalise: method="max"
+      #no normalisation
 mzML_qnt1 <- list() #empty list
 TMT1 <- list() #empty list
 for (i in seq_along(mzML)) {
@@ -44,10 +44,9 @@ for (i in seq_along(mzML)) {
              reporters = TMT10,
              strict = FALSE,
              verbose = FALSE) %>%
-    purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
-    normalise("max")
+    purityCorrect(makeImpuritiesMatrix(10, edit = FALSE))
   for (j in seq_along(mzML_qnt1)) {
-    TMT1[[j]] <- head(exprs(mzML_qnt1[[j]]),n=10) #only 10 first SPECTRA
+    TMT1[[j]] <- exprs(mzML_qnt1[[j]]) #only 10 first SPECTRA
   }
 }
 TMT_intensities1 <- set_names(TMT1, file_names_wd) #names each file by file_names_wd
@@ -59,9 +58,10 @@ for (i in seq_along(TMT_intensities2)) {
 missing_tot1 <- set_names(missing1, file_names_wd) #names each file by file_names_wd
 missing_tot1 # Total missing for each file
 
+
   #Loop that outputs intensities for ALL spectra
     #impute: method="MLE"
-    #normalise: method="center.median"
+    #no normalisation
 mzML_qnt2 <- list() #empty list
 TMT2 <- list() #empty list
 for (i in seq_along(mzML)) {
@@ -71,8 +71,7 @@ for (i in seq_along(mzML)) {
              strict = FALSE,
              verbose = FALSE) %>%
     impute(method="MLE") %>%
-    purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
-    normalise(method="center.median")
+    purityCorrect(makeImpuritiesMatrix(10, edit = FALSE))
   for (j in seq_along(mzML_qnt2)) {
     TMT2[[j]] <- exprs(mzML_qnt2[[j]]) #output all spectra, unclear in terminal
   }
@@ -86,8 +85,10 @@ for (i in seq_along(TMT_intensities2)) {
 missing_tot2 <- set_names(missing2, file_names_wd) #names each file by file_names_wd
 missing_tot2 # Total missing for each file
 
-    #Loop that outputs intensities for all spectra
+    #Loop that outputs intensities for ALL spectra
         #Output for later analysis
+          #impute: method="MLE"
+          #normalise: method="center.median"
         #The Terminal output is unclear
 mzML_qnt3 <- list() #empty list
 TMT3 <- list() #empty list
@@ -99,14 +100,30 @@ for (i in seq_along(mzML)) {
              verbose = FALSE) %>%
     impute(method="MLE") %>%
     purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
-    normalise("center.median")
-  for (j in seq_along(mzML_qnt_2)) {
-    TMT3[[j]] <- exprs(mzML_qnt_2[[j]]) #output all spectra (unclear in terminal)
+    normalise(method="center.median")
+  for (j in seq_along(mzML_qnt3)) {
+    TMT3[[j]] <- exprs(mzML_qnt3[[j]]) #output all spectra, unclear in terminal
   }
 }
 TMT_intensities3 <- set_names(TMT3, file_names_wd) #names each file by file_names_wd
 TMT_intensities3 #The Terminal output is unclear
+ #Check missing data after imputation
+missing3 <- list () #empty list
+for (i in seq_along(TMT_intensities2)) {
+   missing3[[i]] <- sum(is.na(TMT_intensities2[[i]]))}
+missing_tot3 <- set_names(missing3, file_names_wd) #names each file by file_names_wd
+missing_tot3 # Total missing for each file
 
+
+
+
+
+
+
+
+
+
+#####################################################################################
 ########
 #Extra's
 ########
@@ -120,25 +137,24 @@ mzML_purrr <- file_paths %>%
   })
 #Two seperate loops for extracting and printing intensities
     #Loop extracting TMT intensities
-mzML_qnt <- list() #empty list
+mzML_qnt_extra <- list() #empty list
 for (i in seq_along(mzML)) {
-  mzML.qnt[[i]] <- 
+  mzML_qnt_extra[[i]] <- 
     quantify(mzML[[i]] ,method = "max", #max is the only working method
                                    reporters = TMT10,
                                    strict = FALSE,
                                    verbose = FALSE) %>%
-    filterNA(pNA = 0) %>%
+    impute(method="MLE") %>%
     purityCorrect(makeImpuritiesMatrix(10, edit = FALSE)) %>%
-    normalise("max")
-}
-data_names_qnt <- c("mzML.qnt1", "mzML.qnt2", "mzML.qnt3", "mzML.qnt4")    
-mzML_qnt2 <- set_names(mzML_qnt, file_names_wd) #names each file
-mzML_qnt2
+    normalise(method="center.median")
+}   
+mzML_qnt_extre2 <- set_names(mzML_qnt_extra, file_names_wd) #names each file by file_names_wd
+mzML_qnt_extra2
     #Printing TMT intensities
-intensities <- list() #empty list
-for (i in seq_along(mzML_qnt)) {
+intensities_extra <- list() #empty list
+for (i in seq_along(mzML_qnt_extra2)) {
   intensities[[i]] <-
-  head(exprs(mzML_qnt[[i]]))
+  head(exprs(mzML_qnt_extra2[[i]]))
 } 
-intensities2 <- set_names(intensities, file_names_wd) #names each file
-intensities2
+intensities_extra2 <- set_names(intensities_extra, file_names_wd) #names each file
+intensities_extra2
