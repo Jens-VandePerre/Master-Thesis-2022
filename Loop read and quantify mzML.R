@@ -32,7 +32,8 @@ mzML <- set_names(mzML_files, file_names_wd) #names each file by file_names_wd
 mzML
 
 #Loop extracting TMT intensities + Printing TMT intensities
-  #Loop that outputs intensities for ALL SPECTRA
+
+  #1. Loop that outputs intensities for ALL SPECTRA
       #not removing NAs
       #no imputation
       #no normalisation
@@ -46,12 +47,12 @@ for (i in seq_along(mzML)) {
              verbose = FALSE) %>%
     purityCorrect(makeImpuritiesMatrix(10, edit = FALSE))
   for (j in seq_along(mzML_qnt1)) {
-    TMT1[[j]] <- exprs(mzML_qnt1[[j]]) #only 10 first SPECTRA
+    TMT1[[j]] <- exprs(mzML_qnt1[[j]]) #outputs all spectra, unclear in terminal
   }
 }
 TMT_intensities1 <- set_names(TMT1, file_names_wd) #names each file by file_names_wd
 TMT_intensities1
-         #Check missing data before imputation
+         #1. Check missing data before imputation
 missing1 <- list () #empty list
 for (i in seq_along(TMT_intensities1)) {
    missing1[[i]] <- sum(is.na(TMT_intensities1[[i]]))}
@@ -59,7 +60,7 @@ missing_tot1 <- set_names(missing1, file_names_wd) #names each file by file_name
 missing_tot1 # Total missing for each file
 
 
-  #Loop that outputs intensities for ALL spectra
+  #2. Loop that outputs intensities for ALL spectra
     #impute: method="MLE"
     #no normalisation
 mzML_qnt2 <- list() #empty list
@@ -78,14 +79,14 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities2 <- set_names(TMT2, file_names_wd) #names each file by file_names_wd
 TMT_intensities2
-          #Check missing data after imputation
+          #2. Check missing data after imputation
 missing2 <- list () #empty list
 for (i in seq_along(TMT_intensities2)) {
    missing2[[i]] <- sum(is.na(TMT_intensities2[[i]]))}
 missing_tot2 <- set_names(missing2, file_names_wd) #names each file by file_names_wd
 missing_tot2 # Total missing for each file
 
-   #Loop that outputs intensities for ALL spectra
+   #3. Loop that outputs intensities for ALL spectra
         #Output for later analysis
           #no imputation
           #normalise: method="center.median"
@@ -106,14 +107,14 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities3 <- set_names(TMT3, file_names_wd) #names each file by file_names_wd
 TMT_intensities3 #The Terminal output is unclear
-          #Check missing data after imputation
+          #3. Check missing data after imputation
 missing3 <- list () #empty list
 for (i in seq_along(TMT_intensities3)) {
    missing3[[i]] <- sum(is.na(TMT_intensities3[[i]]))}
 missing_tot3 <- set_names(missing3, file_names_wd) #names each file by file_names_wd
 missing_tot3 # Total missing for each file
 
-    #Loop that outputs intensities for ALL spectra
+    #4. Loop that outputs intensities for ALL spectra
         #Output for later analysis
           #impute: method="MLE"
           #normalise: method="center.median"
@@ -135,7 +136,7 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities4 <- set_names(TMT3, file_names_wd) #names each file by file_names_wd
 TMT_intensities4 #The Terminal output is unclear
-         #Check missing data after imputation
+         #4. Check missing data after imputation
 missing4 <- list () #empty list
 for (i in seq_along(TMT_intensities4)) {
    missing4[[i]] <- sum(is.na(TMT_intensities4[[i]]))}
