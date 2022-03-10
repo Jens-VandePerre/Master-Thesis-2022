@@ -144,10 +144,15 @@ for (i in seq_along(TMT_intensities4)) {
 missing_tot4 <- set_names(missing4, file_names_wd) #names each file by file_names_wd
 missing_tot4 # Total missing for each file
 
-
-
-
-
+#Difference in missing values after imputation
+  #total
+diff <- mapply('-', missing_tot1, missing_tot4, SIMPLIFY = FALSE)
+missing_diff <- set_names(diff, file_names_wd)
+missing_diff
+  #percentage 
+diff_perc <- mapply('/', missing_tot4, missing_tot1, SIMPLIFY = FALSE)
+missing_diff_perc <- set_names(diff_perc, file_names_wd)
+missing_diff_perc
 
 
 
