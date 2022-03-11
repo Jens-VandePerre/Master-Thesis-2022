@@ -149,9 +149,10 @@ missing_tot4 # Total missing for each file
 diff <- mapply('-', missing_tot1, missing_tot4, SIMPLIFY = FALSE)
 missing_diff <- set_names(diff, file_names_wd)
 missing_diff
-  #percentage 
-diff_perc <- mapply('/', missing_tot4, missing_tot1, SIMPLIFY = FALSE)
-missing_diff_perc <- set_names(diff_perc, file_names_wd)
+  #percentage lowered missing values
+diff_perc <- mapply('/', missing_diff, missing_tot1, SIMPLIFY = FALSE)
+diff_perc2 <- mapply('*', diff_perc, 100, SIMPLIFY = FALSE)
+missing_diff_perc <- set_names(diff_perc2, file_names_wd)
 missing_diff_perc
 
 
