@@ -11,8 +11,10 @@ library(MSnbase)
 library(Biobase)
 library(dplyr)
 library(tidyverse)
+library(ggplot2)
 library(fs)
 library(proxyC)
+library("httpgd")
 
 #Loop code to import files
 wd <- setwd("~/Desktop/Read raw file/Data mzML")
@@ -80,6 +82,22 @@ for (i in seq_along(TMT_intensities1)) {
 }
 missing_file_mean <- set_names(missing3, file_names_wd) #names each file by file_names_wd 
 missing_file_mean #mean missing values per file
+
+barplot(unlist(missing_file_mean))
+
+means <- c(0.01650336, 0.02377111, 0.01958903, 0.01656064, 0.0144778, 0.0236738, 0.02782404, 0.02605497, 0.02480649, 0.02118762)
+means2 <- set_names(means, file_names_wd)
+means_missing <- as.data.frame(means2,
+                           col.names = c("File Name", "Means"))
+means_missing
+plot <- ggplot(means_missing, mapping = aes(x="File Name", y="Means")) +
+    geom_col()
+plot
+
+
+
+
+
 
 #Missing per row 
 missing4 <- list () #empty list

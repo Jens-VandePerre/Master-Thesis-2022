@@ -51,7 +51,19 @@ for (i in seq_along(mzML)) {
   }
 }
 TMT_intensities1 <- set_names(TMT1, file_names_wd) #names each file by file_names_wd
-TMT_intensities1
+TMT_intensities1%>% as_tibble
+
+row.names(TMT_intensities1)
+colnames(TMT_intensities1)
+
+length(TMT_intensities1)
+
+df <- data.frame(matrix(unlist(TMT_intensities1), nrow=length(TMT_intensities1), byrow=TRUE))
+df%>% as_tibble
+
+
+
+
          #1. Check missing data before imputation
 missing1 <- list () #empty list
 for (i in seq_along(TMT_intensities1)) {
