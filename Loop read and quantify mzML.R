@@ -21,6 +21,7 @@ list.files(wd) #The first 10 mzML files of CPTAC
 file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML")
 file_paths #The first 10 mzML files paths of CPTAC
 
+
 mzML_files <- list() #empty list
 for (i in seq_along(file_paths)) {
   mzML_files[[i]] <- readMSData(file_paths[[i]],
@@ -51,6 +52,14 @@ for (i in seq_along(mzML)) {
   }
 }
 TMT_intensities1 <- set_names(TMT1, file_names_wd) #names each file by file_names_wd
+    #Save output to different location: TMT outputs
+saveRDS(TMT_intensities1, file = "~/Desktop/Read raw file/TMT outputs/TMT_Intensities")
+
+
+
+
+
+
 TMT_intensities1%>% as_tibble
 
 row.names(TMT_intensities1)
@@ -91,6 +100,8 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities2 <- set_names(TMT2, file_names_wd) #names each file by file_names_wd
 TMT_intensities2
+   #Save output to different location: TMT outputs
+saveRDS(TMT_intensities1, file = "~/Desktop/Read raw file/TMT outputs/TMT_Intensities_Imputation")
           #2. Check missing data after imputation
 missing2 <- list () #empty list
 for (i in seq_along(TMT_intensities2)) {
@@ -119,6 +130,8 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities3 <- set_names(TMT3, file_names_wd) #names each file by file_names_wd
 TMT_intensities3 #The Terminal output is unclear
+   #Save output to different location: TMT outputs
+saveRDS(TMT_intensities1, file = "~/Desktop/Read raw file/TMT outputs/TMT_Intensities_Normalization")
           #3. Check missing data after normalization
 missing3 <- list () #empty list
 for (i in seq_along(TMT_intensities3)) {
@@ -149,6 +162,8 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities4 <- set_names(TMT4, file_names_wd) #names each file by file_names_wd
 TMT_intensities4 #The Terminal output is unclear
+   #Save output to different location: TMT outputs
+saveRDS(TMT_intensities1, file = "~/Desktop/Read raw file/TMT outputs/TMT_Intensities_Imputation+Normalization")
          #4. Check missing data after imputation and normalization
 missing4 <- list () #empty list
 for (i in seq_along(TMT_intensities4)) {

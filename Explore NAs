@@ -55,7 +55,23 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities1 <- set_names(TMT1, file_names_wd) #names each file by file_names_wd
 TMT_intensities1
+    #Save output to different location: TMT outputs
+saveRDS(TMT_intensities1, file = "~/Desktop/Read raw file/TMT outputs/TMT_intensities_1-10", )
 
+
+
+
+
+"~/Desktop/Read raw file/TMT outputs"
+
+
+
+
+
+
+
+
+options(vsc.plot = FALSE)
 
 #######################
 #Exploring missing data
