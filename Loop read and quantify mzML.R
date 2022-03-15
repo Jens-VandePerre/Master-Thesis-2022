@@ -122,8 +122,8 @@ TMT_Intensities1_10_Imputation <- readRDS(file= "~/Desktop/Read raw file/TMT out
 TMT_Intensities1_10_Imputation
           #2. Check missing data after imputation
 missing2 <- list () #empty list
-for (i in seq_along(TMT_intensities2)) {
-   missing2[[i]] <- sum(is.na(TMT_intensities2[[i]]))}
+for (i in seq_along(TMT_Intensities1_10_Imputation)) {
+   missing2[[i]] <- sum(is.na(TMT_Intensities1_10_Imputation[[i]]))}
 missing_tot2 <- set_names(missing2, file_names_wd) #names each file by file_names_wd
 missing_tot2 # Total missing for each file
 
@@ -153,8 +153,8 @@ TMT_Intensities1_10_Normalization <- readRDS(file= "~/Desktop/Read raw file/TMT 
 TMT_Intensities1_10_Normalization  
           #3. Check missing data after normalization
 missing3 <- list () #empty list
-for (i in seq_along(TMT_intensities3)) {
-   missing3[[i]] <- sum(is.na(TMT_intensities3[[i]]))}
+for (i in seq_along(TMT_Intensities1_10_Normalization)) {
+   missing3[[i]] <- sum(is.na(TMT_intTMT_Intensities1_10_Normalizationensities3[[i]]))}
 missing_tot3 <- set_names(missing3, file_names_wd) #names each file by file_names_wd
 missing_tot3 # Total missing for each file
 
@@ -186,8 +186,8 @@ TMT_Intensities1_10_Imputation_Normalization <- readRDS(file= "~/Desktop/Read ra
 TMT_Intensities1_10_Imputation_Normalization
          #4. Check missing data after imputation and normalization
 missing4 <- list () #empty list
-for (i in seq_along(TMT_intensities4)) {
-   missing4[[i]] <- sum(is.na(TMT_intensities4[[i]]))}
+for (i in seq_along(TMT_Intensities1_10_Imputation_Normalization)) {
+   missing4[[i]] <- sum(is.na(TMT_Intensities1_10_Imputation_Normalization[[i]]))}
 missing_tot4 <- set_names(missing4, file_names_wd) #names each file by file_names_wd
 missing_tot4 # Total missing for each file
 
