@@ -175,22 +175,6 @@ zero_row <- set_names(missing11, file_names_wd) #names each file by file_names_w
 zero_row
 
 
-
-
-
-
-
-
-
-means <- c(0.01650336, 0.02377111, 0.01958903, 0.01656064, 0.0144778, 0.0236738, 0.02782404, 0.02605497, 0.02480649, 0.02118762)
-means2 <- set_names(means, file_names_wd)
-means_missing <- as.data.frame(means2,
-                           col.names = c("File Name", "Means"))
-means_missing
-plot <- ggplot(missing_file_mean, mapping = aes(x="File Name", y="Means")) +
-    geom_col()
-plot
-
 #################
 #Making Plots
 #################
@@ -203,7 +187,7 @@ colnames(TMT_intensities1)
 
 length(TMT_intensities1)
 
- data.frame(matrix(unlist(missing_file_mean), nrow=length(missing_file_mean), byrow=TRUE))
+data.frame(matrix(unlist(missing_file_mean), nrow=length(missing_file_mean), byrow=TRUE))
 x %>% 
 as_tibble %>%
 var_label(x) 
@@ -220,18 +204,21 @@ var_label(x$value) <- "Mean"
 add_column(File_name=file_names) %>%
 
 
-df <- tibble(File_name=file_names , Mean=means)
 
 
-file_names <- c("B1S1_f10","B2S4_f10","B3S2_f09","B3S4_f04","B3S4_f06","B5S1_f08","B5S2_f04","B5S2_f07","B5S5_f04","B5S5_f08")
-file_names
-file_names_wd
+
 
 png(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per File.png",
 width=1000, height=1000)
 barplot(unlist(missing_file_mean), main="Mean Missing Values per File", xlab="Mean Missing Values", ylab=file_names, las=1)
 dev.off()
 
+
+file_names <- c("B1S1_f10","B2S4_f10","B3S2_f09","B3S4_f04","B3S4_f06","B5S1_f08","B5S2_f04","B5S2_f07","B5S5_f04","B5S5_f08")
+file_names
+file_names_wd
+means <- c(0.01650336, 0.02377111, 0.01958903, 0.01656064, 0.0144778, 0.0236738, 0.02782404, 0.02605497, 0.02480649, 0.02118762)
+df <- tibble(File_name=file_names , Mean=means)
 
 png(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per File.png",
 width=600, height=350)
