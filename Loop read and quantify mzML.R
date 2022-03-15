@@ -182,9 +182,37 @@ diff_perc2 <- mapply('*', diff_perc, 100, SIMPLIFY = FALSE)
 missing_diff_perc <- set_names(diff_perc2, file_names_wd)
 missing_diff_perc
 
+#####################################################################################
+###########################
+#Loops Saving output inside
+###########################
 
+ #5. Loop that outputs intensities for ALL SPECTRA
+      #not removing NAs
+      #no imputation
+      #no normalisation
+mzML_qnt5 <- list() #empty list
+TMT5 <- list() #empty list
+for (i in seq_along(mzML)) {
+  mzML_qnt5[[i]] <- 
+    quantify(mzML[[i]], method = "max", #max is the only working method
+             reporters = TMT10,
+             strict = FALSE,
+             verbose = FALSE) %>%
+    purityCorrect(makeImpuritiesMatrix(10, edit = FALSE))
+  for (j in seq_along(mzML_qnt5)) {
+    TMT5[[j]] <- exprs(mzML_qnt5[[j]]) #outputs all spectra, unclear in terminal
+  }
+}
+TMT_intensities5 <- set_names(TMT5, file_names_wd) #names each file by file_names_wd
+    #Save output to different location: TMT outputs
+saveRDS(TMT_intensities5, file = "~/Desktop/Read raw file/TMT outputs/TMT_Intensities")
 
-
+saved_files5 <- list() #empty list
+for (i in 1:10) {
+  assign(names[i],TMT_intensities5[[i]])
+  saveRDS(list=names[i],file = paste(names[i],'~/Desktop/Read raw file/TMT outputs/TMT_Intensities' , sep=""), compress=TRUE)
+}
 
 #####################################################################################
 ########
