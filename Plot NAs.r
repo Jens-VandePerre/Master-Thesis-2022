@@ -206,7 +206,10 @@ df%>% as_tibble
 
 
 
-
+png(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per File.png",
+width=1000, height=350)
+barplot(unlist(missing_file_mean), main="Mean Missing Values per File", xlab="Mean Missing Values", ylab=file_names_wd)
+dev.off()
 
 
 
