@@ -31,6 +31,9 @@ file_names_wd <- list.files(wd)
 file_names_wd
 mzML <- set_names(mzML_files, file_names_wd) #names each file by file_names_wd
 mzML
+ #Save mzMLs to different location: TMT outputs
+saveRDS(mzML, file = "~/Desktop/Read raw file/TMT outputs/Combined Files/mzML1-10")
+
 
 #Loop extracting TMT intensities + Printing TMT intensities
 
@@ -52,31 +55,15 @@ for (i in seq_along(mzML)) {
   }
 }
 TMT_intensities1 <- set_names(TMT1, file_names_wd) #names each file by file_names_wd
-    #Save output to different location: TMT outputs
-saveRDS(TMT_intensities1, file = "~/Desktop/Read raw file/TMT outputs/TMT_Intensities")
-
-
-
-
-
-
-TMT_intensities1%>% as_tibble
-
-row.names(TMT_intensities1)
-colnames(TMT_intensities1)
-
-length(TMT_intensities1)
-
-df <- data.frame(matrix(unlist(TMT_intensities1), nrow=length(TMT_intensities1), byrow=TRUE))
-df%>% as_tibble
-
-
-
-
+TMT_intensities1
+    #Save output to different location: TMT outputs/Combined Files
+saveRDS(TMT_intensities1, file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10")
+TMT_Intensities1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10")
+TMT_Intensities1_10       
          #1. Check missing data before imputation
 missing1 <- list () #empty list
-for (i in seq_along(TMT_intensities1)) {
-   missing1[[i]] <- sum(is.na(TMT_intensities1[[i]]))}
+for (i in seq_along(TMT_Intensities1_10)) {
+   missing1[[i]] <- sum(is.na(TMT_Intensities1_10[[i]]))}
 missing_tot1 <- set_names(missing1, file_names_wd) #names each file by file_names_wd
 missing_tot1 # Total missing for each file
 
@@ -100,14 +87,17 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities2 <- set_names(TMT2, file_names_wd) #names each file by file_names_wd
 TMT_intensities2
-   #Save output to different location: TMT outputs
-saveRDS(TMT_intensities1, file = "~/Desktop/Read raw file/TMT outputs/TMT_Intensities_Imputation")
+   #Save output to different location: TMT outputs/Combined Files
+saveRDS(TMT_intensities2, file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Imputation")
+TMT_Intensities1_10_Imputation <- readRDS(file= "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Imputation")
+TMT_Intensities1_10_Imputation
           #2. Check missing data after imputation
 missing2 <- list () #empty list
 for (i in seq_along(TMT_intensities2)) {
    missing2[[i]] <- sum(is.na(TMT_intensities2[[i]]))}
 missing_tot2 <- set_names(missing2, file_names_wd) #names each file by file_names_wd
 missing_tot2 # Total missing for each file
+
 
    #3. Loop that outputs intensities for ALL spectra
         #Output for later analysis
@@ -130,8 +120,10 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities3 <- set_names(TMT3, file_names_wd) #names each file by file_names_wd
 TMT_intensities3 #The Terminal output is unclear
-   #Save output to different location: TMT outputs
-saveRDS(TMT_intensities1, file = "~/Desktop/Read raw file/TMT outputs/TMT_Intensities_Normalization")
+   #Save output to different location: TMT outputs/Combined Files
+saveRDS(TMT_intensities3, file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Normalization")
+TMT_Intensities1_10_Normalization <- readRDS(file= "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Normalization")
+TMT_Intensities1_10_Normalization  
           #3. Check missing data after normalization
 missing3 <- list () #empty list
 for (i in seq_along(TMT_intensities3)) {
@@ -162,14 +154,18 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities4 <- set_names(TMT4, file_names_wd) #names each file by file_names_wd
 TMT_intensities4 #The Terminal output is unclear
-   #Save output to different location: TMT outputs
-saveRDS(TMT_intensities1, file = "~/Desktop/Read raw file/TMT outputs/TMT_Intensities_Imputation+Normalization")
+   #Save output to different location: TMT outputs/Combined Files
+saveRDS(TMT_intensities4, file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Imputation+Normalization")
+TMT_Intensities1_10_Imputation_Normalization <- readRDS(file= "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Imputation+Normalization")
+TMT_Intensities1_10_Imputation_Normalization
          #4. Check missing data after imputation and normalization
 missing4 <- list () #empty list
 for (i in seq_along(TMT_intensities4)) {
    missing4[[i]] <- sum(is.na(TMT_intensities4[[i]]))}
 missing_tot4 <- set_names(missing4, file_names_wd) #names each file by file_names_wd
 missing_tot4 # Total missing for each file
+
+
 
 #Difference in missing values after imputation
   #total
@@ -213,6 +209,27 @@ for (i in 1:10) {
   assign(names[i],TMT_intensities5[[i]])
   saveRDS(list=names[i],file = paste(names[i],'~/Desktop/Read raw file/TMT outputs/TMT_Intensities' , sep=""), compress=TRUE)
 }
+
+######################################################################################
+#################
+#Making Plots
+#################
+
+TMT_intensities1%>% as_tibble
+
+row.names(TMT_intensities1)
+colnames(TMT_intensities1)
+
+length(TMT_intensities1)
+
+df <- data.frame(matrix(unlist(TMT_intensities1), nrow=length(TMT_intensities1), byrow=TRUE))
+df%>% as_tibble
+
+
+
+
+
+
 
 #####################################################################################
 ########
