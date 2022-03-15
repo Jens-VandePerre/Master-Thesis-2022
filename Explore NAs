@@ -16,6 +16,35 @@ library(fs)
 library(proxyC)
 library("httpgd")
 
+########################################################################################
+#Load in outputs directly, not running loops
+############################################
+#1. Output intensities for ALL SPECTRA
+      #not removing NAs
+      #no imputation
+      #no normalisation
+TMT_Intensities1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10")
+TMT_Intensities1_10 
+
+#2. Output intensities for ALL spectra
+    #impute: method="MLE"
+    #no normalisation
+TMT_Intensities1_10_Imputation <- readRDS(file= "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Imputation")
+TMT_Intensities1_10_Imputation
+
+#3. Loop that outputs intensities for ALL spectra
+    #no imputation
+    #normalise: method="center.median"
+TMT_Intensities1_10_Normalization <- readRDS(file= "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Normalization")
+TMT_Intensities1_10_Normalization  
+
+#4. Output intensities for ALL spectra
+    #impute: method="MLE"
+    #normalise: method="center.median"
+TMT_Intensities1_10_Imputation_Normalization <- readRDS(file= "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Imputation+Normalization")
+TMT_Intensities1_10_Imputation_Normalization
+########################################################################################
+
 #Loop code to import files
 wd <- setwd("~/Desktop/Read raw file/Data mzML")
 getwd() 
@@ -35,7 +64,6 @@ mzML <- set_names(mzML_files, file_names_wd) #names each file by file_names_wd
 mzML
 
 #Loop extracting TMT intensities + Printing TMT intensities
-
   #1. Loop that outputs intensities for ALL SPECTRA
       #not removing NAs
       #no imputation
@@ -55,14 +83,6 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities1 <- set_names(TMT1, file_names_wd) #names each file by file_names_wd
 TMT_intensities1
-    #Save output to different location: TMT outputs
-saveRDS(TMT_intensities1, file = "~/Desktop/Read raw file/TMT outputs/TMT_intensities_1-10", )
-
-
-
-
-
-"~/Desktop/Read raw file/TMT outputs"
 
 
 
@@ -71,7 +91,14 @@ saveRDS(TMT_intensities1, file = "~/Desktop/Read raw file/TMT outputs/TMT_intens
 
 
 
-options(vsc.plot = FALSE)
+
+
+
+
+
+
+
+
 
 #######################
 #Exploring missing data
