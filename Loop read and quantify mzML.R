@@ -236,27 +236,6 @@ for (i in 1:10) {
   saveRDS(list=names[i],file = paste(names[i],'~/Desktop/Read raw file/TMT outputs/TMT_Intensities' , sep=""), compress=TRUE)
 }
 
-######################################################################################
-#################
-#Making Plots
-#################
-
-TMT_intensities1%>% as_tibble
-
-row.names(TMT_intensities1)
-colnames(TMT_intensities1)
-
-length(TMT_intensities1)
-
-df <- data.frame(matrix(unlist(TMT_intensities1), nrow=length(TMT_intensities1), byrow=TRUE))
-df%>% as_tibble
-
-
-
-
-
-
-
 #####################################################################################
 ########
 #Extra's
