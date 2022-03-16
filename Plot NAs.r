@@ -62,6 +62,29 @@ for (i in seq_along(TMT_Intensities1_10)) {
 missing_tot1 <- set_names(missing1, file_names_wd) #names each file by file_names_wd
 missing_tot1 # Total missing for each file
 
+data.frame(matrix(unlist(missing_file_mean), nrow=length(missing_file_mean), byrow=TRUE)) 
+mean <- matrix(unlist(missing_file_mean), nrow=length(missing_file_mean), byrow=TRUE, ncol=1)
+mean
+df <- tibble(File_name=file_names_wd , Mean=mean)
+df
+ggplot(df, mapping = aes(x=File_name, y=Mean)) +
+    geom_col() +
+    labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values", 
+      subtitle="Mean missing values for the 10 first CPTAC files")
+   #png
+png(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per File.png",
+width=1000, height=750)
+ggplot(df, mapping = aes(x=File_name, y=Mean)) +
+    geom_col() +
+    labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values", 
+      subtitle="Mean missing values for the 10 first CPTAC files") +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+dev.off()
+
+
+
+
+
 
           #2. Check missing data after imputation
 missing2 <- list () #empty list
@@ -179,19 +202,17 @@ zero_row
 #Making Plots
 #################
 
-meansgg <-missing_file_mean%>% as_tibble
-barplot(TMT_intensities1)
+meansgg <- missing_file_mean %>% as_tibble
 
-row.names(TMT_intensities1)
-colnames(TMT_intensities1)
+row.names(TMT_Intensities1_10)
+colnames(TMT_Intensities1_10)
+length(TMT_Intensities1_10)
 
-length(TMT_intensities1)
 
-data.frame(matrix(unlist(missing_file_mean), nrow=length(missing_file_mean), byrow=TRUE))
+x
 x %>% 
-as_tibble %>%
-var_label(x) 
-<- c("Mean")
+as_tibble 
+(var_label(x) <- c("Mean"))
 
 
 x <- unlist(missing_file_mean)
@@ -208,23 +229,47 @@ add_column(File_name=file_names) %>%
 
 
 
-png(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per File.png",
-width=1000, height=1000)
-barplot(unlist(missing_file_mean), main="Mean Missing Values per File", xlab="Mean Missing Values", ylab=file_names, las=1)
-dev.off()
 
-
+#Non Efficient Way
 file_names <- c("B1S1_f10","B2S4_f10","B3S2_f09","B3S4_f04","B3S4_f06","B5S1_f08","B5S2_f04","B5S2_f07","B5S5_f04","B5S5_f08")
 file_names
 file_names_wd
 means <- c(0.01650336, 0.02377111, 0.01958903, 0.01656064, 0.0144778, 0.0236738, 0.02782404, 0.02605497, 0.02480649, 0.02118762)
-df <- tibble(File_name=file_names , Mean=means)
+df1 <- tibble(File_name=file_names , Mean=means)
+df1
+png(file="~/Desktop/Read raw file/TMT outputs/Plots/Non Efficient Plot.png",
+width=1000, height=750)
+ggplot(df1, mapping = aes(x=File_name, y=Mean)) +
+    geom_col() +
+    labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values", subtitle="Mean missing values for the 10 first CPTAC files")
+dev.off()
 
-png(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per File.png",
-width=600, height=350)
+#Efficient Plot Making
+data.frame(matrix(unlist(missing_file_mean), nrow=length(missing_file_mean), byrow=TRUE)) 
+mean <- matrix(unlist(missing_file_mean), nrow=length(missing_file_mean), byrow=TRUE, ncol=1)
+mean
+df <- tibble(File_name=file_names_wd , Mean=mean)
+df
 ggplot(df, mapping = aes(x=File_name, y=Mean)) +
     geom_col() +
-    labs(x="Mean Missing Values", y="File Name", title="Mean Missing Values per File")
+    labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values", 
+      subtitle="Mean missing values for the 10 first CPTAC files")
+   #png
+png(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per File.png",
+width=1000, height=750)
+ggplot(df, mapping = aes(x=File_name, y=Mean)) +
+    geom_col() +
+    labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values", 
+      subtitle="Mean missing values for the 10 first CPTAC files") +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+dev.off()
+   #pdf
+pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per File.pdf",
+)
+ggplot(df, mapping = aes(x=File_name, y=Mean)) +
+    geom_col() +
+    labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values", 
+      subtitle="Mean missing values for the 10 first CPTAC files")
 dev.off()
 
 
