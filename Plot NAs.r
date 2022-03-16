@@ -65,25 +65,21 @@ missing_tot1_10 # Total missing for each file
 data.frame(matrix(unlist(missing_tot1_10), nrow=length(missing_tot1_10), byrow=TRUE)) 
 Total_Missing_Values1_10 <- matrix(unlist(missing_tot1_10), nrow=length(missing_tot1_10), byrow=TRUE, ncol=1)
 Total_Missing_Values1_10
-df <- tibble(File_name=file_names_wd , Total_Missing_Values=Total_Missing_Values1_10)
-df
-ggplot(df, mapping = aes(x=File_name, y=Mean)) +
+df_missing <- tibble(File_name=file_names_wd , Total_Missing_Values=Total_Missing_Values1_10)
+df_missing
+ggplot(df_missing, mapping = aes(x=File_name, y=Total_Missing_Values)) +
     geom_col() +
-    labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values", 
-      subtitle="Mean missing values for the 10 first CPTAC files")
+    labs(x="File Name", y="Total Missing Values", title="Total Missing Values: No Imputation", 
+      subtitle="Total missing values before imputation")
    #png
-png(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per File.png",
+png(file="~/Desktop/Read raw file/TMT outputs/Plots/Total Missing Values: No Imputation.png",
 width=1000, height=750)
-ggplot(df, mapping = aes(x=File_name, y=Mean)) +
+ggplot(df_missing, mapping = aes(x=File_name, y=Total_Missing_Values)) +
    geom_col() +
-   labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values", 
-      subtitle="Mean missing values for the 10 first CPTAC files") +
+   labs(x="File Name", y="Total Missing Values", title="Total Missing Values: No Imputation", 
+      subtitle="Total missing values before imputation") +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 dev.off()
-
-
-
-
 
 
           #2. Check missing data after imputation
@@ -93,6 +89,24 @@ for (i in seq_along(TMT_Intensities1_10_Imputation)) {
 missing_tot2 <- set_names(missing2, file_names_wd) #names each file by file_names_wd
 missing_tot2 # Total missing for each file
 
+data.frame(matrix(unlist(missing_tot2), nrow=length(missing_tot2), byrow=TRUE)) 
+Total_Missing_Values1_10_Imputation <- matrix(unlist(missing_tot2), nrow=length(missing_tot2), byrow=TRUE, ncol=1)
+Total_Missing_Values1_10_Imputation
+df_missing_imp <- tibble(File_name=file_names_wd , Total_Missing_Values=Total_Missing_Values1_10_Imputation)
+df_missing_imp
+ggplot(df_missing_imp, mapping = aes(x=File_name, y=Total_Missing_Values)) +
+    geom_col() +
+    labs(x="File Name", y="Total Missing Values", title="Total Missing Values: Imputation", 
+      subtitle="Total missing values after imputation")
+   #png
+png(file="~/Desktop/Read raw file/TMT outputs/Plots/Total Missing Values: Imputation.png",
+width=1000, height=750)
+ggplot(df_missing_imp, mapping = aes(x=File_name, y=Total_Missing_Values)) +
+   geom_col() +
+   labs(x="File Name", y="Total Missing Values", title="Total Missing Values: Imputation", 
+      subtitle="Total missing values after imputation") +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+dev.off()
 
           #3. Check missing data after normalization
 missing3 <- list () #empty list
@@ -100,6 +114,25 @@ for (i in seq_along(TMT_Intensities1_10_Normalization)) {
    missing3[[i]] <- sum(is.na(TMT_Intensities1_10_Normalization[[i]]))}
 missing_tot3 <- set_names(missing3, file_names_wd) #names each file by file_names_wd
 missing_tot3 # Total missing for each file
+
+data.frame(matrix(unlist(missing_tot3), nrow=length(missing_tot3), byrow=TRUE)) 
+Total_Missing_Values1_10_Normalization <- matrix(unlist(missing_tot3), nrow=length(missing_tot3), byrow=TRUE, ncol=1)
+Total_Missing_Values1_10_Normalization
+df_missing_norm <- tibble(File_name=file_names_wd , Total_Missing_Values=Total_Missing_Values1_10_Normalization)
+df_missing_norm
+ggplot(df_missing_norm, mapping = aes(x=File_name, y=Total_Missing_Values)) +
+    geom_col() +
+    labs(x="File Name", y="Total Missing Values", title="Total Missing Values: Normalization", 
+      subtitle="Total missing values after Normalization")
+   #png
+png(file="~/Desktop/Read raw file/TMT outputs/Plots/Total Missing Values: Normalization.png",
+width=1000, height=750)
+ggplot(df_missing_norm, mapping = aes(x=File_name, y=Total_Missing_Values)) +
+   geom_col() +
+   labs(x="File Name", y="Total Missing Values", title="Total Missing Values: Normalization", 
+      subtitle="Total missing values after Normalization") +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+dev.off()
 
 
          #4. Check missing data after imputation and normalization
