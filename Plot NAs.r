@@ -142,7 +142,51 @@ for (i in seq_along(TMT_Intensities1_10_Imputation_Normalization)) {
 missing_tot4 <- set_names(missing4, file_names_wd) #names each file by file_names_wd
 missing_tot4 # Total missing for each file
 
+data.frame(matrix(unlist(missing_tot4), nrow=length(missing_tot4), byrow=TRUE)) 
+Total_Missing_Values1_10_Imputation_Normalization <- matrix(unlist(missing_tot4), nrow=length(missing_tot4), byrow=TRUE, ncol=1)
+Total_Missing_Values1_10_Imputation_Normalization
+df_missing_imp_norm <- tibble(File_name=file_names_wd , Total_Missing_Values=Total_Missing_Values1_10_Imputation_Normalization)
+df_missing_imp_norm
+ggplot(df_missing_imp_norm, mapping = aes(x=File_name, y=Total_Missing_Values)) +
+    geom_col() +
+    labs(x="File Name", y="Total Missing Values", title="Total Missing Values: Imutation and Normalization", 
+      subtitle="Total missing values after imutation and normalization")
+   #png
+png(file="~/Desktop/Read raw file/TMT outputs/Plots/Total Missing Values: Imutation and Normalization.png",
+width=1000, height=750)
+ggplot(df_missing_imp_norm, mapping = aes(x=File_name, y=Total_Missing_Values)) +
+   geom_col() +
+   labs(x="File Name", y="Total Missing Values", title="Total Missing Values: Normalization", 
+      subtitle="Total missing values after imutation and normalization") +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+dev.off()
 
+
+#Putting the 4 plots on 1 page
+png(file="~/Desktop/Read raw file/TMT outputs/Plots/Total Missing Values Plots.png",
+width=1000, height=750)
+   par(mfrow= c(2, 2))
+ggplot(df_missing, mapping = aes(x=File_name, y=Total_Missing_Values)) +
+   geom_col() +
+   labs(x="File Name", y="Total Missing Values", title="Total Missing Values: No Imputation", 
+      subtitle="Total missing values before imputation", tag="A") +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+ggplot(df_missing_imp, mapping = aes(x=File_name, y=Total_Missing_Values)) +
+   geom_col() +
+   labs(x="File Name", y="Total Missing Values", title="Total Missing Values: Imputation", 
+      subtitle="Total missing values after imputation", tag="B") +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+ggplot(df_missing_norm, mapping = aes(x=File_name, y=Total_Missing_Values)) +
+   geom_col() +
+   labs(x="File Name", y="Total Missing Values", title="Total Missing Values: Normalization", 
+      subtitle="Total missing values after Normalization", tag="C") +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+ggplot(df_missing_imp_norm, mapping = aes(x=File_name, y=Total_Missing_Values)) +
+   geom_col() +
+   labs(x="File Name", y="Total Missing Values", title="Total Missing Values: Normalization", 
+      subtitle="Total missing values after imutation and normalization", tag="D") +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+dev.off()
 
 #Missing per spectrum
 missing_spec <- list () #empty list
