@@ -59,13 +59,13 @@ file_paths #The first 10 mzML files paths of CPTAC
 missing1 <- list () #empty list
 for (i in seq_along(TMT_Intensities1_10)) {
    missing1[[i]] <- sum(is.na(TMT_Intensities1_10[[i]]))}
-missing_tot1 <- set_names(missing1, file_names_wd) #names each file by file_names_wd
-missing_tot1 # Total missing for each file
+missing_tot1_10 <- set_names(missing1, file_names_wd) #names each file by file_names_wd
+missing_tot1_10 # Total missing for each file
 
-data.frame(matrix(unlist(missing_file_mean), nrow=length(missing_file_mean), byrow=TRUE)) 
-mean <- matrix(unlist(missing_file_mean), nrow=length(missing_file_mean), byrow=TRUE, ncol=1)
-mean
-df <- tibble(File_name=file_names_wd , Mean=mean)
+data.frame(matrix(unlist(missing_tot1_10), nrow=length(missing_tot1_10), byrow=TRUE)) 
+Total_Missing_Values1_10 <- matrix(unlist(missing_tot1_10), nrow=length(missing_tot1_10), byrow=TRUE, ncol=1)
+Total_Missing_Values1_10
+df <- tibble(File_name=file_names_wd , Total_Missing_Values=Total_Missing_Values1_10)
 df
 ggplot(df, mapping = aes(x=File_name, y=Mean)) +
     geom_col() +
@@ -75,8 +75,8 @@ ggplot(df, mapping = aes(x=File_name, y=Mean)) +
 png(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per File.png",
 width=1000, height=750)
 ggplot(df, mapping = aes(x=File_name, y=Mean)) +
-    geom_col() +
-    labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values", 
+   geom_col() +
+   labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values", 
       subtitle="Mean missing values for the 10 first CPTAC files") +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 dev.off()
