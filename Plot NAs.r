@@ -60,10 +60,12 @@ for (i in seq_along(TMT_Intensities1_10)) {
    missing1[[i]] <- sum(is.na(TMT_Intensities1_10[[i]]))}
 missing_tot1_10 <- set_names(missing1, file_names_wd) #names each file by file_names_wd
 missing_tot1_10 # Total missing for each file
-
+            #Transforming List Data
 data.frame(matrix(unlist(missing_tot1_10), nrow=length(missing_tot1_10), byrow=TRUE)) 
 Total_Missing_Values1_10 <- matrix(unlist(missing_tot1_10), nrow=length(missing_tot1_10), byrow=TRUE, ncol=1)
 Total_Missing_Values1_10
+df_missing <- tibble(File_name=file_names , Total_Missing_Values=Total_Missing_Values1_10)
+df_missing
 
           #2. Check missing data after imputation
 missing2 <- list () #empty list
@@ -71,6 +73,12 @@ for (i in seq_along(TMT_Intensities1_10_Imputation)) {
    missing2[[i]] <- sum(is.na(TMT_Intensities1_10_Imputation[[i]]))}
 missing_tot2 <- set_names(missing2, file_names_wd) #names each file by file_names_wd
 missing_tot2 # Total missing for each file
+            #Transforming List Data
+data.frame(matrix(unlist(missing_tot2), nrow=length(missing_tot2), byrow=TRUE)) 
+Total_Missing_Values1_10_Imputation <- matrix(unlist(missing_tot2), nrow=length(missing_tot2), byrow=TRUE, ncol=1)
+Total_Missing_Values1_10_Imputation
+df_missing_imp <- tibble(File_name=file_names , Total_Missing_Values=Total_Missing_Values1_10_Imputation)
+df_missing_imp
 
           #3. Check missing data after normalization
 missing3 <- list () #empty list
@@ -78,6 +86,12 @@ for (i in seq_along(TMT_Intensities1_10_Normalization)) {
    missing3[[i]] <- sum(is.na(TMT_Intensities1_10_Normalization[[i]]))}
 missing_tot3 <- set_names(missing3, file_names_wd) #names each file by file_names_wd
 missing_tot3 # Total missing for each file
+            #Transforming List Data
+data.frame(matrix(unlist(missing_tot3), nrow=length(missing_tot3), byrow=TRUE)) 
+Total_Missing_Values1_10_Normalization <- matrix(unlist(missing_tot3), nrow=length(missing_tot3), byrow=TRUE, ncol=1)
+Total_Missing_Values1_10_Normalization
+df_missing_norm <- tibble(File_name=file_names , Total_Missing_Values=Total_Missing_Values1_10_Normalization)
+df_missing_norm
 
          #4. Check missing data after imputation and normalization
 missing4 <- list () #empty list
@@ -85,28 +99,47 @@ for (i in seq_along(TMT_Intensities1_10_Imputation_Normalization)) {
    missing4[[i]] <- sum(is.na(TMT_Intensities1_10_Imputation_Normalization[[i]]))}
 missing_tot4 <- set_names(missing4, file_names_wd) #names each file by file_names_wd
 missing_tot4 # Total missing for each file
+            #Transforming List Data
+data.frame(matrix(unlist(missing_tot4), nrow=length(missing_tot4), byrow=TRUE)) 
+Total_Missing_Values1_10_Imputation_Normalization <- matrix(unlist(missing_tot4), nrow=length(missing_tot4), byrow=TRUE, ncol=1)
+Total_Missing_Values1_10_Imputation_Normalization
+df_missing_imp_norm <- tibble(File_name=file_names , Total_Missing_Values=Total_Missing_Values1_10_Imputation_Normalization)
+df_missing_imp_norm
+
 
 #4 Plots
 p1 <- ggplot(df_missing, mapping = aes(x=File_name, y=Total_Missing_Values)) +
    geom_col() +
    labs(x="File Name", y="Total Missing Values", title="Total Missing Values: No Imputation", 
       subtitle="Total missing values before imputation", tag="A") +
-   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+   geom_text(aes(label=Total_Missing_Values1_10_Imputation_Normalization), 
+               position=position_dodge(width=0.9), vjust=-0.25, size = 1.75) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
 p2 <- ggplot(df_missing_imp, mapping = aes(x=File_name, y=Total_Missing_Values)) +
    geom_col() +
    labs(x="File Name", y="Total Missing Values", title="Total Missing Values: Imputation", 
       subtitle="Total missing values after imputation", tag="B") +
-   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+   geom_text(aes(label=Total_Missing_Values1_10_Imputation_Normalization), 
+               position=position_dodge(width=0.9), vjust=-0.25, size = 1.75) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
 p3 <- ggplot(df_missing_norm, mapping = aes(x=File_name, y=Total_Missing_Values)) +
    geom_col() +
    labs(x="File Name", y="Total Missing Values", title="Total Missing Values: Normalization", 
-      subtitle="Total missing values after Normalization", tag="C") +
-   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+      subtitle="Total missing values after normalization", tag="C") +
+   geom_text(aes(label=Total_Missing_Values1_10_Imputation_Normalization), 
+               position=position_dodge(width=0.9), vjust=-0.25, size = 1.75) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
 p4 <- ggplot(df_missing_imp_norm, mapping = aes(x=File_name, y=Total_Missing_Values)) +
    geom_col() +
    labs(x="File Name", y="Total Missing Values", title="Total Missing Values: Normalization", 
-      subtitle="Total missing values after imutation and normalization", tag="D") +
-   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+      subtitle="Total missing values after imputation and normalization", tag="D") +
+   geom_text(aes(label=Total_Missing_Values1_10_Imputation_Normalization), 
+               position=position_dodge(width=0.9), vjust=-0.25, size = 1.75) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
 
 #Putting the 4 plots on 1 page
 pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Total Missing Values Plots.pdf")
