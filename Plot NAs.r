@@ -112,7 +112,7 @@ p1 <- ggplot(df_missing, mapping = aes(x=File_name, y=Total_Missing_Values)) +
    geom_col() +
    labs(x="File Name", y="Total Missing Values", title="Total Missing Values: No Imputation", 
       subtitle="Total missing values before imputation", tag="A") +
-   geom_text(aes(label=Total_Missing_Values1_10_Imputation_Normalization), 
+   geom_text(aes(label=Total_Missing_Values1_10), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.75) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
@@ -120,7 +120,7 @@ p2 <- ggplot(df_missing_imp, mapping = aes(x=File_name, y=Total_Missing_Values))
    geom_col() +
    labs(x="File Name", y="Total Missing Values", title="Total Missing Values: Imputation", 
       subtitle="Total missing values after imputation", tag="B") +
-   geom_text(aes(label=Total_Missing_Values1_10_Imputation_Normalization), 
+   geom_text(aes(label=Total_Missing_Values1_10_Imputation), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.75) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
@@ -128,7 +128,7 @@ p3 <- ggplot(df_missing_norm, mapping = aes(x=File_name, y=Total_Missing_Values)
    geom_col() +
    labs(x="File Name", y="Total Missing Values", title="Total Missing Values: Normalization", 
       subtitle="Total missing values after normalization", tag="C") +
-   geom_text(aes(label=Total_Missing_Values1_10_Imputation_Normalization), 
+   geom_text(aes(label=Total_Missing_Values1_10_Normalization), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.75) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
@@ -145,6 +145,89 @@ p4 <- ggplot(df_missing_imp_norm, mapping = aes(x=File_name, y=Total_Missing_Val
 pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Total Missing Values Plots.pdf")
    p1 + p2 + p3 + p4
 dev.off()
+
+#Mean missing values over 10 files
+missing3 <- list () #empty list
+for (i in seq_along(TMT_Intensities1_10)) {
+   missing3[[i]] <- mean(is.na(TMT_Intensities1_10[[i]]))
+}
+missing_file_mean <- set_names(missing3, file_names_wd) #names each file by file_names_wd 
+missing_file_mean #mean missing values per file
+
+#Mean missing per row 
+missing6 <- list () #empty list
+for (i in seq_along(TMT_Intensities1_10)) {
+   missing6[[i]] <- mean(rowSums(is.na(TMT_Intensities1_10[[i]])))}
+missing_row_mean <- set_names(missing6, file_names_wd) #names each file by file_names_wd
+missing_row_mean #missing for each row
+
+#Mean missing per column/TMT channel 
+missing7 <- list () #empty list
+means <- list()
+for (i in seq_along(TMT_Intensities1_10)) {
+   missing7[[i]] <- is.na(TMT_Intensities1_10[[i]])
+   for (j in seq_along(missing7)) { 
+       means[[j]] <- colMeans(missing7[[j]])         
+}}
+missing_col_mean <- set_names(means, file_names_wd) #names each file by file_names_wd
+missing_col_mean #mean missing for each col
+
+
+
+#Plots Max and Min Intensities 
+   #Max TMT intensity
+missing8 <- list()
+for (i in seq_along(TMT_Intensities1_10)) {
+    missing8[[i]] <- max(TMT_Intensities1_10[[i]], na.rm=TRUE)
+}
+max <- set_names(missing8, file_names_wd) #names each file by file_names_wd
+max
+data.frame(matrix(unlist(max), nrow=length(max), byrow=TRUE)) 
+Max_Values1_10 <- matrix(unlist(max), nrow=length(max), byrow=TRUE, ncol=1)
+Max_Values1_10
+df_max <- tibble(File_name=file_names , Max_Values=Max_Values1_10)
+df_max
+   #Min TMT intensity
+missing9 <- list()
+for (i in seq_along(TMT_Intensities1_10)) {
+    missing9[[i]] <- min(TMT_Intensities1_10[[i]], na.rm=TRUE)
+}
+min <- set_names(missing9, file_names_wd) #names each file by file_names_wd
+min
+data.frame(matrix(unlist(min), nrow=length(min), byrow=TRUE)) 
+Min_Values1_10 <- matrix(unlist(min), nrow=length(min), byrow=TRUE, ncol=1)
+Min_Values1_10
+df_min <- tibble(File_name=file_names , Min_Values=Min_Values1_10)
+df_min
+   #Plots
+p8 <- ggplot(df_max, mapping = aes(x=File_name, y=Max_Values)) +
+   geom_col() +
+   ylim(750000000, 223000000) +
+   labs(x="File Name", y="Maximun Intensities", title="Maximun TMT Intensities", 
+      subtitle="Maximun measuered TMT intensities", tag="A") +
+   geom_text(aes(label=round(Max_Values1_10, digits = 0)), 
+               position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+p9 <- ggplot(df_min, mapping = aes(x=File_name, y=Min_Values)) +
+   geom_col() +
+   labs(x="File Name", y="Minimum Intensiteis", title="Minumim TMT Intensities", 
+      subtitle="Minimum measuered TMT intensities", tag="B") +
+   geom_text(aes(label=round(Min_Values1_10, digits = 3)), 
+               position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Plots Max and Min TMT Intensities.pdf")
+   p8 + p9
+dev.off()
+
+
+
+
+
+
+
+
 
 #Missing per spectrum
 missing_spec <- list () #empty list
