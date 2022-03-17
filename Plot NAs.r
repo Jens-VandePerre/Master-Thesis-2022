@@ -107,7 +107,7 @@ df_missing_imp_norm <- tibble(File_name=file_names , Total_Missing_Values=Total_
 df_missing_imp_norm
 
 
-#4 Plots
+#1-4 Plots
 p1 <- ggplot(df_missing, mapping = aes(x=File_name, y=Total_Missing_Values)) +
    geom_col() +
    labs(x="File Name", y="Total Missing Values", title="Total Missing Values: No Imputation", 
@@ -140,8 +140,8 @@ p4 <- ggplot(df_missing_imp_norm, mapping = aes(x=File_name, y=Total_Missing_Val
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.75) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
-
-#Putting the 4 plots on 1 page
+   #Putting the 4 plots on 1 page
+p1 + p2 + p3 + p4
 pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Total Missing Values Plots.pdf")
    p1 + p2 + p3 + p4
 dev.off()
@@ -153,6 +153,24 @@ for (i in seq_along(TMT_Intensities1_10)) {
 }
 missing_file_mean <- set_names(missing3, file_names_wd) #names each file by file_names_wd 
 missing_file_mean #mean missing values per file
+data.frame(matrix(unlist(missing_file_mean), nrow=length(missing_file_mean), byrow=TRUE)) 
+Mean_Missing <- matrix(unlist(missing_file_mean), nrow=length(missing_file_mean), byrow=TRUE)
+Mean_Missing
+df_missing_mean <- tibble(File_name=file_names , Missing_Mean=Mean_Missing)
+df_missing_mean
+  #Plot 3 
+p3 <- ggplot(df_missing_mean, mapping = aes(x=File_name, y=Missing_Mean)) +
+   geom_col(group=TMT_Labels) +
+   labs(x="File Name", y="Mean Missing Intensiteis", title="Mean Missing Values per File") +
+   geom_text(aes(label=round(Mean_Missing, digits = 3)), 
+               position=position_dodge(width=0.9), vjust=-0.25, size = 3) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 7), axis.text.y = element_text(size = 7)
+            plot.title = element_text(size = 15))
+   #Print 8-9 plots together
+p3
+pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per File.pdf")
+   p3
+dev.off()
 
 #Mean missing per row 
 missing6 <- list () #empty list
@@ -171,6 +189,25 @@ for (i in seq_along(TMT_Intensities1_10)) {
 }}
 missing_col_mean <- set_names(means, file_names_wd) #names each file by file_names_wd
 missing_col_mean #mean missing for each col
+data.frame(matrix(unlist(missing_col_mean), nrow=length(missing_col_mean), byrow=TRUE)) 
+Mean_Missing_Channel <- matrix(unlist(missing_col_mean), nrow=length(missing_col_mean), byrow=TRUE, ncol=10)
+Mean_Missing_Channel
+df_missing_col_mean <- tibble(File_name=file_names , Missing_Channel=Mean_Missing_Channel)
+df_missing_col_mean
+   #Plot 7 NOT WORKING
+TMT_Labels <- c("126", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131")
+p7 <- ggplot(df_missing_col_mean, mapping = aes(x=File_name, y=Mean_Missing_Channel)) +
+   geom_col(group=TMT_Labels) +
+   labs(x="File Name", y="Minimum Intensiteis", title="Mean Missing Values per TMT Channel") +
+   geom_text(aes(label=TMT_Labels), 
+               position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+   #Print 8-9 plots together
+p7
+pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per TMT Channel.pdf")
+   p7
+dev.off()
 
 
 
@@ -199,10 +236,9 @@ Min_Values1_10 <- matrix(unlist(min), nrow=length(min), byrow=TRUE, ncol=1)
 Min_Values1_10
 df_min <- tibble(File_name=file_names , Min_Values=Min_Values1_10)
 df_min
-   #Plots
+   #8-9 Plots
 p8 <- ggplot(df_max, mapping = aes(x=File_name, y=Max_Values)) +
    geom_col() +
-   ylim(70000000, 250000000) +
    labs(x="File Name", y="Maximun Intensities", title="Maximun TMT Intensities", 
       subtitle="Maximun measuered TMT intensities", tag="A") +
    geom_text(aes(label=round(Max_Values1_10, digits = 0)), 
@@ -217,6 +253,8 @@ p9 <- ggplot(df_min, mapping = aes(x=File_name, y=Min_Values)) +
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+   #Print 8-9 plots together
+p8 + p9
 pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Plots Max and Min TMT Intensities.pdf")
    p8 + p9
 dev.off()
