@@ -202,7 +202,7 @@ df_min
    #Plots
 p8 <- ggplot(df_max, mapping = aes(x=File_name, y=Max_Values)) +
    geom_col() +
-   ylim(750000000, 223000000) +
+   ylim(70000000, 250000000) +
    labs(x="File Name", y="Maximun Intensities", title="Maximun TMT Intensities", 
       subtitle="Maximun measuered TMT intensities", tag="A") +
    geom_text(aes(label=round(Max_Values1_10, digits = 0)), 
