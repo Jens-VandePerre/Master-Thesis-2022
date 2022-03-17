@@ -304,6 +304,7 @@ data.frame(matrix(unlist(missing_col_mean), nrow=length(missing_col_mean), byrow
 Mean_Missing_Channel <- matrix(unlist(missing_col_mean), byrow=TRUE, ncol=10)
 Mean_Missing_Channel <- data.frame(matrix(unlist(missing_col_mean), nrow=length(missing_col_mean), byrow=TRUE)) 
 
+
 df_missing_col_mean <- tibble(File_name=file_names , Missing_Channel=Mean_Missing_Channel)
 df_missing_col_mean
    #Plot 7 NOT WORKING
