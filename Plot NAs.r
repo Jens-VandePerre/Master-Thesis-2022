@@ -276,7 +276,7 @@ Mean_Row_Missing <- matrix(unlist(missing_row_mean), nrow=length(missing_row_mea
 Mean_Row_Missing
 df_missing_mean <- tibble(File_name=file_names , Mean_Row_Missing=Mean_Row_Missing)
 df_missing_mean
-  #Plot 6 
+  #Plot 6
 p6 <- ggplot(df_missing_mean, mapping = aes(x=File_name, y=Mean_Row_Missing)) +
    geom_col() +
    labs(x="File Name", y="Mean Missing Intensiteis per Spectrum", title="Mean Missing Values per Spectrum") +
