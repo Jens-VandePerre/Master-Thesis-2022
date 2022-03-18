@@ -280,7 +280,7 @@ df_missing_mean
 p6 <- ggplot(df_missing_mean, mapping = aes(x=File_name, y=Mean_Row_Missing)) +
    geom_col() +
    labs(x="File Name", y="Mean Missing Intensiteis per Spectrum", title="Mean Missing Values per Spectrum") +
-   geom_text(aes(label=round(Mean_Missing, digits = 4)), 
+   geom_text(aes(label=round(Mean_Row_Missing, digits = 4)), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 3) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 10), axis.text.y = element_text(size = 10),
             plot.title = element_text(size = 18))
@@ -387,7 +387,6 @@ Difference <- matrix(unlist(missing_diff), nrow=length(missing_diff), byrow=TRUE
 Difference
 df_diff <- tibble(File_name=file_names , Decrease_Missing_Values=Difference)
 df_diff
-
   #percentage lowered missing values
 diff_perc <- mapply('/', missing_diff, missing_tot1_10, SIMPLIFY = FALSE)
 diff_perc2 <- mapply('*', diff_perc, 100, SIMPLIFY = FALSE)
@@ -396,22 +395,22 @@ missing_diff_perc
 data.frame(matrix(unlist(missing_diff_perc), nrow=length(missing_diff_perc), byrow=TRUE)) 
 Difference_Perc <- matrix(unlist(missing_diff_perc), nrow=length(missing_diff_perc), byrow=TRUE, ncol=1)
 Difference_Perc
-df_diff <- tibble(File_name=file_names , Percentage_Decrease_Missing_Values=Difference_Perc)
-df_diff
-#Plots
-p10 <- ggplot(df_max, mapping = aes(x=File_name, y=Max_Values)) +
+df_diff_perc <- tibble(File_name=file_names , Percentage_Decrease_Missing_Values=Difference_Perc)
+df_diff_perc
+   #Plots
+p10 <- ggplot(df_diff, mapping = aes(x=File_name, y=Decrease_Missing_Values)) +
    geom_col() +
    labs(x="File Name", y="Decrease missing values", title="Decrease Missing Values", 
       subtitle="Decrease in missing values after imputation and normalization", tag="A") +
-   geom_text(aes(label=round(Max_Values1_10, digits = 0)), 
+   geom_text(aes(label=Difference), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
-p11 <- ggplot(df_min, mapping = aes(x=File_name, y=Min_Values)) +
+p11 <- ggplot(df_diff_perc, mapping = aes(x=File_name, y=Percentage_Decrease_Missing_Values)) +
    geom_col() +
    labs(x="File Name", y="Percentage decrease missing values", title="Percentage Decrease Missing Values", 
       subtitle="Percentage decrease in missing values after imputation and normalization", tag="B") +
-   geom_text(aes(label=round(Difference, digits = 4)), 
+   geom_text(aes(label=round(Difference_Perc, digits = 0)), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
