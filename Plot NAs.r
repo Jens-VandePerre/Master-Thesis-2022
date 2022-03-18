@@ -301,28 +301,31 @@ for (i in seq_along(TMT_Intensities1_10)) {
 missing_col_mean <- set_names(means, file_names_wd) #names each file by file_names_wd
 missing_col_mean #mean missing for each col
 data.frame(matrix(unlist(missing_col_mean), nrow=length(missing_col_mean), byrow=TRUE)) 
-Mean_Missing_Channel <- matrix(unlist(missing_col_mean), byrow=TRUE, ncol=10)
 Mean_Missing_Channel <- data.frame(matrix(unlist(missing_col_mean), nrow=length(missing_col_mean), byrow=TRUE)) 
+Mean_Missing_Channel
 cols <- colnames(Mean_Missing_Channel)
+TMT_Labels <- c("126", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131")
 df_newnames_Mean_Missing_Channel <- setnames(Mean_Missing_Channel, old = cols, new = TMT_Labels)
 tbl_files <- tibble(File_name=file_names)
 tbl_tmt <- as_tibble(df_newnames_Mean_Missing_Channel)
 tbl_missing_col_mean <- cbind(tbl_files, tbl_tmt)
-
-df_missing_col_mean <- tibble(File_name=file_names , Missing_Channel=Mean_Missing_Channel)
+df_missing_col_mean <- tibble(File_name=file_names , Missing_Channel=tbl_tmt)
 df_missing_col_mean
    #Plot 7 NOT WORKING
-TMT_Labels <- c("126", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131")
-ggplot(df_missing_col_mean, mapping = aes(x=File_name, y=Missing_Channel)) +
-   geom_col(position="dodge") +
-   labs(x="File Name", y="Minimum Intensiteis", title="Mean Missing Values per TMT Channel") 
-   
-   geom_text(aes(label=TMT_Labels), 
-               position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
+ggplot(df_missing_col_mean, mapping = aes(x=File_name, y=tbl_tmt, group=TMT_Labels)) +
+   geom_col() 
+
+
+   labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values per TMT Channel") +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
 
-File_name_10 <- 10*file_names
+ggplot(df_missing_col_mean, mapping = aes(x=File_name, y=Missing_Channel)) +
+   geom_col(position="dodge") +
+   labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values per TMT Channel") +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+
 
 ggplot(data = df_missing_col_mean) + 
   geom_bar(mapping = aes(x = File_name, fill = TMT_Labels), position = "dodge")
