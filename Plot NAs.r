@@ -48,7 +48,7 @@ getwd()
 file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML")
 file_paths #The first 10 mzML files paths of CPTAC
 
-
+#File Names
 file_names <- c("B1S1_f10","B2S4_f10","B3S2_f09","B3S4_f04","B3S4_f06","B5S1_f08","B5S2_f04","B5S2_f07","B5S5_f04","B5S5_f08")
 file_names #Short file names
 file_names_wd #Long file names
@@ -154,9 +154,9 @@ missing_tot1_10_mean <- set_names(missing1_mean, file_names_wd) #names each file
 missing_tot1_10_mean # Mean missing for each file
             #Transforming List Data
 data.frame(matrix(unlist(missing_tot1_10_mean), nrow=length(missing_tot1_10_mean), byrow=TRUE)) 
-Mean_Missing_Values1_10_mean <- matrix(unlist(missing_tot1_10_mean), nrow=length(missing_tot1_10_mean), byrow=TRUE, ncol=1)
-Mean_Missing_Values1_10_mean
-df_missing_mean <- tibble(File_name=file_names , Mean_Missing_Values=Total_Missing_Values1_10_mean)
+Mean_Missing_Values1_10 <- matrix(unlist(missing_tot1_10_mean), nrow=length(missing_tot1_10_mean), byrow=TRUE, ncol=1)
+Mean_Missing_Values1_10
+df_missing_mean <- tibble(File_name=file_names , Mean_Missing_Values=Mean_Missing_Values1_10)
 df_missing_mean
 
           #2.1 Check missing data after imputation: mean
@@ -167,9 +167,9 @@ missing_tot2_mean <- set_names(missing2_mean, file_names_wd) #names each file by
 missing_tot2_mean # Mean missing for each file
             #Transforming List Data
 data.frame(matrix(unlist(missing_tot2_mean), nrow=length(missing_tot2_mean), byrow=TRUE)) 
-Mean_Missing_Values1_10_Imputation_mean <- matrix(unlist(missing_tot2_mean), nrow=length(missing_tot2_mean), byrow=TRUE, ncol=1)
-Mean_Missing_Values1_10_Imputation_mean
-df_missing_imp_mean <- tibble(File_name=file_names , Mean_Missing_Values=Total_Missing_Values1_10_Imputation_mean)
+Mean_Missing_Values1_10_Imputation <- matrix(unlist(missing_tot2_mean), nrow=length(missing_tot2_mean), byrow=TRUE, ncol=1)
+Mean_Missing_Values1_10_Imputation
+df_missing_imp_mean <- tibble(File_name=file_names , Mean_Missing_Values=Mean_Missing_Values1_10_Imputation)
 df_missing_imp_mean
 
           #3.1 Check missing data after normalization: mean
@@ -180,9 +180,9 @@ missing_tot3_mean <- set_names(missing3_mean, file_names_wd) #names each file by
 missing_tot3_mean # Mean missing for each file
             #Transforming List Data
 data.frame(matrix(unlist(missing_tot3_mean), nrow=length(missing_tot3_mean), byrow=TRUE)) 
-Mean_Missing_Values1_10_Normalization_mean <- matrix(unlist(missing_tot3_mean), nrow=length(missing_tot3_mean), byrow=TRUE, ncol=1)
-Mean_Missing_Values1_10_Normalization_mean
-df_missing_norm_mean <- tibble(File_name=file_names , Mean_Missing_Values=Total_Missing_Values1_10_Normalization_mean)
+Mean_Missing_Values1_10_Normalization <- matrix(unlist(missing_tot3_mean), nrow=length(missing_tot3_mean), byrow=TRUE, ncol=1)
+Mean_Missing_Values1_10_Normalization
+df_missing_norm_mean <- tibble(File_name=file_names , Mean_Missing_Values=Mean_Missing_Values1_10_Normalization)
 df_missing_norm_mean
 
          #4.1 Check missing data after imputation and normalization: mean
@@ -193,9 +193,9 @@ missing_tot4_mean <- set_names(missing4_mean, file_names_wd) #names each file by
 missing_tot4_mean # Mean missing for each file
             #Transforming List Data
 data.frame(matrix(unlist(missing_tot4_mean), nrow=length(missing_tot4_mean), byrow=TRUE)) 
-Mean_Missing_Values1_10_Imputation_Normalization_mean <- matrix(unlist(missing_tot4_mean), nrow=length(missing_tot4_mean), byrow=TRUE, ncol=1)
-Mean_Missing_Values1_10_Imputation_Normalization_mean
-df_missing_imp_norm_mean <- tibble(File_name=file_names , Mean_Missing_Values=Total_Missing_Values1_10_Imputation_Normalization_mean)
+Mean_Missing_Values1_10_Imputation_Normalization <- matrix(unlist(missing_tot4_mean), nrow=length(missing_tot4_mean), byrow=TRUE, ncol=1)
+Mean_Missing_Values1_10_Imputation_Normalization
+df_missing_imp_norm_mean <- tibble(File_name=file_names , Mean_Missing_Values=Mean_Missing_Values1_10_Imputation_Normalization)
 df_missing_imp_norm_mean
 
 #1-4 Plots
@@ -203,7 +203,7 @@ p1_mean <- ggplot(df_missing_mean, mapping = aes(x=File_name, y=Mean_Missing_Val
    geom_col() +
    labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values: No Imputation", 
       subtitle="Mean missing values before imputation", tag="A") +
-   geom_text(aes(label=round(Total_Missing_Values1_10_mean, digits=3)), 
+   geom_text(aes(label=round(Mean_Missing_Values1_10, digits=3)), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.75) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
@@ -211,7 +211,7 @@ p2_mean <- ggplot(df_missing_imp_mean, mapping = aes(x=File_name, y=Mean_Missing
    geom_col() +
    labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values: Imputation", 
       subtitle="Mean missing values after imputation", tag="B") +
-   geom_text(aes(label=round(Total_Missing_Values1_10_Imputation_mean, digits=3)), 
+   geom_text(aes(label=round(Mean_Missing_Values1_10_Imputation, digits=3)), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.75) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
@@ -219,7 +219,7 @@ p3_mean <- ggplot(df_missing_norm_mean, mapping = aes(x=File_name, y=Mean_Missin
    geom_col() +
    labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values: Normalization", 
       subtitle="Mean missing values after normalization", tag="C") +
-   geom_text(aes(label=round(Total_Missing_Values1_10_Normalization_mean, digits = 4)), 
+   geom_text(aes(label=round(Mean_Missing_Values1_10_Normalization, digits = 4)), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.75) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
@@ -227,7 +227,7 @@ p4_mean <- ggplot(df_missing_imp_norm_mean, mapping = aes(x=File_name, y=Mean_Mi
    geom_col() +
    labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values: Normalization", 
       subtitle="Mean missing values after imputation and normalization", tag="D") +
-   geom_text(aes(label=round(Total_Missing_Values1_10_Imputation_Normalization_mean, digits = 4)), 
+   geom_text(aes(label=round(Mean_Missing_Values1_10_Imputation_Normalization, digits = 4)), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.75) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
