@@ -304,7 +304,6 @@ data.frame(matrix(unlist(missing_col_mean), nrow=length(missing_col_mean), byrow
 Mean_Missing_Channel <- matrix(unlist(missing_col_mean), byrow=TRUE, ncol=10)
 Mean_Missing_Channel <- data.frame(matrix(unlist(missing_col_mean), nrow=length(missing_col_mean), byrow=TRUE)) 
 
-
 df_missing_col_mean <- tibble(File_name=file_names , Missing_Channel=Mean_Missing_Channel)
 df_missing_col_mean
    #Plot 7 NOT WORKING
@@ -317,7 +316,6 @@ ggplot(df_missing_col_mean, mapping = aes(x=File_name, y=Missing_Channel)) +
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
-
 
 File_name_10 <- 10*file_names
 
