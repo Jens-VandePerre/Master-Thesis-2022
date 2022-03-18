@@ -303,6 +303,11 @@ missing_col_mean #mean missing for each col
 data.frame(matrix(unlist(missing_col_mean), nrow=length(missing_col_mean), byrow=TRUE)) 
 Mean_Missing_Channel <- matrix(unlist(missing_col_mean), byrow=TRUE, ncol=10)
 Mean_Missing_Channel <- data.frame(matrix(unlist(missing_col_mean), nrow=length(missing_col_mean), byrow=TRUE)) 
+cols <- colnames(Mean_Missing_Channel)
+df_newnames_Mean_Missing_Channel <- setnames(Mean_Missing_Channel, old = cols, new = TMT_Labels)
+tbl_files <- tibble(File_name=file_names)
+tbl_tmt <- as_tibble(df_newnames_Mean_Missing_Channel)
+tbl_missing_col_mean <- cbind(tbl_files, tbl_tmt)
 
 df_missing_col_mean <- tibble(File_name=file_names , Missing_Channel=Mean_Missing_Channel)
 df_missing_col_mean
