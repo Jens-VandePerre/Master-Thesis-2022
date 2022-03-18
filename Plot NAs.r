@@ -382,14 +382,44 @@ dev.off()
 diff <- mapply('-', missing_tot1_10, missing_tot4, SIMPLIFY = FALSE)
 missing_diff <- set_names(diff, file_names_wd)
 missing_diff
+data.frame(matrix(unlist(missing_diff), nrow=length(missing_diff), byrow=TRUE)) 
+Difference <- matrix(unlist(missing_diff), nrow=length(missing_diff), byrow=TRUE, ncol=1)
+Difference
+df_diff <- tibble(File_name=file_names , Decrease_Missing_Values=Difference)
+df_diff
+
   #percentage lowered missing values
 diff_perc <- mapply('/', missing_diff, missing_tot1_10, SIMPLIFY = FALSE)
 diff_perc2 <- mapply('*', diff_perc, 100, SIMPLIFY = FALSE)
 missing_diff_perc <- set_names(diff_perc2, file_names_wd)
 missing_diff_perc
-
-
-
+data.frame(matrix(unlist(missing_diff_perc), nrow=length(missing_diff_perc), byrow=TRUE)) 
+Difference_Perc <- matrix(unlist(missing_diff_perc), nrow=length(missing_diff_perc), byrow=TRUE, ncol=1)
+Difference_Perc
+df_diff <- tibble(File_name=file_names , Percentage_Decrease_Missing_Values=Difference_Perc)
+df_diff
+#Plots
+p10 <- ggplot(df_max, mapping = aes(x=File_name, y=Max_Values)) +
+   geom_col() +
+   labs(x="File Name", y="Decrease missing values", title="Decrease Missing Values", 
+      subtitle="Decrease in missing values after imputation and normalization", tag="A") +
+   geom_text(aes(label=round(Max_Values1_10, digits = 0)), 
+               position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+p11 <- ggplot(df_min, mapping = aes(x=File_name, y=Min_Values)) +
+   geom_col() +
+   labs(x="File Name", y="Percentage decrease missing values", title="Percentage Decrease Missing Values", 
+      subtitle="Percentage decrease in missing values after imputation and normalization", tag="B") +
+   geom_text(aes(label=round(Difference, digits = 4)), 
+               position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+  #Print 10-11 plots together
+p10 + p11
+pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Plots Differences Missing Values.pdf")
+   p10 + p11
+dev.off()
 
 
 
