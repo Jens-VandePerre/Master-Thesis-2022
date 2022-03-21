@@ -263,15 +263,16 @@ missing_col_mean <- set_names(means, file_names_wd) #names each file by file_nam
 missing_col_mean #mean missing for each col
 data.frame(matrix(unlist(missing_col_mean), nrow=length(missing_col_mean), byrow=TRUE)) 
 Mean_Missing_Channel <- data.frame(matrix(unlist(missing_col_mean), nrow=length(missing_col_mean), byrow=TRUE)) 
-Mean_Missing_Channel <- unlist(missing_col_mean)
 TMT_Labels <- c("126", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131")
    #Example of creating new column names. Not needed to create plot 6
+cols <- colnames(Mean_Missing_Channel)
 df_newnames_Mean_Missing_Channel <- setnames(Mean_Missing_Channel, old = cols, new = TMT_Labels)
 tbl_files <- tibble(File_name=file_names)
 tbl_tmt <- as_tibble(df_newnames_Mean_Missing_Channel)
 tbl_missing_col_mean <- cbind(tbl_files, tbl_tmt)
 df_missing_col_mean <- tibble(File_name=file_names , Missing_Channel=tbl_tmt)
 df_missing_col_mean
+
    #Create Data Frame for Plot 6
 Labels=rep(TMT_Labels, each=10)
 File=rep(file_names, times=10)
