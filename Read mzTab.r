@@ -56,7 +56,7 @@ for (i in seq_along(file_paths)) {
 mzTab_files <- set_names(mzTab, file_names_short) #names each file by file_names_short
 mzTab_files
   #View first file 
-view(mzTab_files[[1]])
+view(mzTab_files[[3]])
 view(mzTab_files[[1]] %>% as_tibble())
 
  #Save mzMLs to different location: TMT outputs
@@ -96,14 +96,11 @@ for (i in seq_along(mzTab_files)) {
 mzTab_files_Metadata_V1V2V3 <- set_names(MTD_V1V2V3, file_names_short) #names each file by file_names_short
 mzTab_files_Metadata_V1V2V3
 
-
-
-
 #extractFeaturesPSM 
 extractFeaturesPSM <- function(mztab.table) {
   psm <- mztab.table[startsWith(as.character(mztab.table$V1), "PSM"),]
   psh <- mztab.table[startsWith(as.character(mztab.table$V1), "PSH"),]
-  rbind(psm,psh)
+  rbind(psh,psm)
 }
   #For the first file
 (mzTab_files_PSM_First_File <- extractFeaturesPSM(mzTab_files[[1]]))
@@ -111,7 +108,32 @@ view(mzTab_files_PSM_First_File)
   #Loop for all files
 PSM <- list() #empty list
 for (i in seq_along(mzTab_files)) {
-  PSM[[i]] <- extraextractFeaturesPSMctMetadata(mzTab_files[[i]])
+  PSM[[i]] <- extractFeaturesPSM(mzTab_files[[i]])
 }
 mzTab_files_PSM <- set_names(PSM, file_names_short) #names each file by file_names_short
 mzTab_files_PSM
+view(mzTab_files_PSM[[4]])
+
+#Determine identification percentage
+  #Row count for mzTab_PSM = amount of identified peptides
+nrow_PSM <- list() #empty list
+for (i in seq_along(mzTab_files_PSM)) {
+  nrow_PSM[[i]] <- nrow(mzTab_files_PSM[[i]])
+}
+Identified_peptides <- set_names(nrow_PSM, file_names_short) #names each file by file_names_short
+Identified_peptides
+
+  #Row count original
+mzML1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/mzML1-10") #Read in original mzML files
+mzML1_10 #Output gives number of spectra
+TMT_Intensities1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10")
+TMT_Intensities1_10 
+nrow(TMT_Intensities1_10[[1]]) # Is the same as the number of spectra
+    #Loop counting spectra
+nrow_TMT <- list() #empty list
+for (i in 1:6) { #Only for the first 6 spectra, 
+  nrow_TMT[[i]] <- nrow(TMT_Intensities1_10[[i]])
+}
+Spectral_count <- set_names(nrow_TMT, file_names_short) #names each file by file_names_short
+Spectral_count
+
