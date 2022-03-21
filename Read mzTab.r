@@ -38,6 +38,11 @@ readMzTab <- function(filename) {
 }
 (B1S2 <- readMzTab("02CPTAC_COprospective_W_PNNL_20170123_B1S2_f10.mztab")) #The first file
 
+<<<<<<< HEAD
+=======
+hi 
+
+>>>>>>> 765d3a905be4b6d22e6af8070e5ca70c9da4909b
 #Loop Reading in Files
   #File paths to direct the loop
 file_paths <- fs::dir_ls("~/Desktop/mzTab/Imported mzTab")
