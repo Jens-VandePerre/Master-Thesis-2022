@@ -38,8 +38,7 @@ TMT_Intensities1_10_Normalization <- readRDS(file= "~/Desktop/Read raw file/TMT 
     #impute: method="MLE"
     #normalise: method="center.median"
 TMT_Intensities1_10_Imputation_Normalization <- readRDS(file= "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Imputation+Normalization")
-########################################################################################
-
+############################################
 #File Names
 wd <- setwd("~/Desktop/Read raw file/Data mzML")
 getwd() 
@@ -50,7 +49,6 @@ file_paths #The first 10 mzML files paths of CPTAC
 file_names <- c("B1S1_f10","B2S4_f10","B3S2_f09","B3S4_f04","B3S4_f06","B5S1_f08","B5S2_f04","B5S2_f07","B5S5_f04","B5S5_f08")
 file_names #Short file names
 file_names_wd #Long file names
-
 
 #1-4 Plots Exploring missing data in relation to imputation and normalization
          #1. Check missing data before imputation
@@ -228,65 +226,38 @@ pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values 4 Plots.
    p1_mean + p2_mean + p3_mean + p4_mean
 dev.off()
 
-#5. Mean missing values over 10 files DON'T NEED TO RUN
-missing_mean <- list () #empty list
+#5. Mean missing per spectrum 
+missing5 <- list () #empty list
 for (i in seq_along(TMT_Intensities1_10)) {
-   missing_mean[[i]] <- mean(is.na(TMT_Intensities1_10[[i]]))
-}
-missing_file_mean <- set_names(missing_mean, file_names_wd) #names each file by file_names_wd 
-missing_file_mean #mean missing values per file
-data.frame(matrix(unlist(missing_file_mean), nrow=length(missing_file_mean), byrow=TRUE)) 
-Mean_Missing <- matrix(unlist(missing_file_mean), nrow=length(missing_file_mean), byrow=TRUE)
-Mean_Missing
-df_missing_mean <- tibble(File_name=file_names , Missing_Mean=Mean_Missing)
-df_missing_mean
-  #Plot 5
-p5 <- ggplot(df_missing_mean, mapping = aes(x=File_name, y=Missing_Mean)) +
-   geom_col(group=TMT_Labels) +
-   labs(x="File Name", y="Mean Missing Intensiteis", title="Mean Missing Values per File") +
-   geom_text(aes(label=round(Mean_Missing, digits = 4)), 
-               position=position_dodge(width=0.9), vjust=-0.25, size = 3) +
-   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 10), axis.text.y = element_text(size = 10),
-            plot.title = element_text(size = 18))
-   #Print plot 5 
-p5
-#Copy of plot A with means DON'T NEED TO RUN
-#pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per File.pdf")
-   #p5
-#dev.off()
-
-#6. Mean missing per spectrum 
-missing6 <- list () #empty list
-for (i in seq_along(TMT_Intensities1_10)) {
-   missing6[[i]] <- mean(rowSums(is.na(TMT_Intensities1_10[[i]])))}
-missing_row_mean <- set_names(missing6, file_names_wd) #names each file by file_names_wd
+   missing5[[i]] <- mean(rowSums(is.na(TMT_Intensities1_10[[i]])))}
+missing_row_mean <- set_names(missing5, file_names_wd) #names each file by file_names_wd
 missing_row_mean #missing for each  spectrum 
 data.frame(matrix(unlist(missing_row_mean), nrow=length(missing_row_mean), byrow=TRUE)) 
 Mean_Row_Missing <- matrix(unlist(missing_row_mean), nrow=length(missing_row_mean), byrow=TRUE)
 Mean_Row_Missing
 df_missing_mean <- tibble(File_name=file_names , Mean_Row_Missing=Mean_Row_Missing)
 df_missing_mean
-  #Plot 6
-p6 <- ggplot(df_missing_mean, mapping = aes(x=File_name, y=Mean_Row_Missing)) +
+  #Plot 5
+p5 <- ggplot(df_missing_mean, mapping = aes(x=File_name, y=Mean_Row_Missing)) +
    geom_col() +
    labs(x="File Name", y="Mean Missing Intensiteis per Spectrum", title="Mean Missing Values per Spectrum") +
    geom_text(aes(label=round(Mean_Row_Missing, digits = 4)), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 3) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 10), axis.text.y = element_text(size = 10),
             plot.title = element_text(size = 18))
-   #Print plot 6
-p6
+   #Print plot 5
+p5
 pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per Spectrum.pdf")
-   p6
+   p5
 dev.off()
 
-#7. Mean missing per column/TMT channel 
-missing7 <- list () #empty list
+#6. Mean missing per column/TMT channel 
+missing6 <- list () #empty list
 means <- list()
 for (i in seq_along(TMT_Intensities1_10)) {
-   missing7[[i]] <- is.na(TMT_Intensities1_10[[i]])
-   for (j in seq_along(missing7)) { 
-       means[[j]] <- colMeans(missing7[[j]])         
+   missing6[[i]] <- is.na(TMT_Intensities1_10[[i]])
+   for (j in seq_along(missing6)) { 
+       means[[j]] <- colMeans(missing6[[j]])         
 }}
 missing_col_mean <- set_names(means, file_names_wd) #names each file by file_names_wd
 missing_col_mean #mean missing for each col
@@ -294,14 +265,14 @@ data.frame(matrix(unlist(missing_col_mean), nrow=length(missing_col_mean), byrow
 Mean_Missing_Channel <- data.frame(matrix(unlist(missing_col_mean), nrow=length(missing_col_mean), byrow=TRUE)) 
 Mean_Missing_Channel <- unlist(missing_col_mean)
 TMT_Labels <- c("126", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131")
-   #Example of creating new column names. Not needed to create plot 7
+   #Example of creating new column names. Not needed to create plot 6
 df_newnames_Mean_Missing_Channel <- setnames(Mean_Missing_Channel, old = cols, new = TMT_Labels)
 tbl_files <- tibble(File_name=file_names)
 tbl_tmt <- as_tibble(df_newnames_Mean_Missing_Channel)
 tbl_missing_col_mean <- cbind(tbl_files, tbl_tmt)
 df_missing_col_mean <- tibble(File_name=file_names , Missing_Channel=tbl_tmt)
 df_missing_col_mean
-   #Create Data Frame for Plot 7
+   #Create Data Frame for Plot 6
 Labels=rep(TMT_Labels, each=10)
 File=rep(file_names, times=10)
 Missing_Values=(Mean_Missing_Channel)
@@ -311,21 +282,21 @@ df
 length(Labels) #100
 length(File) #100
 length(Missing_Values) #100
-   #Plot 7
-p7 <- ggplot(df, mapping = aes(x=Labels, y=Missing_Values, fill=File)) +
+   #Plot 6
+p6 <- ggplot(df, mapping = aes(x=Labels, y=Missing_Values, fill=File)) +
    geom_bar(stat="identity", position="dodge") +
    labs(x="TMT Channel", y="Mean Missing Values", title="Mean Missing Values per TMT Channel") +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) +
    geom_text(aes(label=round(Missing_Values, digits = 4)), 
                position=position_dodge(width=0.9), vjust=0.5, size = 1.55, angle = 90, hjust=-0.1) 
-   #Print plot 7 
-p7
+   #Print plot 6
+p6
 pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per TMT Channel.pdf")
-   p7
+   p6
 dev.off()
 
-#8-9 Plots Max and Min Intensities 
+#7-8 Plots Max and Min Intensities 
    #Max TMT intensity
 missing8 <- list()
 for (i in seq_along(TMT_Intensities1_10)) {
@@ -339,19 +310,19 @@ Max_Values1_10
 df_max <- tibble(File_name=file_names , Max_Values=Max_Values1_10)
 df_max
    #Min TMT intensity
-missing9 <- list()
+missing8 <- list()
 for (i in seq_along(TMT_Intensities1_10)) {
-    missing9[[i]] <- min(TMT_Intensities1_10[[i]], na.rm=TRUE)
+    missing8[[i]] <- min(TMT_Intensities1_10[[i]], na.rm=TRUE)
 }
-min <- set_names(missing9, file_names_wd) #names each file by file_names_wd
+min <- set_names(missing8, file_names_wd) #names each file by file_names_wd
 min
 data.frame(matrix(unlist(min), nrow=length(min), byrow=TRUE)) 
 Min_Values1_10 <- matrix(unlist(min), nrow=length(min), byrow=TRUE, ncol=1)
 Min_Values1_10
 df_min <- tibble(File_name=file_names , Min_Values=Min_Values1_10)
 df_min
-   #8-9 Plots
-p8 <- ggplot(df_max, mapping = aes(x=File_name, y=Max_Values)) +
+   #7-8 Plots
+p7 <- ggplot(df_max, mapping = aes(x=File_name, y=Max_Values)) +
    geom_col() +
    labs(x="File Name", y="Maximun Intensities", title="Maximun TMT Intensities", 
       subtitle="Maximun measuered TMT intensities", tag="A") +
@@ -359,7 +330,7 @@ p8 <- ggplot(df_max, mapping = aes(x=File_name, y=Max_Values)) +
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
-p9 <- ggplot(df_min, mapping = aes(x=File_name, y=Min_Values)) +
+p8 <- ggplot(df_min, mapping = aes(x=File_name, y=Min_Values)) +
    geom_col() +
    labs(x="File Name", y="Minimum Intensiteis", title="Minumim TMT Intensities", 
       subtitle="Minimum measuered TMT intensities", tag="B") +
@@ -368,12 +339,12 @@ p9 <- ggplot(df_min, mapping = aes(x=File_name, y=Min_Values)) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
    #Print 8-9 plots together
-p8 + p9
+p7 + p8
 pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Plots Max and Min TMT Intensities.pdf")
-   p8 + p9
+  p7 + p8
 dev.off()
 
-#10-11 Plot difference in missing values after imputation
+#9-10 Plot difference in missing values after imputation
   #total
 diff <- mapply('-', missing_tot1_10, missing_tot4, SIMPLIFY = FALSE)
 missing_diff <- set_names(diff, file_names_wd)
@@ -393,8 +364,8 @@ Difference_Perc <- matrix(unlist(missing_diff_perc), nrow=length(missing_diff_pe
 Difference_Perc
 df_diff_perc <- tibble(File_name=file_names , Percentage_Decrease_Missing_Values=Difference_Perc)
 df_diff_perc
-   #Plots
-p10 <- ggplot(df_diff, mapping = aes(x=File_name, y=Decrease_Missing_Values)) +
+   #Plots 9-10
+p9 <- ggplot(df_diff, mapping = aes(x=File_name, y=Decrease_Missing_Values)) +
    geom_col() +
    labs(x="File Name", y="Decrease missing values", title="Decrease Missing Values", 
       subtitle="Decrease in missing values after imputation and normalization", tag="A") +
@@ -402,7 +373,7 @@ p10 <- ggplot(df_diff, mapping = aes(x=File_name, y=Decrease_Missing_Values)) +
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
-p11 <- ggplot(df_diff_perc, mapping = aes(x=File_name, y=Percentage_Decrease_Missing_Values)) +
+p10 <- ggplot(df_diff_perc, mapping = aes(x=File_name, y=Percentage_Decrease_Missing_Values)) +
    geom_col() +
    labs(x="File Name", y="Percentage decrease missing values", title="Percentage Decrease Missing Values", 
       subtitle="Percentage decrease in missing values after imputation and normalization", tag="B") +
@@ -410,10 +381,10 @@ p11 <- ggplot(df_diff_perc, mapping = aes(x=File_name, y=Percentage_Decrease_Mis
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
             plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
-  #Print 10-11 plots together
-p10 + p11
+  #Print 9-10 plots together
+p9 + p10
 pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Plots Differences Missing Values.pdf")
-   p10 + p11
+   p9 + p10
 dev.off()
 
 ###################################
@@ -444,10 +415,10 @@ for (i in seq_along(TMT_Intensities1_10)) {
 missing_row <- set_names(missing4, file_names_wd) #names each file by file_names_wd
 missing_row #missing for each spectrum
    #Mean missing per spectrum 
-missing6 <- list () #empty list
+missing5 <- list () #empty list
 for (i in seq_along(TMT_Intensities1_10)) {
-   missing6[[i]] <- mean(rowSums(is.na(TMT_Intensities1_10[[i]])))}
-missing_row_mean <- set_names(missing6, file_names_wd) #names each file by file_names_wd
+   missing5[[i]] <- mean(rowSums(is.na(TMT_Intensities1_10[[i]])))}
+missing_row_mean <- set_names(missing5, file_names_wd) #names each file by file_names_wd
 missing_row_mean #missing for each spectrum 
    #Missing total per column/TMT channel
 missing5 <- list () #empty list
@@ -456,12 +427,12 @@ for (i in seq_along(TMT_Intensities1_10)) {
 missing_col <- set_names(missing5, file_names_wd) #names each file by file_names_wd
 missing_col #total missing for each col
    #Mean missing per column/TMT channel 
-missing7 <- list () #empty list
+missing6 <- list () #empty list
 means <- list()
 for (i in seq_along(TMT_Intensities1_10)) {
-   missing7[[i]] <- is.na(TMT_Intensities1_10[[i]])
-   for (j in seq_along(missing7)) { 
-       means[[j]] <- colMeans(missing7[[j]])         
+   missing6[[i]] <- is.na(TMT_Intensities1_10[[i]])
+   for (j in seq_along(missing6)) { 
+       means[[j]] <- colMeans(missing6[[j]])         
 }}
 missing_col_mean <- set_names(means, file_names_wd) #names each file by file_names_wd
 missing_col_mean #mean missing for each col
@@ -473,11 +444,11 @@ for (i in seq_along(TMT_Intensities1_10)) {
 max <- set_names(missing8, file_names_wd) #names each file by file_names_wd
 max
    #Min TMT intensity
-missing9 <- list()
+missing8 <- list()
 for (i in seq_along(TMT_Intensities1_10)) {
-    missing9[[i]] <- min(TMT_Intensities1_10[[i]], na.rm=TRUE)
+    missing8[[i]] <- min(TMT_Intensities1_10[[i]], na.rm=TRUE)
 }
-min <- set_names(missing9, file_names_wd) #names each file by file_names_wd
+min <- set_names(missing8, file_names_wd) #names each file by file_names_wd
 min
    #How many zero?
 missing10 <- list()
