@@ -71,20 +71,44 @@ Test_6_mzTabs <- readRDS(file = "~/Desktop/mzTab/Stored files/Test 6 mzTabs")
 extractMetadata <- function(mztab.table) {
   mztab.table[startsWith(as.character(mztab.table$V1), "MTD"),]
 }
-?startsWith
-(mzTab_files_Metadata <- extractMetadata(mzTab_files[[1]]))
+  #For the first file
+(mzTab_files_Metadata_First_File <- extractMetadata(mzTab_files[[1]]))
+  #Loop for all files
+MTD <- list() #empty list
+for (i in seq_along(mzTab_files)) {
+  MTD[[i]] <- extractMetadata(mzTab_files[[i]])
+}
+mzTab_files_Metadata <- set_names(MTD, file_names_short) #names each file by file_names_short
+mzTab_files
 
-#extracts columns V1:V3
+#extractMetadata.V1V2V3
+  #Extracting the MTD: only columns first 3 have inforamtion
 extractMetadata.V1V2V3 <- function(mztab.table) {
   mztab.table[startsWith(as.character(mztab.table$V1), "MTD"), 1:3]
 }
-(mzTab_files_Metadata_V1V2V3 <- extractMetadata.V1V2V3(mzTab_files))
+  #For the first file
+(mzTab_files_Metadata_V1V2V3_File <- extractMetadata.V1V2V3(mzTab_files[[1]]))
+  #Loop for all files
+MTD_V1V2V3 <- list() #empty list
+for (i in seq_along(mzTab_files)) {
+  MTD_V1V2V3[[i]] <- extractMetadata.V1V2V3(mzTab_files[[i]])
+}
+mzTab_files_Metadata_V1V2V3 <- set_names(MTD_V1V2V3, file_names_short) #names each file by file_names_short
+mzTab_files_Metadata_V1V2V3
 
 #extractFeaturesPSM 
 extractFeaturesPSM <- function(mztab.table) {
   psm <- mztab.table[startsWith(as.character(mztab.table$V1), "PSM"),]
-  prt <- mztab.table[startsWith(as.character(mztab.table$V1), "PRT"),]
-  rbind(psm,prt)
+  psh <- mztab.table[startsWith(as.character(mztab.table$V1), "PSH"),]
+  rbind(psm,psh)
 }
-  #PSM or PRT present in datasets
-(mzTab_files_PSM <- extractFeaturesPSM(mzTab_files))
+  #For the first file
+(mzTab_files_PSM_First_File <- extractFeaturesPSM(mzTab_files[[1]]))
+view(mzTab_files_PSM_First_File)
+  #Loop for all files
+PSM <- list() #empty list
+for (i in seq_along(mzTab_files)) {
+  PSM[[i]] <- extraextractFeaturesPSMctMetadata(mzTab_files[[i]])
+}
+mzTab_files_PSM <- set_names(PSM, file_names_short) #names each file by file_names_short
+mzTab_files_PSM
