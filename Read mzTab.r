@@ -45,14 +45,17 @@ file_paths <- fs::dir_ls("~/Desktop/mzTab/Imported mzTab")
 file_paths 
   #Names for the stored files
 file_names_wd <- list.files(wd)
-file_names_short <- c("B1S2_f10","B1S3_f05","B1S3_f10","B1S4_f02","B1S4_f06","B2S4_f09")
+file_names_short_typed <- c("B1S2_f10","B1S3_f05","B1S3_f10","B1S4_f02","B1S4_f06","B2S4_f09")
+    #Automate filename extraction
+file_names_wd #Long file names
+file_names_short <- substring(file_names_wd, 39, 46) #Character 39 untill 46 are unique
 
-htcytctyucv 
+  #Loop reading mzTabs
 mzTab <- list() #empty list
 for (i in seq_along(file_paths)) {
   mzTab[[i]] <- readMzTab(file_paths[[i]])
 }
-mzTab_files <- set_names(mzTab, file_names_wd) #names each file by file_names_wd
+mzTab_files <- set_names(mzTab, file_names_short) #names each file by file_names_short
 mzTab_files
 
 view(mzTab_files[[1]])
