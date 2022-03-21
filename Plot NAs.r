@@ -46,6 +46,7 @@ file_names_wd <- list.files(wd) #The first 10 mzML files of CPTAC
 file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML")
 file_paths #The first 10 mzML files paths of CPTAC
 file_names <- c("B1S1_f10","B2S4_f10","B3S2_f09","B3S4_f04","B3S4_f06","B5S1_f08","B5S2_f04","B5S2_f07","B5S5_f04","B5S5_f08")
+file_names_automated <- substring(file_names_wd, 39, 46) #Character 39 untill 46 are unique
 file_names #Short file names
 file_names_wd #Long file names
 

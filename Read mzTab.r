@@ -24,7 +24,6 @@ wd <- setwd("~/Desktop/mzTab/Imported mzTab")
 getwd() 
 list.files(wd)
 
-
 #Create Function readMzTab
   #Read an mzTab tab separated file 
 readMzTab <- function(filename) {
