@@ -96,6 +96,9 @@ for (i in seq_along(mzTab_files)) {
 mzTab_files_Metadata_V1V2V3 <- set_names(MTD_V1V2V3, file_names_short) #names each file by file_names_short
 mzTab_files_Metadata_V1V2V3
 
+
+
+
 #extractFeaturesPSM 
 extractFeaturesPSM <- function(mztab.table) {
   psm <- mztab.table[startsWith(as.character(mztab.table$V1), "PSM"),]
