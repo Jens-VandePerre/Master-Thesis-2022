@@ -137,3 +137,10 @@ for (i in 1:6) { #Only for the first 6 spectra,
 Spectral_count <- set_names(nrow_TMT, file_names_short) #names each file by file_names_short
 Spectral_count
 
+  #Loop percentage calculation
+nrow_TMT <- list() #empty list
+for (i in 1:6) { #Only for the first 6 spectra, 
+  nrow_TMT[[i]] <- nrow(TMT_Intensities1_10[[i]])
+}
+Spectral_count <- set_names(nrow_TMT, file_names_short) #names each file by file_names_short
+Spectral_count
