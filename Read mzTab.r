@@ -163,7 +163,7 @@ pdf(file = "~/Desktop/mzTab/Plots/Identification Percentage.pdf")
    p_perc
 dev.off()
 
-
+  #Extra: create a tibble
 cols_old <- colnames(df_perc)
 Perc <- c("Identification Percentage")
 file_names_6 <- file_names_short[c(1:6)]
@@ -171,3 +171,48 @@ df_newnames_perc <- setnames(df_perc, old = cols_old, new = Perc)
 tbl_name <- tibble(File_Name = file_names_6)
 tbl_perc <- as_tibble(df_newnames_perc)
 tbl_id_perc <- cbind(tbl_name, tbl_perc)
+
+
+
+#Create column with unmodified peptide sequence
+mzTab_files_PSM
+view(mzTab_files_PSM[[4]])
+
+  #Transform PSMs to Tibble
+    #Extract only PSM
+extractFeaturesPSM <- function(mztab.table) {
+  psm <- mztab.table[startsWith(as.character(mztab.table$V1), "PSM"),]
+}
+PSM <- list() #empty list
+for (i in seq_along(mzTab_files)) {
+  PSM[[i]] <- extractFeaturesPSM(mzTab_files[[i]])
+}
+PSM_only <- set_names(PSM, file_names_short) #names each file by file_names_short
+PSM_only
+
+    #Extract only PSH
+extractFeaturesPSH <- function(mztab.table) {
+  psh <- mztab.table[startsWith(as.character(mztab.table$V1), "PSH"),]
+}
+PSH <- list()
+for (i in seq_along(mzTab_files)) {
+  PSH[[i]] <- extractFeaturesPSH(mzTab_files[[i]])
+}
+PSH_only <- set_names(PSH, file_names_short) #names each file by file_names_short
+PSH_only
+
+    #Use PSH as column labels for PSM in Tibble
+
+
+
+
+
+
+
+
+  #Select sequence column
+
+
+  #Removing brackets
+
+  #Removinf numbers
