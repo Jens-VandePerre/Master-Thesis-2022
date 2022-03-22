@@ -45,8 +45,8 @@ file_names_wd <- list.files(wd) #The first 10 mzML files of CPTAC
 # Loading in multiple mzML files
 file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML")
 file_paths #The first 10 mzML files paths of CPTAC
-file_names <- c("B1S1_f10","B2S4_f10","B3S2_f09","B3S4_f04","B3S4_f06","B5S1_f08","B5S2_f04","B5S2_f07","B5S5_f04","B5S5_f08")
-file_names_automated <- substring(file_names_wd, 39, 46) #Character 39 untill 46 are unique
+file_names_short_typed <- c("B1S1_f10","B2S4_f10","B3S2_f09","B3S4_f04","B3S4_f06","B5S1_f08","B5S2_f04","B5S2_f07","B5S5_f04","B5S5_f08")
+file_names <- substring(file_names_wd, 39, 46) #Character 39 untill 46 are unique
 file_names #Short file names
 file_names_wd #Long file names
 
@@ -247,7 +247,7 @@ p5 <- ggplot(df_missing_mean, mapping = aes(x=File_name, y=Mean_Row_Missing)) +
             plot.title = element_text(size = 18))
    #Print plot 5
 p5
-pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per Spectrum.pdf")
+pdf(file = "~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per Spectrum.pdf")
    p5
 dev.off()
 
@@ -257,7 +257,7 @@ means <- list()
 for (i in seq_along(TMT_Intensities1_10)) {
    missing6[[i]] <- is.na(TMT_Intensities1_10[[i]])
    for (j in seq_along(missing6)) { 
-       means[[j]] <- colMeans(missing6[[j]])         
+       means[[j]] <- colMeans(missing6[[j]])
 }}
 missing_col_mean <- set_names(means, file_names_wd) #names each file by file_names_wd
 missing_col_mean #mean missing for each col
@@ -297,7 +297,7 @@ pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per TMT 
    p6
 dev.off()
 
-#7-8 Plots Max and Min Intensities 
+#7-8 Plots Max and Min Intensities
    #Max TMT intensity
 missing8 <- list()
 for (i in seq_along(TMT_Intensities1_10)) {
