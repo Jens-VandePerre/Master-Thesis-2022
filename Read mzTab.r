@@ -145,21 +145,29 @@ Identification_percentage <- set_names(perc, file_names_short) #names each file 
 Identification_percentage
 
   #Making tibble of Identification_percentage, for plot
-df_perc <- data.frame(matrix(unlist(Identification_percentage), nrow=length(Identification_percentage), byrow=TRUE)) 
-cols <- colnames(df_perc)
-file_names_6 <- file_names_short[c(1:6)]
-df_newnames_perc <- setnames(df_perc, old = cols, new = "Identification_percentage")
-tbl_name <- tibble(File_Name = file_names_6)
-tbl_perc <- tibble(Identification_Percentage = df_perc)
-tbl_id_perc <- cbind(tbl_name, tbl_perc)
-as_tibble(tbl_id_perc)
-tbl_Identification_percentage <- tibble(File_Name=tbl_name , Identification_Percentage=tbl_perc)
+df_perc <- matrix(unlist(Identification_percentage), nrow=length(Identification_percentage), byrow=TRUE)
+tbl_Identification_percentage <- tibble(File_Name=file_names_6 , Identification_Percentage=df_perc)
 tbl_Identification_percentage
   #Plot
-File_Name = file_names_6
-Percentage = df_perc
-df_perc = data.frame(File_Name, Percentage)
-df_perc
+p_perc <- ggplot(tbl_Identification_percentage, aes(x= File_Name , y= Identification_Percentage)) +
+  geom_col() +
+  labs(x="File Name", y="Percentage Identified Spectra (%)", title="Identification Percentage" , 
+        subtitle="Percentage of identified peptides for each file with spectra") +
+  geom_text(aes(label=round(df_perc, digits = 4)), 
+               position=position_dodge(width=0.9), vjust=-0.25, size = 3) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 10), axis.text.y = element_text(size = 10),
+            plot.title = element_text(size = 18))
+  #Print p_perc
+p_perc
+pdf(file = "~/Desktop/mzTab/Plots/Identification Percentage.pdf")
+   p_perc
+dev.off()
 
-ggplot(df_perc, aes(x= File_Name , y= Percentage)) +
-  geom_col()
+
+cols_old <- colnames(df_perc)
+Perc <- c("Identification Percentage")
+file_names_6 <- file_names_short[c(1:6)]
+df_newnames_perc <- setnames(df_perc, old = cols_old, new = Perc)
+tbl_name <- tibble(File_Name = file_names_6)
+tbl_perc <- as_tibble(df_newnames_perc)
+tbl_id_perc <- cbind(tbl_name, tbl_perc)
