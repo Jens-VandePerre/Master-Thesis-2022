@@ -126,8 +126,7 @@ Identified_peptides
   #Row count original
 mzML1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/mzML1-10") #Read in original mzML files
 mzML1_10 #Output gives number of spectra
-TMT_Intensities1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10")
-TMT_Intensities1_10 
+TMT_Intensities1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10") 
 nrow(TMT_Intensities1_10[[1]]) # Is the same as the number of spectra
     #Loop counting spectra
 nrow_TMT <- list() #empty list
@@ -138,9 +137,10 @@ Spectral_count <- set_names(nrow_TMT, file_names_short) #names each file by file
 Spectral_count
 
   #Loop percentage calculation
-nrow_TMT <- list() #empty list
+perc <- list() #empty list
 for (i in 1:6) { #Only for the first 6 spectra, 
-  nrow_TMT[[i]] <- nrow(TMT_Intensities1_10[[i]])
+  perc[[i]] <- (Identified_peptides[[i]]/Spectral_count[[i]])*100
 }
-Spectral_count <- set_names(nrow_TMT, file_names_short) #names each file by file_names_short
-Spectral_count
+Identification_percentage <- set_names(perc, file_names_short) #names each file by file_names_short
+Identification_percentage
+as.tibble(Identification_percentage)
