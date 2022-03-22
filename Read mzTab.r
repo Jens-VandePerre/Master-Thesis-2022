@@ -20,6 +20,7 @@ library("patchwork")
 library("msdata")
 library("remotes")
 library("janitor")
+library("stringr")
 
 wd <- setwd("~/Desktop/mzTab/Imported mzTab")
 getwd() 
@@ -176,29 +177,26 @@ tbl_id_perc <- cbind(tbl_name, tbl_perc)
 
 
 #Create column with unmodified peptide sequence
-mzTab_files_PSM
-view(mzTab_files_PSM[[4]])
-
-testy <- as_tibble(mzTab_files_PSM[[4]])
-
-testy %>% row_to_names(row_number = 1)
-
-psms <- list()
+  #Make Tibble with PSMs and use PSH as column names
+    #Select sequence column + Removing brackets + Removing numbers
+psms1 <- list()
 for (i in 1:6) { #Only for the first 6 spectra
   psms[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
-    row_to_names(row_number = 1)
+  row_to_names(row_number = 1) %>%
+  select(sequence) %>%
+  mutate(sequence = trimws(str_remove_all(sequence, "[n]"))) %>%
+  mutate(sequence = trimws(str_remove_all(sequence, "[0123456789]"))) %>%
+  mutate(sequence = trimws(str_remove_all(sequence, "\\[|\\]"))) 
 }
-tbl_PSM <- set_names(psms, file_names_short) #names each file by file_names_short
-tbl_PSM
+tbl_seq_no_mod <- set_names(psms, file_names_short)
+tbl_seq_no_mod
 
-  #Select sequence column
-seq <- list()
+  #Adding new column
+psms2 <- list()
 for (i in 1:6) { #Only for the first 6 spectra
-  seq[[i]] <- select(tbl_PSM[[i]], sequence)
-}
-tbl_sequence <- set_names(seq, file_names_short) #names each file by file_names_short
-tbl_sequence
-
-  #Removing brackets
-
-  #Removinf numbers
+psms2[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
+  row_to_names(row_number = 1) %>%
+  add_column(sequence_no_mod = tbl_seq_no_mod[[i]], .after = "sequence")
+  }
+tbl_mzTab_PSM <- set_names(psms2, file_names_short)
+tbl_mzTab_PSM
