@@ -19,6 +19,7 @@ library("labelled")
 library("patchwork")
 library("msdata")
 library("remotes")
+library("janitor")
 
 wd <- setwd("~/Desktop/mzTab/Imported mzTab")
 getwd() 
@@ -178,40 +179,25 @@ tbl_id_perc <- cbind(tbl_name, tbl_perc)
 mzTab_files_PSM
 view(mzTab_files_PSM[[4]])
 
-  #Transform PSMs to Tibble
-    #Extract only PSM
-extractFeaturesPSM <- function(mztab.table) {
-  psm <- mztab.table[startsWith(as.character(mztab.table$V1), "PSM"),]
+testy <- as_tibble(mzTab_files_PSM[[4]])
+
+testy %>% row_to_names(row_number = 1)
+
+psms <- list()
+for (i in 1:6) { #Only for the first 6 spectra
+  psms[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
+    row_to_names(row_number = 1)
 }
-PSM <- list() #empty list
-for (i in seq_along(mzTab_files)) {
-  PSM[[i]] <- extractFeaturesPSM(mzTab_files[[i]])
-}
-PSM_only <- set_names(PSM, file_names_short) #names each file by file_names_short
-PSM_only
-
-    #Extract only PSH
-extractFeaturesPSH <- function(mztab.table) {
-  psh <- mztab.table[startsWith(as.character(mztab.table$V1), "PSH"),]
-}
-PSH <- list()
-for (i in seq_along(mzTab_files)) {
-  PSH[[i]] <- extractFeaturesPSH(mzTab_files[[i]])
-}
-PSH_only <- set_names(PSH, file_names_short) #names each file by file_names_short
-PSH_only
-
-    #Use PSH as column labels for PSM in Tibble
-
-
-
-
-
-
-
+tbl_PSM <- set_names(psms, file_names_short) #names each file by file_names_short
+tbl_PSM
 
   #Select sequence column
-
+seq <- list()
+for (i in 1:6) { #Only for the first 6 spectra
+  seq[[i]] <- select(tbl_PSM[[i]], sequence)
+}
+tbl_sequence <- set_names(seq, file_names_short) #names each file by file_names_short
+tbl_sequence
 
   #Removing brackets
 
