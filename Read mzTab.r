@@ -148,7 +148,7 @@ Identification_percentage
 
   #Making tibble of Identification_percentage, for plot
 df_perc <- matrix(unlist(Identification_percentage), nrow=length(Identification_percentage), byrow=TRUE)
-tbl_Identification_percentage <- tibble(File_Name=file_names_6 , Identification_Percentage=df_perc)
+tbl_Identification_percentage <- tibble(File_Name=file_names_short , Identification_Percentage=df_perc)
 tbl_Identification_percentage
   #Plot
 p_perc <- ggplot(tbl_Identification_percentage, aes(x= File_Name , y= Identification_Percentage)) +
