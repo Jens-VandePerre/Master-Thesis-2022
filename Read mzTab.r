@@ -147,13 +147,19 @@ Identification_percentage
   #Making tibble of Identification_percentage, for plot
 df_perc <- data.frame(matrix(unlist(Identification_percentage), nrow=length(Identification_percentage), byrow=TRUE)) 
 cols <- colnames(df_perc)
-df_newnames_perc <- setnames(df_perc, old = cols, new = "Identification Percentage")
-tbl_name <- tibble(File_name=file_names_short)
-tbl_perc <- as_tibble(df_newnames_perc)
+file_names_6 <- file_names_short[c(1:6)]
+df_newnames_perc <- setnames(df_perc, old = cols, new = "Identification_percentage")
+tbl_name <- tibble(File_Name = file_names_6)
+tbl_perc <- tibble(Identification_Percentage = df_perc)
 tbl_id_perc <- cbind(tbl_name, tbl_perc)
-tbl_id_perc
-tbl_Identification_percentage <- tibble(File_name=file_names_short , Identification_Percentage=tbl_perc)
+as_tibble(tbl_id_perc)
+tbl_Identification_percentage <- tibble(File_Name=tbl_name , Identification_Percentage=tbl_perc)
 tbl_Identification_percentage
   #Plot
-ggplot(tbl_Identification_percentage, aes(x=File_name , y=Identification_Percentage)) +
+File_Name = file_names_6
+Percentage = df_perc
+df_perc = data.frame(File_Name, Percentage)
+df_perc
+
+ggplot(df_perc, aes(x= File_Name , y= Percentage)) +
   geom_col()
