@@ -148,7 +148,7 @@ Identification_percentage
 
   #Making tibble of Identification_percentage, for plot
 df_perc <- matrix(unlist(Identification_percentage), nrow=length(Identification_percentage), byrow=TRUE)
-tbl_Identification_percentage <- tibble(File_Name=file_names_6 , Identification_Percentage=df_perc)
+tbl_Identification_percentage <- tibble(File_Name=file_names_short , Identification_Percentage=df_perc)
 tbl_Identification_percentage
   #Plot
 p_perc <- ggplot(tbl_Identification_percentage, aes(x= File_Name , y= Identification_Percentage)) +
@@ -176,22 +176,21 @@ tbl_id_perc <- cbind(tbl_name, tbl_perc)
 
 
 
-#Create column with unmodified peptide sequence
+#Create column with unmodified peptide sequences
   #Make Tibble with PSMs and use PSH as column names
     #Select sequence column + Removing brackets + Removing numbers
 psms1 <- list()
 for (i in 1:6) { #Only for the first 6 spectra
-  psms[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
+  psms1[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
   row_to_names(row_number = 1) %>%
   select(sequence) %>%
   mutate(sequence = trimws(str_remove_all(sequence, "[n]"))) %>%
   mutate(sequence = trimws(str_remove_all(sequence, "[0123456789]"))) %>%
   mutate(sequence = trimws(str_remove_all(sequence, "\\[|\\]"))) 
 }
-tbl_seq_no_mod <- set_names(psms, file_names_short)
+tbl_seq_no_mod <- set_names(psms1, file_names_short)
 tbl_seq_no_mod
-
-  #Adding new column
+  #Adding new column with unmodified peptide sequences
 psms2 <- list()
 for (i in 1:6) { #Only for the first 6 spectra
 psms2[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
@@ -200,3 +199,4 @@ psms2[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
   }
 tbl_mzTab_PSM <- set_names(psms2, file_names_short)
 tbl_mzTab_PSM
+view(tbl_mzTab_PSM[[1]])
