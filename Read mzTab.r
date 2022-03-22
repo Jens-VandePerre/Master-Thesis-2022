@@ -126,7 +126,7 @@ Identified_peptides
   #Row count original
 mzML1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/mzML1-10") #Read in original mzML files
 mzML1_10 #Output gives number of spectra
-TMT_Intensities1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10") 
+TMT_Intensities1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10")
 nrow(TMT_Intensities1_10[[1]]) # Is the same as the number of spectra
     #Loop counting spectra
 nrow_TMT <- list() #empty list
@@ -143,4 +143,17 @@ for (i in 1:6) { #Only for the first 6 spectra,
 }
 Identification_percentage <- set_names(perc, file_names_short) #names each file by file_names_short
 Identification_percentage
-as.tibble(Identification_percentage)
+
+  #Making tibble of Identification_percentage, for plot
+df_perc <- data.frame(matrix(unlist(Identification_percentage), nrow=length(Identification_percentage), byrow=TRUE)) 
+cols <- colnames(df_perc)
+df_newnames_perc <- setnames(df_perc, old = cols, new = "Identification Percentage")
+tbl_name <- tibble(File_name=file_names_short)
+tbl_perc <- as_tibble(df_newnames_perc)
+tbl_id_perc <- cbind(tbl_name, tbl_perc)
+tbl_id_perc
+tbl_Identification_percentage <- tibble(File_name=file_names_short , Identification_Percentage=tbl_perc)
+tbl_Identification_percentage
+  #Plot
+ggplot(tbl_Identification_percentage, aes(x=File_name , y=Identification_Percentage)) +
+  geom_col()
