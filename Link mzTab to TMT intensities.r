@@ -22,8 +22,9 @@ library("remotes")
 library("janitor")
 library("stringr")
 
-#Load 6 mzTabs
-mzTab_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/Test 6 mzTabs")
+#Load 6 PSMs
+mzTab_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 PSM")
+mzTab_6
 
 #Load 6 matching mzMLs
 wd <- setwd("~/Desktop/mzTab/mzML corresponding to mzTab")
@@ -55,8 +56,12 @@ for (i in seq_along(mzML)) {
     TMT[[j]] <- exprs(mzML_qnt[[j]]) #output all spectra, unclear in terminal
   }
 }
-TMT_Matched_mzML_6 <- set_names(TMT, file_names_wd) #names each file by file_names_wd
-TMT_Matched_mzML_6
+Matched_mzML_6 <- set_names(TMT, file_names_wd) #names each file by file_names_wd
+Matched_mzML_6
     #Store this output
-saveRDS(TMT_Matched_mzML_6, file = "~/Desktop/mzTab/Stored files/6 matched mzMLS")
-Matched_mzML_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 matched mzMLS")
+saveRDS(Matched_mzML_6, file = "~/Desktop/mzTab/Stored files/6 matched mzMLS")
+TMT_Matched_mzML_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 matched mzMLS")
+
+#Look for matching scan numbers
+view(mzTab_6[[1]])
+view(TMT_Matched_mzML_6[[1]])

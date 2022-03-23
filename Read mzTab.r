@@ -199,4 +199,7 @@ tbl_mzTab_PSM <- set_names(psms2, file_names_short)
 tbl_mzTab_PSM
 view(tbl_mzTab_PSM[[1]])
 
-#22/3/22
+  #Store PSM files
+saveRDS(tbl_mzTab_PSM, file = "~/Desktop/mzTab/Stored files/6 PSM")
+mzTab_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 PSM")
+
