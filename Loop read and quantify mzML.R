@@ -62,8 +62,8 @@ mzML <- set_names(mzML_files, file_names_wd) #names each file by file_names_wd
 mzML
  #Save mzMLs to different location: TMT outputs
 saveRDS(mzML, file = "~/Desktop/Read raw file/TMT outputs/Combined Files/mzML1-10")
-readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/mzML1-10")
-
+mzML1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/mzML1-10")
+view(mzML1_10[[1]])
 
 #Loop extracting TMT intensities + Printing TMT intensities
 

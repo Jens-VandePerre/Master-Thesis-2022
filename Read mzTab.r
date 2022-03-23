@@ -81,7 +81,7 @@ for (i in seq_along(mzTab_files)) {
   MTD[[i]] <- extractMetadata(mzTab_files[[i]])
 }
 mzTab_files_Metadata <- set_names(MTD, file_names_short) #names each file by file_names_short
-mzTab_files
+mzTab_files_Metadata
 
 #extractMetadata.V1V2V3
   #Extracting the MTD: only columns first 3 have inforamtion
