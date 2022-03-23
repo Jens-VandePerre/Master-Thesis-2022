@@ -39,6 +39,8 @@ for (i in seq_along(file_paths)) {
 mzML <- set_names(mzML, file_names_wd) #names each file by file_names_wd
 mzML
 #Extract TMT intensities from these 6 mzMLs
+    #impute: method="MLE"
+    #no normalisation
 mzML_qnt <- list() #empty list
 TMT <- list() #empty list
 for (i in seq_along(mzML)) {
@@ -55,7 +57,6 @@ for (i in seq_along(mzML)) {
 }
 TMT_Matched_mzML_6 <- set_names(TMT, file_names_wd) #names each file by file_names_wd
 TMT_Matched_mzML_6
-
-#Store this output
+    #Store this output
 saveRDS(TMT_Matched_mzML_6, file = "~/Desktop/mzTab/Stored files/6 matched mzMLS")
 Matched_mzML_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 matched mzMLS")
