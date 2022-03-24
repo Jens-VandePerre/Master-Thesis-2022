@@ -115,16 +115,14 @@ for (i in seq_along(mzTab_files_PSM)) {
 }
 Identified_peptides <- set_names(nrow_PSM, file_names_short) #names each file by file_names_short
 Identified_peptides
-
   #Row count original
-mzML1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/mzML1-10") #Read in original mzML files
-mzML1_10 #Output gives number of spectra
-TMT_Intensities1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10")
-nrow(TMT_Intensities1_10[[1]]) # Is the same as the number of spectra
+TMT_Matched_mzML_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 matched mzMLS")
+TMT_Matched_mzML_6 #Output gives number of spectra
+nrow(TMT_Matched_mzML_6[[1]]) # Is the same as the number of spectra
     #Loop counting spectra
 nrow_TMT <- list() #empty list
 for (i in 1:6) { #Only for the first 6 spectra, 
-  nrow_TMT[[i]] <- nrow(TMT_Intensities1_10[[i]])
+  nrow_TMT[[i]] <- nrow(TMT_Matched_mzML_6[[i]])
 }
 Spectral_count <- set_names(nrow_TMT, file_names_short) #names each file by file_names_short
 Spectral_count
@@ -189,7 +187,7 @@ for (i in 1:6) { #Only for the first 6 spectra
 tbl_mzTab_PSM <- set_names(psms2, file_names_short)
 tbl_mzTab_PSM
 view(tbl_mzTab_PSM[[1]])
-  `#Store PSM files
+  #Store PSM files
 saveRDS(tbl_mzTab_PSM, file = "~/Desktop/mzTab/Stored files/6 PSM")
 mzTab_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 PSM")
 
