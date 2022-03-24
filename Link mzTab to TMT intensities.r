@@ -89,31 +89,35 @@ TMT_indexed <- set_names(tmt_tbl, file_names_short)
 TMT_indexed
 view(TMT_indexed[[1]])
 
-
+view(as_tibble(TMT_Matched_mzML_6[[1]]))
 
 #Make PSM index column for matching
     #Select column spectra_ref
 select(mzTab_6[[4]], spectra_ref)
-spec_ref <- list()
+ind_mzTab1 <- list()
 for (i in seq_along(mzTab_6)) {
-    spec_ref[[i]] <- select(mzTab_6[[i]], spectra_ref)
+    ind_mzTab1[[i]] <- select(mzTab_6[[i]], spectra_ref)
 }
-spectra_ref <- set_names(spec_ref, file_names_short)
-spectra_ref
-
+spectra_ind <- set_names(ind_mzTab1, file_names_short)
+spectra_ind
     #Extract numbers from spectra_ref column
-spectra_ref2 <- spectra_ref[[1]] %>% 
+ind_mzTab2 <- list()
+for (i in seq_along(spectra_ind)) {
+ind_mzTab2[[i]] <- spectra_ind[[i]] %>% 
                 mutate(index = trimws(str_remove_all(spectra_ref, "index="))) %>%
                 mutate(index = trimws(str_remove_all(index, "ms_run"))) %>%
                 mutate(index = trimws(str_remove_all(index, "\\[|\\]"))) %>%
-                mutate(index = trimws(str_remove_all(index, "1:")))
-
-?str_remove_all
-
-
-spectra_ref3 <- sapply(spectra_ref[[1]], function(x) gsub("index=", "",  x)) %>%
-                sapply(function(x) gsub("ms_run", "",  x))
-
-
-
-view(spectra_ref3)
+                mutate(index = trimws(str_remove_all(index, "1:"))) %>%
+                select(index) 
+}
+mzTab_index_col <- set_names(ind_mzTab2, file_names_short)
+mzTab_index_col
+    #Adding this index column to mzTab_6
+ind_mzTab3 <- list()
+for (i in seq_along(mzTab_6)) {
+    ind_mzTab3[[i]] <- mzTab_6[[i]] %>%
+        add_column(index = mzTab_index_col[[i]], .before = "sequence")
+}
+mzTab_6_ready_for_matching <- set_names(ind_mzTab3, file_names_short)
+mzTab_6_ready_for_matching
+view(mzTab_6_ready_for_matching[[1]])
