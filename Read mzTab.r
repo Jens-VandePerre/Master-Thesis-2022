@@ -39,7 +39,6 @@ readMzTab <- function(filename) {
   mztab.table
 }
 (Test <- readMzTab("02CPTAC_COprospective_W_PNNL_20170123_B1S2_f10.mztab")) #The first file
-
 #Loop Reading in Files
   #File paths to direct the loop
 file_paths <- fs::dir_ls("~/Desktop/mzTab/Imported mzTab")
@@ -57,7 +56,6 @@ mzTab_files
   #View first file 
 view(mzTab_files[[3]])
 view(mzTab_files[[1]] %>% as_tibble())
-
  #Save mzMLs to different location: TMT outputs
 saveRDS(mzTab_files, file = "~/Desktop/mzTab/Stored files/Test 6 mzTabs")
 Test_6_mzTabs <- readRDS(file = "~/Desktop/mzTab/Stored files/Test 6 mzTabs")
@@ -70,14 +68,12 @@ Test_6_mzTabs <- readRDS(file = "~/Desktop/mzTab/Stored files/Test 6 mzTabs")
 extractMetadata_long <- function(mztab.table) {
   mztab.table[startsWith(as.character(mztab.table$V1), "MTD"),]
 }
-  #For the first file
-(mzTab_files_Metadata_First_File <- extractMetadata_long(mzTab_files[[1]]))
-  #Loop for all files
+  #Loop
 MTD_long <- list() #empty list
 for (i in seq_along(mzTab_files)) {
   MTD_long[[i]] <- extractMetadata_long(mzTab_files[[i]])
 }
-mzTab_files_Metadata_long <- set_names(MTD, file_names_short) #names each file by file_names_short
+mzTab_files_Metadata_long <- set_names(MTD_long, file_names_short) #names each file by file_names_short
 mzTab_files_Metadata_long
 
 #extractMetadata
@@ -85,14 +81,12 @@ mzTab_files_Metadata_long
 extractMetadata <- function(mztab.table) {
   mztab.table[startsWith(as.character(mztab.table$V1), "MTD"), 1:3]
 }
-  #For the first file
-(mzTab_files_Metadata_V1V2V3_File <- extractMetadata.V1V2V3(mzTab_files[[1]]))
-  #Loop for all files
-MTD_V1V2V3 <- list() #empty list
+  #Loop
+MTD <- list() #empty list
 for (i in seq_along(mzTab_files)) {
-  MTD_V1V2V3[[i]] <- extractMetadata(mzTab_files[[i]])
+  MTD[[i]] <- extractMetadata(mzTab_files[[i]])
 }
-mzTab_files_Metadata <- set_names(MTD_V1V2V3, file_names_short) #names each file by file_names_short
+mzTab_files_Metadata <- set_names(MTD, file_names_short) #names each file by file_names_short
 mzTab_files_Metadata
 
 #extractFeaturesPSM 
@@ -195,8 +189,7 @@ for (i in 1:6) { #Only for the first 6 spectra
 tbl_mzTab_PSM <- set_names(psms2, file_names_short)
 tbl_mzTab_PSM
 view(tbl_mzTab_PSM[[1]])
-
-  #Store PSM files
+  `#Store PSM files
 saveRDS(tbl_mzTab_PSM, file = "~/Desktop/mzTab/Stored files/6 PSM")
 mzTab_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 PSM")
 
