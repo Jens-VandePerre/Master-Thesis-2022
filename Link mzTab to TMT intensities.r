@@ -24,7 +24,7 @@ library("stringr")
 
 #Load 6 PSMs
 mzTab_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 PSM")
-mzTab_6
+mzTab_6 #This is a Tibble
 
 #Load 6 matching mzMLs
 wd <- setwd("~/Desktop/mzTab/mzML corresponding to mzTab")
@@ -38,12 +38,13 @@ for (i in seq_along(file_paths)) {
                          msLevel = 2, verbose = FALSE, mode = "onDisk")
 }
 mzML <- set_names(mzML, file_names_wd) #names each file by file_names_wd
-mzML
+view(mzML)
 #Extract TMT intensities from these 6 mzMLs
     #impute: method="MLE"
     #no normalisation
 mzML_qnt <- list() #empty list
 TMT <- list() #empty list
+tbl <- list()
 for (i in seq_along(mzML)) {
   mzML_qnt[[i]] <- 
     quantify(mzML[[i]], method = "max", #max is the only working method
@@ -62,6 +63,44 @@ Matched_mzML_6
 saveRDS(Matched_mzML_6, file = "~/Desktop/mzTab/Stored files/6 matched mzMLS")
 TMT_Matched_mzML_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 matched mzMLS")
 
+
 #Look for matching scan numbers
-view(mzTab_6[[1]])
-view(TMT_Matched_mzML_6[[1]])
+view(mzTab_6[[4]])
+view(TMT_Matched_mzML_6[[4]][,0])
+
+#Make TMT tibble + add index column for matching
+    #Extracting spectral number column
+ind <- list()
+for (i in seq_along(TMT_Matched_mzML_6)) { 
+  ind[[i]] <- TMT_Matched_mzML_6[,1][[i]] %>%
+  as_tibble(ind[[i]])
+}
+TMT_col_add <- set_names(ind, file_names_short)
+TMT_col_add
+view(ind[[1]])
+
+    #Loop making  Tibble + adding column
+tmt_tbl <- list()
+for (i in seq_along(TMT_Matched_mzML_6)) { 
+  tmt_tbl[[i]] <- as_tibble(TMT_Matched_mzML_6[[i]]) %>%
+    add_column(index = TMT_col_add[[i]], .before = "126")
+}
+TMT_indexed <- set_names(tmt_tbl, file_names_short)
+TMT_indexed
+view(TMT_indexed[[1]])
+
+
+
+#Make PSM index column for matching
+    #Select column spectra_ref
+select(mzTab_6[[4]], spectra_ref)
+spec_ref <- list()
+for (i in seq_along(mzTab_6)) {
+    spec_ref[[i]] <- select(mzTab_6[[i]], spectra_ref)
+}
+spectra_ref <- set_names(spec_ref, file_names_short)
+spectra_ref
+
+    #Extract numbers from spectra_ref column
+indx <- sub(".*= ", "", spectra_ref[[1]]) 
+view(indx)
