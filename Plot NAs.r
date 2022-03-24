@@ -373,7 +373,7 @@ p9 <- ggplot(df_diff, mapping = aes(x=File_name, y=Decrease_Missing_Values)) +
    geom_text(aes(label=Difference), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
-            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 6))
 p10 <- ggplot(df_diff_perc, mapping = aes(x=File_name, y=Percentage_Decrease_Missing_Values)) +
    geom_col() +
    labs(x="File Name", y="Percentage decrease missing values", title="Percentage Decrease Missing Values", 
@@ -381,7 +381,7 @@ p10 <- ggplot(df_diff_perc, mapping = aes(x=File_name, y=Percentage_Decrease_Mis
    geom_text(aes(label=round(Difference_Perc, digits = 0)), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
-            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 6))
   #Print 9-10 plots together
 p9 + p10
 pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Plots Differences Missing Values.pdf")
