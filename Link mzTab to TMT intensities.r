@@ -66,7 +66,15 @@ TMT_Matched_mzML_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 matched mzM
 
 #Look for matching scan numbers
 view(mzTab_6[[4]])
-view(TMT_Matched_mzML_6[[4]][,0])
+
+
+class(TMT_Matched_mzML_6)
+
+view(TMT_Matched_mzML_6[[6]][,0])
+
+
+test <- matrix(unlist(TMT_Matched_mzML_6[[1]]), nrow=length(TMT_Matched_mzML_6[[1]]), byrow=TRUE)
+view(test)
 
 #Make TMT tibble + add index column for matching
     #Extracting spectral number column
@@ -89,11 +97,20 @@ TMT_indexed <- set_names(tmt_tbl, file_names_short)
 TMT_indexed
 view(TMT_indexed[[1]])
 
+
+tmt_tbl <- list()
+for (i in seq_along(TMT_Matched_mzML_6)) { 
+  tmt_tbl[[i]] <- as_tibble(TMT_Matched_mzML_6[[i]]) %>%
+    select
+}
+TMT_indexed <- set_names(tmt_tbl, file_names_short)
+TMT_indexed
+view(TMT_indexed[[1]])
+
 view(as_tibble(TMT_Matched_mzML_6[[1]]))
 
 #Make PSM index column for matching
     #Select column spectra_ref
-select(mzTab_6[[4]], spectra_ref)
 ind_mzTab1 <- list()
 for (i in seq_along(mzTab_6)) {
     ind_mzTab1[[i]] <- select(mzTab_6[[i]], spectra_ref)
@@ -121,3 +138,9 @@ for (i in seq_along(mzTab_6)) {
 mzTab_6_ready_for_matching <- set_names(ind_mzTab3, file_names_short)
 mzTab_6_ready_for_matching
 view(mzTab_6_ready_for_matching[[1]])
+
+
+
+#Merging the 2
+mzTab_6_ready_for_matching
+
