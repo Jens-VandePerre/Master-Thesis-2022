@@ -44,11 +44,8 @@ readMzTab <- function(filename) {
   #File paths to direct the loop
 file_paths <- fs::dir_ls("~/Desktop/mzTab/Imported mzTab")
 file_paths 
-  #Names for the stored files
-file_names_wd <- list.files(wd)
-file_names_short_typed <- c("B1S2_f10","B1S3_f05","B1S3_f10","B1S4_f02","B1S4_f06","B2S4_f09")
     #Automate filename extraction
-file_names_wd #Long file names
+file_names_wd <- list.files(wd) #names of files in wd
 file_names_short <- substring(file_names_wd, 39, 46) #Character 39 untill 46 are unique
   #Loop reading mzTabs
 mzTab <- list() #empty list
@@ -69,23 +66,23 @@ Test_6_mzTabs <- readRDS(file = "~/Desktop/mzTab/Stored files/Test 6 mzTabs")
 #Extract functions
 ##################
 
-#extractMetadata
-extractMetadata <- function(mztab.table) {
+#extractMetadata_long
+extractMetadata_long <- function(mztab.table) {
   mztab.table[startsWith(as.character(mztab.table$V1), "MTD"),]
 }
   #For the first file
-(mzTab_files_Metadata_First_File <- extractMetadata(mzTab_files[[1]]))
+(mzTab_files_Metadata_First_File <- extractMetadata_long(mzTab_files[[1]]))
   #Loop for all files
-MTD <- list() #empty list
+MTD_long <- list() #empty list
 for (i in seq_along(mzTab_files)) {
-  MTD[[i]] <- extractMetadata(mzTab_files[[i]])
+  MTD_long[[i]] <- extractMetadata_long(mzTab_files[[i]])
 }
-mzTab_files_Metadata <- set_names(MTD, file_names_short) #names each file by file_names_short
-mzTab_files_Metadata
+mzTab_files_Metadata_long <- set_names(MTD, file_names_short) #names each file by file_names_short
+mzTab_files_Metadata_long
 
-#extractMetadata.V1V2V3
+#extractMetadata
   #Extracting the MTD: only columns first 3 have inforamtion
-extractMetadata.V1V2V3 <- function(mztab.table) {
+extractMetadata <- function(mztab.table) {
   mztab.table[startsWith(as.character(mztab.table$V1), "MTD"), 1:3]
 }
   #For the first file
@@ -93,10 +90,10 @@ extractMetadata.V1V2V3 <- function(mztab.table) {
   #Loop for all files
 MTD_V1V2V3 <- list() #empty list
 for (i in seq_along(mzTab_files)) {
-  MTD_V1V2V3[[i]] <- extractMetadata.V1V2V3(mzTab_files[[i]])
+  MTD_V1V2V3[[i]] <- extractMetadata(mzTab_files[[i]])
 }
-mzTab_files_Metadata_V1V2V3 <- set_names(MTD_V1V2V3, file_names_short) #names each file by file_names_short
-mzTab_files_Metadata_V1V2V3
+mzTab_files_Metadata <- set_names(MTD_V1V2V3, file_names_short) #names each file by file_names_short
+mzTab_files_Metadata
 
 #extractFeaturesPSM 
 extractFeaturesPSM <- function(mztab.table) {
@@ -182,9 +179,9 @@ for (i in 1:6) { #Only for the first 6 spectra
   psms1[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
     row_to_names(row_number = 1) %>%
     select(sequence) %>%
-    mutate(sequence = trimws(str_remove_all(sequence, "[n]"))) %>%
-    mutate(sequence = trimws(str_remove_all(sequence, "[0123456789]"))) %>%
-    mutate(sequence = trimws(str_remove_all(sequence, "\\[|\\]"))) 
+    mutate(sequence = trimws(str_remove_all(sequence, "[n]"))) %>% #remove [n]
+    mutate(sequence = trimws(str_remove_all(sequence, "[0123456789]"))) %>% # remove numbers
+    mutate(sequence = trimws(str_remove_all(sequence, "\\[|\\]"))) #remove []
 }
 tbl_seq_no_mod <- set_names(psms1, file_names_short)
 tbl_seq_no_mod
