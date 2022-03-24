@@ -80,12 +80,11 @@ view(test)
     #Extracting spectral number column
 ind <- list()
 for (i in seq_along(TMT_Matched_mzML_6)) { 
-  ind[[i]] <- TMT_Matched_mzML_6[,1][[i]] %>%
-  as_tibble(ind[[i]])
+  ind[[i]] <- TMT_Matched_mzML_6[[i]][,0] 
 }
 TMT_col_add <- set_names(ind, file_names_short)
 TMT_col_add
-view(ind[[1]])
+view(TMT_col_add[[1]])
 
     #Loop making  Tibble + adding column
 tmt_tbl <- list()
@@ -99,9 +98,8 @@ view(TMT_indexed[[1]])
 
 
 tmt_tbl <- list()
-for (i in seq_along(TMT_Matched_mzML_6)) { 
-  tmt_tbl[[i]] <- as_tibble(TMT_Matched_mzML_6[[i]]) %>%
-    select
+for (i in seq_along(TMT_indexed)) { 
+  tmt_tbl[[i]] <- as_tibble(TMT_indexed[[i]])
 }
 TMT_indexed <- set_names(tmt_tbl, file_names_short)
 TMT_indexed
