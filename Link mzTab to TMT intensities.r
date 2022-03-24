@@ -102,5 +102,18 @@ spectra_ref <- set_names(spec_ref, file_names_short)
 spectra_ref
 
     #Extract numbers from spectra_ref column
-indx <- sub(".*= ", "", spectra_ref[[1]]) 
-view(indx)
+spectra_ref2 <- spectra_ref[[1]] %>% 
+                mutate(index = trimws(str_remove_all(spectra_ref, "index="))) %>%
+                mutate(index = trimws(str_remove_all(index, "ms_run"))) %>%
+                mutate(index = trimws(str_remove_all(index, "\\[|\\]"))) %>%
+                mutate(index = trimws(str_remove_all(index, "1:")))
+
+?str_remove_all
+
+
+spectra_ref3 <- sapply(spectra_ref[[1]], function(x) gsub("index=", "",  x)) %>%
+                sapply(function(x) gsub("ms_run", "",  x))
+
+
+
+view(spectra_ref3)
