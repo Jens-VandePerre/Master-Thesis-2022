@@ -65,13 +65,8 @@ TMT_Matched_mzML_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 matched mzM
 
 
 #Look for matching scan numbers
-view(mzTab_6[[4]])
-
-
-class(TMT_Matched_mzML_6)
-
-view(TMT_Matched_mzML_6[[6]][,0])
-
+view(mzTab_6[[1]]["spectra_ref"]) #Column spectra ref
+view(TMT_Matched_mzML_6[[1]][,0]) #Column 0 has spectra identifiers like F1.S43745
 
 test <- matrix(unlist(TMT_Matched_mzML_6[[1]]), nrow=length(TMT_Matched_mzML_6[[1]]), byrow=TRUE)
 view(test)
