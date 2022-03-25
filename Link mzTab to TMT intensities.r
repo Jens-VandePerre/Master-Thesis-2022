@@ -80,7 +80,6 @@ for (i in seq_along(TMT_Matched_mzML_6)) {
   ind[[i]] <- TMT_Matched_mzML_6[[i]][,0] 
 }
 TMT_col_add <- set_names(ind, file_names_short)
-TMT_col_add
 view(TMT_col_add[[1]])
     #Loop making  Tibble + adding column
 tmt_tbl <- list()
@@ -89,8 +88,15 @@ for (i in seq_along(TMT_Matched_mzML_6)) {
     cbind(TMT_col_add[[i]], TMT_Matched_mzML_6[[i]])
 }
 TMT_indexed <- set_names(tmt_tbl, file_names_short)
-TMT_indexed
 view(TMT_indexed[[1]])
+    #Extract only numbers from TMT_indexed
+ind_TMT <- list()
+for (i in seq_along(TMT_indexed)) {
+  ind_TMT[[i]] <- TMT_indexed[[i]] %>%
+    
+}
+TMT_ready_for_machting <- set_names(ind_TMT, file_names_short)
+view(TMT_ready_for_machting[[1]])
 
 #Make PSM index column for matching
     #Select column spectra_ref
