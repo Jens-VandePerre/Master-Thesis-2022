@@ -95,9 +95,6 @@ extractFeaturesPSM <- function(mztab.table) {
   psh <- mztab.table[startsWith(as.character(mztab.table$V1), "PSH"),]
   rbind(psh,psm)
 }
-  #For the first file
-(mzTab_files_PSM_First_File <- extractFeaturesPSM(mzTab_files[[1]]))
-view(mzTab_files_PSM_First_File)
   #Loop for all files
 PSM <- list() #empty list
 for (i in seq_along(mzTab_files)) {
@@ -187,6 +184,18 @@ for (i in 1:6) { #Only for the first 6 spectra
 tbl_mzTab_PSM <- set_names(psms2, file_names_short)
 tbl_mzTab_PSM
 view(tbl_mzTab_PSM[[1]])
+
+#Adding new column with unmodified peptide sequences with CBIND
+psms3 <- list()
+for (i in 1:6) { #Only for the first 6 spectra
+  psms2[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
+    row_to_names(row_number = 1) %>%
+    cbind(tbl_seq_no_mod[[i]]) #Column is all the way in the back
+}
+tbl_mzTab_PSM_2 <- set_names(psms2, file_names_short)
+tbl_mzTab_PSM_2
+view(tbl_mzTab_PSM_2[[1]])
+
   #Store PSM files
 saveRDS(tbl_mzTab_PSM, file = "~/Desktop/mzTab/Stored files/6 PSM")
 mzTab_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 PSM")
