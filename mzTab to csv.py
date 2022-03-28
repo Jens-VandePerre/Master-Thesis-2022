@@ -1,6 +1,6 @@
 import sys
 #print(sys.executable)  #sys.executable contains full path of the currently running Python interpreter
-import pandas as pd
+import pandas
 import sys
 import argparse, pathlib
 
