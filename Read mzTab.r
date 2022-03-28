@@ -187,13 +187,22 @@ view(tbl_mzTab_PSM[[1]])
 #Adding new column with unmodified peptide sequences with CBIND
 psms3 <- list()
 for (i in 1:6) { #Only for the first 6 spectra
-  psms3[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
-    row_to_names(row_number = 1) %>%
-    cbind(tbl_seq_no_mod[[i]]) #Column is all the way in the back
+  psms3[[i]] <- as_tibble(mzTab_files_PSM[[i]]) 
+    cbind(mzTab_files_PSM[[i]][,2] ,tbl_seq_no_mod[[i]], mzTab_files_PSM[[i]][,3:ncol(mzTab_files_PSM[[i]])]) #Column is all the way in the back
 }
 tbl_mzTab_PSM_2 <- set_names(psms3, file_names_short)
 tbl_mzTab_PSM_2
 view(tbl_mzTab_PSM_2[[1]])
+
+psms4 <- list()
+for (i in 1:6) { #Only for the first 6 spectra
+  psms4[[i]] <- cbind(tbl_seq_no_mod[[i]] , as_tibble(mzTab_files_PSM[[i]]) %>%
+    row_to_names(row_number = 1)) 
+}
+tbl_mzTab_PSM_4 <- set_names(psms4, file_names_short)
+as_tibble(tbl_mzTab_PSM_4[[1]])
+view(tbl_mzTab_PSM_4[[1]])
+head(tbl_mzTab_PSM_4[[1]])
 
   #Store PSM files
 saveRDS(tbl_mzTab_PSM, file = "~/Desktop/mzTab/Stored files/6 PSM")

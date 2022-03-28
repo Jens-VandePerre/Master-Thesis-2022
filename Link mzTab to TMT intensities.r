@@ -84,7 +84,7 @@ view(TMT_col_add[[1]])
     #Extract only numbers from TMT_col_add
 ind_TMT <- list()
 for (i in seq_along(TMT_col_add)) {
-  ind_TMT[[i]] <- stringr::str_replace(TMT_col_add[[i]], '\\F1.S', '')
+  ind_TMT[[i]] <- as_tibble(TMT_col_add[[i]])
 }
 TMT_col_add <- set_names(ind_TMT, file_names_short)
 view(TMT_col_add[[1]])
