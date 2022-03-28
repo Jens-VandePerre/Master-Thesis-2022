@@ -81,22 +81,22 @@ for (i in seq_along(TMT_Matched_mzML_6)) {
 }
 TMT_col_add <- set_names(ind, file_names_short)
 view(TMT_col_add[[1]])
+    #Extract only numbers from TMT_col_add
+ind_TMT <- list()
+for (i in seq_along(TMT_col_add)) {
+  ind_TMT[[i]] <- stringr::str_replace(TMT_col_add[[i]], '\\F1.S', '')
+}
+TMT_col_add <- set_names(ind_TMT, file_names_short)
+view(TMT_col_add[[1]])
     #Loop making  Tibble + adding column
 tmt_tbl <- list()
 for (i in seq_along(TMT_Matched_mzML_6)) { 
   tmt_tbl[[i]] <- as_tibble(TMT_Matched_mzML_6[[i]]) %>%
     cbind(TMT_col_add[[i]], TMT_Matched_mzML_6[[i]])
 }
-TMT_indexed <- set_names(tmt_tbl, file_names_short)
-view(TMT_indexed[[1]])
-    #Extract only numbers from TMT_indexed
-ind_TMT <- list()
-for (i in seq_along(TMT_indexed)) {
-  ind_TMT[[i]] <- TMT_indexed[[i]] %>%
-    
-}
-TMT_ready_for_machting <- set_names(ind_TMT, file_names_short)
+TMT_ready_for_machting <- set_names(tmt_tbl, file_names_short)
 view(TMT_ready_for_machting[[1]])
+
 
 #Make PSM index column for matching
     #Select column spectra_ref
@@ -111,10 +111,10 @@ view(spectra_ind[[1]])
 ind_mzTab2 <- list()
 for (i in seq_along(spectra_ind)) {
 ind_mzTab2[[i]] <- spectra_ind[[i]] %>% 
-                mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
-                mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
-                mutate(index = trimws(str_remove_all(index, "scan="))) %>%
-                select(index) 
+  mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
+  mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
+  mutate(index = trimws(str_remove_all(index, "scan="))) %>%
+  select(index) 
 }
 mzTab_index_col <- set_names(ind_mzTab2, file_names_short)
 mzTab_index_col
