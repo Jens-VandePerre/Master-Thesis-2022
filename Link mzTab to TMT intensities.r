@@ -79,15 +79,30 @@ ind <- list()
 for (i in seq_along(TMT_Matched_mzML_6)) { 
   ind[[i]] <- TMT_Matched_mzML_6[[i]][,0] 
 }
-TMT_col_add <- set_names(ind, file_names_short)
-view(TMT_col_add[[1]])
+TMT_ind <- set_names(ind, file_names_short)
+view(TMT_ind[[1]])
+
+#Unlisting
+un <- list()
+for (i in seq_along(TMT_ind)) {
+  un[[i]] <- matrix(unlist(TMT_ind[[i]]), nrow=length(TMT_ind[[i]]), byrow=TRUE)
+}
+un
+class(TMT_ind[[1]])
     #Extract only numbers from TMT_col_add
 ind_TMT <- list()
-for (i in seq_along(TMT_col_add)) {
-  ind_TMT[[i]] <- as_tibble(TMT_col_add[[i]])
+for (i in seq_along(TMT_ind)) {
+  ind_TMT[[i]] <- unlist(TMT_ind[[i]]) %>% str_remove_all("F1.S")
+  
 }
 TMT_col_add <- set_names(ind_TMT, file_names_short)
 view(TMT_col_add[[1]])
+
+str_remove_all(df$INTERACTOR_A, "[0-9]+")
+
+
+
+
     #Loop making  Tibble + adding column
 tmt_tbl <- list()
 for (i in seq_along(TMT_Matched_mzML_6)) { 
