@@ -54,8 +54,7 @@ for (i in seq_along(file_paths)) {
 mzTab_files <- set_names(mzTab, file_names_short) #names each file by file_names_short
 mzTab_files
   #View first file 
-view(mzTab_files[[3]])
-view(mzTab_files[[1]] %>% as_tibble())
+view(mzTab_files[[1]])
  #Save mzMLs to different location: TMT outputs
 saveRDS(mzTab_files, file = "~/Desktop/mzTab/Stored files/Test 6 mzTabs")
 Test_6_mzTabs <- readRDS(file = "~/Desktop/mzTab/Stored files/Test 6 mzTabs")
@@ -168,7 +167,7 @@ for (i in 1:6) { #Only for the first 6 spectra
   psms1[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
     row_to_names(row_number = 1) %>%
     select(sequence) %>%
-    mutate(sequence = trimws(str_remove_all(sequence, "[n]"))) %>% #remove [n]
+    mutate(sequence = trimws(str_remove_all(sequence, "n"))) %>% #remove n
     mutate(sequence = trimws(str_remove_all(sequence, "[0123456789]"))) %>% # remove numbers
     mutate(sequence = trimws(str_remove_all(sequence, "\\[|\\]"))) #remove []
 }
@@ -188,11 +187,11 @@ view(tbl_mzTab_PSM[[1]])
 #Adding new column with unmodified peptide sequences with CBIND
 psms3 <- list()
 for (i in 1:6) { #Only for the first 6 spectra
-  psms2[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
+  psms3[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
     row_to_names(row_number = 1) %>%
     cbind(tbl_seq_no_mod[[i]]) #Column is all the way in the back
 }
-tbl_mzTab_PSM_2 <- set_names(psms2, file_names_short)
+tbl_mzTab_PSM_2 <- set_names(psms3, file_names_short)
 tbl_mzTab_PSM_2
 view(tbl_mzTab_PSM_2[[1]])
 
