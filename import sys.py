@@ -1,5 +1,5 @@
 import sys
-print(sys.executable)       #sys.executable contains full path of the currently running Python interpreter
+#print(sys.executable)  #sys.executable contains full path of the currently running Python interpreter
 import pandas as pd
 import sys
 import argparse, pathlib
@@ -26,4 +26,4 @@ with open (args.mztab,'r') as f:
             outF.write(line)
     outF.close()
     
-mztabList.append(line)
+#mztabList.append(line)
