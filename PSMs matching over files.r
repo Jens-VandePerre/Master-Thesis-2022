@@ -21,3 +21,9 @@ library("msdata")
 library("remotes")
 library("janitor")
 library("stringr")
+
+
+#Loading in PSMs
+    #Contains column: 
+PSM <- readRDS(file = "~/Desktop/mzTab/Stored files/PSM column no modifications v2")
+view(PSM[[1]])
