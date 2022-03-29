@@ -74,34 +74,26 @@ test <- matrix(unlist(TMT_Matched_mzML_6[[1]]), nrow=length(TMT_Matched_mzML_6[[
 view(test)
 
 #Make TMT tibble + add index column for matching
-    #Extracting spectral number column
-ind <- list()
-for (i in seq_along(TMT_Matched_mzML_6)) { 
-  ind[[i]] <- TMT_Matched_mzML_6[[i]][,0] 
-}
-TMT_ind <- set_names(ind, file_names_short)
-view(TMT_ind[[1]])
-
 #Unlisting
+view(TMT_Matched_mzML_6[[1]])
+
+
+
 un <- list()
-for (i in seq_along(TMT_ind)) {
-  un[[i]] <- matrix(unlist(TMT_ind[[i]]), nrow=length(TMT_ind[[i]]), byrow=TRUE)
+for (i in seq_along(TMT_Matched_mzML_6)) {
+  un[[i]] <- data.frame(unlist(TMT_Matched_mzML_6[[i]][ , 0]))
 }
-un
-class(TMT_ind[[1]])
+view(un[[1]])
+
     #Extract only numbers from TMT_col_add
 ind_TMT <- list()
-for (i in seq_along(TMT_ind)) {
-  ind_TMT[[i]] <- unlist(TMT_ind[[i]]) %>% str_remove_all("F1.S")
-  
+for (i in seq_along(un)) {
+  ind_TMT[[i]] <-  sub("F1.S", "", un[[i]])
 }
 TMT_col_add <- set_names(ind_TMT, file_names_short)
 view(TMT_col_add[[1]])
 
-str_remove_all(df$INTERACTOR_A, "[0-9]+")
-
-
-
+str_remove_all(un[[1]], "[F]")
 
     #Loop making  Tibble + adding column
 tmt_tbl <- list()
