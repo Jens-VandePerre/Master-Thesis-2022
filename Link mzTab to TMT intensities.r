@@ -65,96 +65,44 @@ Matched_mzML_6
 saveRDS(Matched_mzML_6, file = "~/Desktop/mzTab/Stored files/6 matched mzMLS")
 TMT_Matched_mzML_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 matched mzMLS")
 
-
 #Look for matching scan numbers
 view(mzTab_6[[1]]["PSM_ID"]) #Column PSM_ID
-view(TMT_Matched_mzML_6[[1]][,0]) #Column 0 has spectra identifiers like F1.S43745
-
-test <- matrix(unlist(TMT_Matched_mzML_6[[1]]), nrow=length(TMT_Matched_mzML_6[[1]]), byrow=TRUE)
-view(test)
+view(TMT_Matched_mzML_6[[1]][, 0]) #These are row names
 
 #Make TMT tibble + add index column for matching
-#Unlisting
-view(TMT_Matched_mzML_6[[1]])
-
-
-
-un <- list()
+  #selecting index column
+ind_TMT1 <- list()
 for (i in seq_along(TMT_Matched_mzML_6)) {
-  un[[i]] <- data.frame(unlist(TMT_Matched_mzML_6[[i]][ , 0]))
+  ind_TMT1[[i]] <- tibble(TMT_index=rownames(TMT_Matched_mzML_6[[i]][, 0])) %>%
+  mutate(TMT_index = trimws(str_remove_all(TMT_index, "F1.S"))) %>%
+  mutate(TMT_index = trimws(str_remove_all(TMT_index, "^0"))) %>%
+  mutate(TMT_index = trimws(str_remove_all(TMT_index, "^0"))) %>%
+  mutate(TMT_index = trimws(str_remove_all(TMT_index, "^0"))) %>%
+  mutate(TMT_index = trimws(str_remove_all(TMT_index, "^0"))) 
 }
-view(un[[1]])
-
-    #Extract only numbers from TMT_col_add
-ind_TMT <- list()
-for (i in seq_along(un)) {
-  ind_TMT[[i]] <-  sub("F1.S", "", un[[i]])
-}
-TMT_col_add <- set_names(ind_TMT, file_names_short)
-view(TMT_col_add[[1]])
-
-str_remove_all(un[[1]], "[F]")
-
-    #Loop making  Tibble + adding column
-tmt_tbl <- list()
-for (i in seq_along(TMT_Matched_mzML_6)) { 
-  tmt_tbl[[i]] <- as_tibble(TMT_Matched_mzML_6[[i]]) %>%
-    cbind(TMT_col_add[[i]], TMT_Matched_mzML_6[[i]])
-}
-TMT_ready_for_machting <- set_names(tmt_tbl, file_names_short)
+TMT_ready_for_machting <- set_names(ind_TMT2, file_names_short)
 view(TMT_ready_for_machting[[1]])
 
 
+    #Loop making  Tibble + adding column
+ind_TMT3 <- list()
+for (i in seq_along(TMT_Matched_mzML_6)) { 
+  ind_TMT3[[i]] <- as_tibble(TMT_Matched_mzML_6[[i]]) %>%
+    cbind(TMT_col_add[[i]], TMT_Matched_mzML_6[[i]])
+}
+
+
+
 #Make PSM index column for matching
-    #Select column spectra_ref
-ind_mzTab1 <- list()
-for (i in seq_along(mzTab_6)) {
-    ind_mzTab1[[i]] <- select(mzTab_6[[i]], PSM_ID)
-}
-spectra_ind <- set_names(ind_mzTab1, file_names_short)
-spectra_ind
-view(spectra_ind[[1]])
-    #Extract numbers from PSM_ID column
-ind_mzTab2 <- list()
-for (i in seq_along(spectra_ind)) {
-ind_mzTab2[[i]] <- spectra_ind[[i]] %>% 
-  mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
-  mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
-  mutate(index = trimws(str_remove_all(index, "scan="))) %>%
-  select(index) 
-}
-mzTab_index_col <- set_names(ind_mzTab2, file_names_short)
-mzTab_index_col
-view(mzTab_index_col[[1]])
-
-    #Adding this index column to mzTab_6
-ind_mzTab3 <- list()
-for (i in seq_along(mzTab_6)) {
-    ind_mzTab3[[i]] <- mzTab_6[[i]] %>%
-        add_column(index = mzTab_index_col[[i]], .before = "sequence")
-}
-mzTab_6_ready_for_matching_PROBLEM <- set_names(ind_mzTab3, file_names_short)
-mzTab_6_ready_for_matching_PROBLEM
-view(mzTab_6_ready_for_matching[[1]])
-
-ind_mzTab4 <- list()
-for (i in seq_along(mzTab_6)) {
-    ind_mzTab4[[i]] <- cbind(mzTab_index_col[[i]], mzTab_6[[i]])
-}
-mzTab_6_ready_for_matching <- set_names(ind_mzTab4, file_names_short)
-mzTab_6_ready_for_matching
-view(mzTab_6_ready_for_matching[[1]])
-
   #Extract numbers from PSM_ID column + Adding this index column to mzTab_6
 ind_mzTab5 <- list()
-for (i in seq_along(spectra_ind)) {
+for (i in seq_along(mzTab_6)) {
 ind_mzTab5[[i]] <- select(mzTab_6[[i]], PSM_ID) %>% 
-                mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
-                mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
-                mutate(index = trimws(str_remove_all(index, "scan="))) %>%
-                select(index) %>%
-                cbind(mzTab_6[[i]])
-
+                mutate(PSM_index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
+                mutate(PSM_index = trimws(str_remove_all(PSM_index, "controllerNumber=1 "))) %>%
+                mutate(PSM_index = trimws(str_remove_all(PSM_index, "scan="))) %>%
+                select(PSM_index) %>%
+                cbind(mzTab_6[[i]]) %>% as_tibble
 }
 PSM_ready_for_matching <- set_names(ind_mzTab5, file_names_short)
 PSM_ready_for_matching

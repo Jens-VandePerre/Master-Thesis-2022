@@ -22,8 +22,11 @@ library("remotes")
 library("janitor")
 library("stringr")
 
-
 #Loading in PSMs
-    #Contains column: 
+    #Contains column without modification = column 2
 PSM <- readRDS(file = "~/Desktop/mzTab/Stored files/PSM column no modifications v2")
-view(PSM[[1]])
+view(PSM[[1]][2]) #column with peptide sequences, no modifications
+
+#For all files, only keep peptides that present in all files
+filter(PSM[[1]][2] != PSM[[2]][2])
+
