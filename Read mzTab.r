@@ -130,7 +130,7 @@ Spectral_count
 
   #Loop percentage calculation
 perc <- list() #empty list
-for (i in 1:6) { #Only for the first 6 spectra, 
+for (i in seq_along(Identified_peptides)) { #Only for the first 6 spectra, 
   perc[[i]] <- (Identified_peptides[[i]]/Spectral_count[[i]])*100
 }
 Identification_percentage <- set_names(perc, file_names_short) #names each file by file_names_short
@@ -172,9 +172,10 @@ for (i in seq_along(mzTab_files_PSM)) { #Only for the first 6 spectra
   psms1[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
     row_to_names(row_number = 1) %>%
     select(sequence) %>%
-    mutate(sequence = trimws(str_remove_all(sequence, "n"))) %>% #remove n
-    mutate(sequence = trimws(str_remove_all(sequence, "[0123456789]"))) %>% # remove numbers
-    mutate(sequence = trimws(str_remove_all(sequence, "\\[|\\]"))) #remove []
+    mutate(sequence_no_mod = trimws(str_remove_all(sequence, "n"))) %>% #remove n
+    mutate(sequence_no_mod = trimws(str_remove_all(sequence_no_mod, "[0123456789]"))) %>% # remove numbers
+    mutate(sequence_no_mod = trimws(str_remove_all(sequence_no_mod, "\\[|\\]"))) %>% #remove []
+    select(sequence_no_mod)
 }
 tbl_seq_no_mod <- set_names(psms1, file_names_short)
 tbl_seq_no_mod
@@ -191,25 +192,23 @@ view(tbl_mzTab_PSM[[1]])
 
 #Adding new column with unmodified peptide sequences with CBIND
 psms3 <- list()
-for (i in seq_along(mzTab_files_PSM)) { #Only for the first 6 spectra
-  psms3[[i]] <- as_tibble(mzTab_files_PSM[[i]]) 
-    cbind(mzTab_files_PSM[[i]][,2] ,tbl_seq_no_mod[[i]], mzTab_files_PSM[[i]][,3:ncol(mzTab_files_PSM[[i]])]) #Column is all the way in the back
+for (i in seq_along(mzTab_files_PSM)) {
+  psms3[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
+  row_to_names(row_number = 1)
 }
-tbl_mzTab_PSM_2 <- set_names(psms3, file_names_short)
-tbl_mzTab_PSM_2
-view(tbl_mzTab_PSM_2[[1]])
+tibbeltje <- set_names(psms3, file_names_short)
+tibbeltje
 
 psms4 <- list()
-for (i in 1:6) { #Only for the first 6 spectra
-  psms4[[i]] <- cbind(tbl_seq_no_mod[[i]] , as_tibble(mzTab_files_PSM[[i]]) %>%
-    row_to_names(row_number = 1)) 
+for (i in seq_along(tibbeltje)) { #Only for the first 6 spectra
+  psms4[[i]] <- cbind(tibbeltje[[i]][,2] ,tbl_seq_no_mod[[i]], tibbeltje[[i]][,3:ncol(tibbeltje[[i]])]) #Column is all the way in the back
 }
-tbl_mzTab_PSM_4 <- set_names(psms4, file_names_short)
-as_tibble(tbl_mzTab_PSM_4[[1]])
-view(tbl_mzTab_PSM_4[[1]])
-head(tbl_mzTab_PSM_4[[1]])
+ <- set_names(psms4, file_names_short)
+view([[1]])
 
   #Store PSM files
 saveRDS(tbl_mzTab_PSM, file = "~/Desktop/mzTab/Stored files/6 PSM")
+mzTab_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 PSM")
+saveRDS(, file = "~/Desktop/mzTab/Stored files/6 PSM")
 mzTab_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 PSM")
 
