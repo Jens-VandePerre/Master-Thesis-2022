@@ -187,8 +187,8 @@ for (i in 1:6) { #Only for the first 6 spectra
     add_column(sequence_no_mod = tbl_seq_no_mod[[i]], .after = "sequence")
 }
 tbl_mzTab_PSM <- set_names(psms2, file_names_short)
-tbl_mzTab_PSM
-view(tbl_mzTab_PSM[[1]])
+tbl_mzTab_PSM #Column is visiblre here
+view(tbl_mzTab_PSM[[1]]) #Column is NOT visiblre here
 
 #Adding new column with unmodified peptide sequences with CBIND
 psms3 <- list()
@@ -196,19 +196,17 @@ for (i in seq_along(mzTab_files_PSM)) {
   psms3[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
   row_to_names(row_number = 1)
 }
-tibbeltje <- set_names(psms3, file_names_short)
-tibbeltje
-
+(PSM_tibble <- set_names(psms3, file_names_short))
 psms4 <- list()
-for (i in seq_along(tibbeltje)) { #Only for the first 6 spectra
-  psms4[[i]] <- cbind(tibbeltje[[i]][,2] ,tbl_seq_no_mod[[i]], tibbeltje[[i]][,3:ncol(tibbeltje[[i]])]) #Column is all the way in the back
+for (i in seq_along(PSM_tibble)) { #Only for the first 6 spectra
+  psms4[[i]] <- cbind(PSM_tibble[[i]][,2] ,tbl_seq_no_mod[[i]], PSM_tibble[[i]][,3:ncol(PSM_tibble[[i]])]) #Column is all the way in the back
 }
- <- set_names(psms4, file_names_short)
-view([[1]])
+mzTab_PSM <- set_names(psms4, file_names_short)
+view(mzTab_PSM[[1]]) #Column is visiblre here
 
   #Store PSM files
-saveRDS(tbl_mzTab_PSM, file = "~/Desktop/mzTab/Stored files/6 PSM")
-mzTab_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 PSM")
-saveRDS(, file = "~/Desktop/mzTab/Stored files/6 PSM")
-mzTab_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 PSM")
+saveRDS(tbl_mzTab_PSM, file = "~/Desktop/mzTab/Stored files/PSM column no modifications")
+PSM_seq_no_mod <- readRDS(file = "~/Desktop/mzTab/Stored files/PSM column no modifications")
+saveRDS(mzTab_PSM, file = "~/Desktop/mzTab/Stored files/PSM column no modifications v2")
+PSM_seq_no_mod_v2 <- readRDS(file = "~/Desktop/mzTab/Stored files/PSM column no modifications v2")
 
