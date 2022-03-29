@@ -52,9 +52,8 @@ for (i in seq_along(file_paths)) {
   mzTab[[i]] <- readMzTab(file_paths[[i]])
 }
 mzTab_files <- set_names(mzTab, file_names_short) #names each file by file_names_short
-mzTab_files
-  #View first file 
-view(mzTab_files[[1]])
+mzTab_files[[1]]
+
  #Save mzMLs to different location: TMT outputs
 saveRDS(mzTab_files, file = "~/Desktop/mzTab/Stored files/Test 6 mzTabs")
 Test_6_mzTabs <- readRDS(file = "~/Desktop/mzTab/Stored files/Test 6 mzTabs")
@@ -101,24 +100,30 @@ for (i in seq_along(mzTab_files)) {
 }
 mzTab_files_PSM <- set_names(PSM, file_names_short) #names each file by file_names_short
 mzTab_files_PSM
-view(mzTab_files_PSM[[4]])
+view(mzTab_files_PSM[[1]])
+
+nrow(mzTab_files_PSM[[4]])
+n_distinct(mzTab_files_PSM[[4]])
+nrow(unique(mzTab_files_PSM[[4]]))
 
 #Determine identification percentage
   #Row count for mzTab_PSM = amount of identified peptides
 nrow_PSM <- list() #empty list
 for (i in seq_along(mzTab_files_PSM)) {
-  nrow_PSM[[i]] <- nrow(mzTab_files_PSM[[i]])
+  nrow_PSM[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
+    row_to_names(row_number = 1) %>%
+    n_distinct() #count unique rows
 }
 Identified_peptides <- set_names(nrow_PSM, file_names_short) #names each file by file_names_short
 Identified_peptides
   #Row count original
 TMT_Matched_mzML_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/6 matched mzMLS")
-TMT_Matched_mzML_6 #Output gives number of spectra
-nrow(TMT_Matched_mzML_6[[1]]) # Is the same as the number of spectra
+n_distinct(TMT_Matched_mzML_6[[1]]) #count unique rows
+
     #Loop counting spectra
 nrow_TMT <- list() #empty list
-for (i in 1:6) { #Only for the first 6 spectra, 
-  nrow_TMT[[i]] <- nrow(TMT_Matched_mzML_6[[i]])
+for (i in seq_along(TMT_Matched_mzML_6)) { #Only for the first 6 spectra, 
+  nrow_TMT[[i]] <- n_distinct(TMT_Matched_mzML_6[[i]])
 }
 Spectral_count <- set_names(nrow_TMT, file_names_short) #names each file by file_names_short
 Spectral_count
@@ -163,7 +168,7 @@ tbl_id_perc <- cbind(tbl_name, tbl_perc)
 #Make Tibble with PSMs and use PSH as column names
 #Select sequence column + Removing brackets + Removing numbers
 psms1 <- list()
-for (i in 1:6) { #Only for the first 6 spectra
+for (i in seq_along(mzTab_files_PSM)) { #Only for the first 6 spectra
   psms1[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
     row_to_names(row_number = 1) %>%
     select(sequence) %>%
@@ -186,7 +191,7 @@ view(tbl_mzTab_PSM[[1]])
 
 #Adding new column with unmodified peptide sequences with CBIND
 psms3 <- list()
-for (i in 1:6) { #Only for the first 6 spectra
+for (i in seq_along(mzTab_files_PSM)) { #Only for the first 6 spectra
   psms3[[i]] <- as_tibble(mzTab_files_PSM[[i]]) 
     cbind(mzTab_files_PSM[[i]][,2] ,tbl_seq_no_mod[[i]], mzTab_files_PSM[[i]][,3:ncol(mzTab_files_PSM[[i]])]) #Column is all the way in the back
 }
