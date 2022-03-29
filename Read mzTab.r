@@ -209,4 +209,4 @@ saveRDS(tbl_mzTab_PSM, file = "~/Desktop/mzTab/Stored files/PSM column no modifi
 PSM_seq_no_mod <- readRDS(file = "~/Desktop/mzTab/Stored files/PSM column no modifications")
 saveRDS(mzTab_PSM, file = "~/Desktop/mzTab/Stored files/PSM column no modifications v2")
 PSM_seq_no_mod_v2 <- readRDS(file = "~/Desktop/mzTab/Stored files/PSM column no modifications v2")
-
+view(PSM_seq_no_mod_v2[[1]])
