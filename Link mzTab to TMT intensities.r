@@ -114,3 +114,13 @@ for (i in seq_along(TMT_ready_for_machting)) {
 Merged_PSM_TMT <- set_names(merging, file_names_short)
 Merged_PSM_TMT
 view(Merged_PSM_TMT[[1]])
+
+
+
+#Loading in matching mzMLs to mzTabs in wd
+getwd()
+list.files(wd)
+file_names_short
+
+list.files(path = "~/Desktop/Read raw file/Data mzML")
+list.files(path = "~/Desktop/ALL mzML")
