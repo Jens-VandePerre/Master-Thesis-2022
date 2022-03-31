@@ -139,3 +139,21 @@ for (i in seq_along(PSM_6)) {
 (Length_difference <- set_names(l_diff, file_names_short)) #All lengts are the same. Merging SUCCESS!!!
 
 #Selecting the collumn for relative quantification
+selected <- list()
+for (i in seq_along(Merged_PSM_TMT)) {
+  selected[[i]] <- Merged_PSM_TMT[[i]] %>% 
+  select("sequence_no_mod", "126":"131") %>%
+  rename(Peptide_sequence=sequence_no_mod, 
+        `Repoter intensity corrected 126` = `126`,
+        `Repoter intensity corrected 127N` = `127N`,
+        `Repoter intensity corrected 127C` = `127C`,
+        `Repoter intensity corrected 128N` = `128N`,
+        `Repoter intensity corrected 128C` = `128C`,
+        `Repoter intensity corrected 129N` = `129N`,
+        `Repoter intensity corrected 129C` = `129C`,
+        `Repoter intensity corrected 130N` = `130N`,
+        `Repoter intensity corrected 130C` = `130C`,
+        `Repoter intensity corrected 113` = `131`
+        )
+}
+view(selected[[1]])
