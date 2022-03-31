@@ -109,7 +109,8 @@ view(merge1)
 
 merging <- list()
 for (i in seq_along(TMT_ready_for_machting)) {
-  merging[[i]] <- merge(PSM_ready_for_matching[[i]], TMT_ready_for_machting[[i]], by.x="PSM_index", by.y="TMT_index") %>% as_tibble
+  merging[[i]] <- merge(PSM_ready_for_matching[[i]], TMT_ready_for_machting[[i]], by.x="PSM_index", by.y="TMT_index") %>% 
+  as_tibble %>% arrange(desc("PSM_index"))
 }
 Merged_PSM_TMT <- set_names(merging, file_names_short)
 Merged_PSM_TMT
@@ -117,3 +118,24 @@ view(Merged_PSM_TMT[[1]])
 
 
 
+#Checking if length stay the same after matching PSMs and TMTs
+  #Length PSM
+l_PSM <- list()
+for (i in seq_along(PSM_6)) {
+  l_PSM[[i]] <- nrow(PSM_6[[i]])
+}
+(PSM_length <- set_names(l_PSM, file_names_short))
+
+  #Length TMT
+l_TMT <- list()
+for (i in seq_along(TMT_Matched_mzML_6)) {
+  l_TMT[[i]] <- nrow(TMT_Matched_mzML_6[[i]])
+}
+(TMT_length <- set_names(l_TMT, file_names_short))
+
+  #Length matched
+l_matched <- list()
+for (i in seq_along(Merged_PSM_TMT)) {
+  l_matched[[i]] <- nrow(Merged_PSM_TMT[[i]])
+}
+(Merged_length <- set_names(l_matched, file_names_short)) #Length is the same
