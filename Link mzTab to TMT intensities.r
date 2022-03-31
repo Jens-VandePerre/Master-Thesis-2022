@@ -73,13 +73,13 @@ view(TMT_Matched_mzML_6[[1]][, 0]) #These are row names
   #selecting index column
 ind_TMT1 <- list()
 for (i in seq_along(TMT_Matched_mzML_6)) {
-  ind_TMT1[[i]] <- tibble(TMT_index=rownames(TMT_Matched_mzML_6[[i]][, 0])) %>%
-  mutate(TMT_index = trimws(str_remove_all(TMT_index, "F1.S"))) %>%
-  mutate(TMT_index = trimws(str_remove_all(TMT_index, "^0"))) %>%
-  mutate(TMT_index = trimws(str_remove_all(TMT_index, "^0"))) %>%
-  mutate(TMT_index = trimws(str_remove_all(TMT_index, "^0"))) %>%
-  mutate(TMT_index = trimws(str_remove_all(TMT_index, "^0"))) %>%
-  select(TMT_index) %>%
+  ind_TMT1[[i]] <- tibble(index=rownames(TMT_Matched_mzML_6[[i]][, 0])) %>%
+  mutate(index = trimws(str_remove_all(index, "F1.S"))) %>%
+  mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+  mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+  mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+  mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+  select(index) %>%
   cbind(TMT_Matched_mzML_6[[i]]) %>% as_tibble
 }
 TMT_ready_for_machting <- set_names(ind_TMT1, file_names_short)
@@ -91,10 +91,10 @@ view(TMT_ready_for_machting[[1]])
 ind_mzTab5 <- list()
 for (i in seq_along(PSM_6)) {
 ind_mzTab5[[i]] <- select(PSM_6[[i]], PSM_ID) %>% 
-                mutate(PSM_index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
-                mutate(PSM_index = trimws(str_remove_all(PSM_index, "controllerNumber=1 "))) %>%
-                mutate(PSM_index = trimws(str_remove_all(PSM_index, "scan="))) %>%
-                select(PSM_index) %>%
+                mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
+                mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
+                mutate(index = trimws(str_remove_all(index, "scan="))) %>%
+                select(index) %>%
                 cbind(PSM_6[[i]]) %>% as_tibble
 }
 PSM_ready_for_matching <- set_names(ind_mzTab5, file_names_short)
@@ -104,13 +104,13 @@ view(PSM_ready_for_matching[[1]])
 #Merging the 2
 view(PSM_ready_for_matching[[1]])
 view(TMT_ready_for_machting[[1]])
-merge1 <- merge(PSM_ready_for_matching[[1]], TMT_ready_for_machting[[1]], by.x="PSM_index", by.y="TMT_index")
+merge1 <- merge(PSM_ready_for_matching[[1]], TMT_ready_for_machting[[1]], by="index")
 view(merge1)
 
 merging <- list()
 for (i in seq_along(TMT_ready_for_machting)) {
-  merging[[i]] <- merge(PSM_ready_for_matching[[i]], TMT_ready_for_machting[[i]], by.x="PSM_index", by.y="TMT_index") %>% 
-  as_tibble %>% arrange(desc("PSM_index"))
+  merging[[i]] <- merge(PSM_ready_for_matching[[i]], TMT_ready_for_machting[[i]], by="index") %>% 
+  as_tibble %>% arrange(desc(index[[i]]))
 }
 Merged_PSM_TMT <- set_names(merging, file_names_short)
 Merged_PSM_TMT
@@ -125,17 +125,17 @@ for (i in seq_along(PSM_6)) {
   l_PSM[[i]] <- nrow(PSM_6[[i]])
 }
 (PSM_length <- set_names(l_PSM, file_names_short))
-
-  #Length TMT
-l_TMT <- list()
-for (i in seq_along(TMT_Matched_mzML_6)) {
-  l_TMT[[i]] <- nrow(TMT_Matched_mzML_6[[i]])
-}
-(TMT_length <- set_names(l_TMT, file_names_short))
-
   #Length matched
 l_matched <- list()
 for (i in seq_along(Merged_PSM_TMT)) {
   l_matched[[i]] <- nrow(Merged_PSM_TMT[[i]])
 }
-(Merged_length <- set_names(l_matched, file_names_short)) #Length is the same
+(Merged_length <- set_names(l_matched, file_names_short)) 
+  #Is there a difference?
+l_diff <- list()
+for (i in seq_along(PSM_6)) {
+  l_diff[[i]] <- (PSM_length[[i]]-Merged_length[[i]])
+}
+(Length_difference <- set_names(l_diff, file_names_short)) #All lengts are the same. Merging SUCCESS!!!
+
+#Selecting the collumn for relative quantification
