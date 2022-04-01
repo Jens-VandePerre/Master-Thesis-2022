@@ -167,42 +167,19 @@ tbl_id_perc <- cbind(tbl_name, tbl_perc)
 #Create column with unmodified peptide sequences
 #Make Tibble with PSMs and use PSH as column names
 #Select sequence column + Removing brackets + Removing numbers
-psms1 <- list()
-for (i in seq_along(mzTab_files_PSM)) { #Only for the first 6 spectra
-  psms1[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
-    row_to_names(row_number = 1) %>%
-    select(sequence) %>%
+        #Loop for all files
+psm <- list() #empty list
+for (i in seq_along(mzTab_files)) {
+  psm[[i]] <- extractFeaturesPSM(mzTab_files[[i]]) %>%
+  as_tibble() %>% row_to_names(row_number = 1) %>%
     mutate(sequence_no_mod = trimws(str_remove_all(sequence, "n"))) %>% #remove n
     mutate(sequence_no_mod = trimws(str_remove_all(sequence_no_mod, "[0123456789]"))) %>% # remove numbers
     mutate(sequence_no_mod = trimws(str_remove_all(sequence_no_mod, "\\[|\\]"))) %>% #remove []
-    select(sequence_no_mod)
+    relocate(sequence_no_mod, .after = sequence)
 }
-tbl_seq_no_mod <- set_names(psms1, file_names_short)
-tbl_seq_no_mod
-#Adding new column with unmodified peptide sequences
-psms2 <- list()
-for (i in 1:6) { #Only for the first 6 spectra
-  psms2[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
-    row_to_names(row_number = 1) %>%
-    add_column(sequence_no_mod = tbl_seq_no_mod[[i]], .after = "sequence")
-}
-tbl_mzTab_PSM <- set_names(psms2, file_names_short)
-tbl_mzTab_PSM #Column is visiblre here
-view(tbl_mzTab_PSM[[1]]) #Column is NOT visiblre here
+PSM <- set_names(psm, file_names_short) #names each file by file_names_short
+view(PSM[[1]])
 
-#Adding new column with unmodified peptide sequences with CBIND
-psms3 <- list()
-for (i in seq_along(mzTab_files_PSM)) {
-  psms3[[i]] <- as_tibble(mzTab_files_PSM[[i]]) %>%
-  row_to_names(row_number = 1)
-}
-(PSM_tibble <- set_names(psms3, file_names_short))
-psms4 <- list()
-for (i in seq_along(PSM_tibble)) { #Only for the first 6 spectra
-  psms4[[i]] <- cbind(PSM_tibble[[i]][,2] ,tbl_seq_no_mod[[i]], PSM_tibble[[i]][,3:ncol(PSM_tibble[[i]])]) #Column is all the way in the back
-}
-mzTab_PSM <- set_names(psms4, file_names_short)
-view(mzTab_PSM[[1]]) #Column is visiblre here
 
   #Store PSM files
 saveRDS(tbl_mzTab_PSM, file = "~/Desktop/mzTab/Stored files/PSM column no modifications")

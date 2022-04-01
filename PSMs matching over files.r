@@ -61,11 +61,14 @@ extractFeaturesPSM <- function(mztab.table) {
 psm <- list() #empty list
 for (i in seq_along(mzTab_files)) {
   psm[[i]] <- extractFeaturesPSM(mzTab_files[[i]]) %>%
-  as_tibble() %>% row_to_names(row_number = 1)
+  as_tibble() %>% row_to_names(row_number = 1) %>%
+    mutate(sequence_no_mod = trimws(str_remove_all(sequence, "n"))) %>% #remove n
+    mutate(sequence_no_mod = trimws(str_remove_all(sequence_no_mod, "[0123456789]"))) %>% # remove numbers
+    mutate(sequence_no_mod = trimws(str_remove_all(sequence_no_mod, "\\[|\\]"))) %>% #remove []
+    relocate(sequence_no_mod, .after = sequence)
 }
 PSM <- set_names(psm, file_names_short) #names each file by file_names_short
-PSM
-view(mzTab_files_PSM[[1]])
+view(PSM[[1]])
 
 
 
