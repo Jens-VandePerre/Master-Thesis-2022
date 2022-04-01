@@ -167,23 +167,19 @@ tbl_id_perc <- cbind(tbl_name, tbl_perc)
 #Create column with unmodified peptide sequences
 #Make Tibble with PSMs and use PSH as column names
 #Select sequence column + Removing brackets + Removing numbers
+#Add new column sequence_no_mod behind the sequence column
         #Loop for all files
 psm <- list() #empty list
 for (i in seq_along(mzTab_files)) {
   psm[[i]] <- extractFeaturesPSM(mzTab_files[[i]]) %>%
   as_tibble() %>% row_to_names(row_number = 1) %>%
-    mutate(sequence_no_mod = trimws(str_remove_all(sequence, "n"))) %>% #remove n
-    mutate(sequence_no_mod = trimws(str_remove_all(sequence_no_mod, "[0123456789]"))) %>% # remove numbers
-    mutate(sequence_no_mod = trimws(str_remove_all(sequence_no_mod, "\\[|\\]"))) %>% #remove []
-    relocate(sequence_no_mod, .after = sequence)
+  mutate(sequence_no_mod = trimws(str_remove_all(sequence, "n"))) %>% #remove n
+  mutate(sequence_no_mod = trimws(str_remove_all(sequence_no_mod, "[0123456789]"))) %>% # remove numbers
+  mutate(sequence_no_mod = trimws(str_remove_all(sequence_no_mod, "\\[|\\]"))) %>% #remove []
+  relocate(sequence_no_mod, .after = sequence)
 }
 PSM <- set_names(psm, file_names_short) #names each file by file_names_short
 view(PSM[[1]])
-
-
   #Store PSM files
-saveRDS(tbl_mzTab_PSM, file = "~/Desktop/mzTab/Stored files/PSM column no modifications")
+saveRDS(PSM, file = "~/Desktop/mzTab/Stored files/PSM column no modifications") #updated 1/4/22
 PSM_seq_no_mod <- readRDS(file = "~/Desktop/mzTab/Stored files/PSM column no modifications")
-saveRDS(mzTab_PSM, file = "~/Desktop/mzTab/Stored files/PSM column no modifications v2")
-PSM_seq_no_mod_v2 <- readRDS(file = "~/Desktop/mzTab/Stored files/PSM column no modifications v2")
-view(PSM_seq_no_mod_v2[[1]])
