@@ -72,5 +72,23 @@ for (i in seq_along(mzTab_files)) {
 PSM <- set_names(psm, file_names_short) #names each file by file_names_short
 view(PSM[[1]])
 
+#
+PSM_TMT <- readRDS("~/Desktop/mzTab/Stored files/PSMs linked to TMT intensities")
 
 
+
+#Selecting the sequence column for all files
+seq <- list()
+for (i in seq_along(PSM)) {
+    seq[[i]] <- select(PSM[[1]], sequence, ) %>% 
+    add_column()
+}
+seq
+
+
+seq1 <- PSM[[1]][2]
+seq2 <- PSM[[2]][2]
+seq3 <- PSM[[3]][2]
+seq4 <- PSM[[4]][2]
+seq5 <- PSM[[5]][2]
+data.frame(seq1, seq2, seq3, seq4, seq5)
