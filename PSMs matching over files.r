@@ -57,7 +57,9 @@ extractFeaturesPSM <- function(mztab.table) {
   psh <- mztab.table[startsWith(as.character(mztab.table$V1), "PSH"),]
   rbind(psh,psm)
 }
-        #Loop for all files
+    #Loop for all files
+    #Select sequence column + Removing brackets + Removing numbers
+    #Add new column sequence_no_mod behind the sequence column
 psm <- list() #empty list
 for (i in seq_along(mzTab_files)) {
   psm[[i]] <- extractFeaturesPSM(mzTab_files[[i]]) %>%
