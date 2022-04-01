@@ -115,7 +115,9 @@ for (i in seq_along(TMT_ready_for_machting)) {
 Merged_PSM_TMT <- set_names(merging, file_names_short)
 Merged_PSM_TMT
 view(Merged_PSM_TMT[[1]])
-
+  #Save outputs
+saveRDS(Merged_PSM_TMT, file = "~/Desktop/mzTab/Stored files/PSMs linked to TMT intensities")
+PSM_TMT <- readRDS("~/Desktop/mzTab/Stored files/PSMs linked to TMT intensities")
 
 
 #Checking if length stay the same after matching PSMs and TMTs
