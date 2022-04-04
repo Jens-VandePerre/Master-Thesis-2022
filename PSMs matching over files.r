@@ -107,4 +107,4 @@ add_column(count = rep(1, nrow(all_seq_no_mod))) %>%
 group_by(sequence_no_mod) %>%
 summarise(Count = sum(count))
 view(Sum_all_seq_no_mod) #sequence_no_mod summarized, with a counter
-view(Sum_all_seq_no_mod %>% arrange(sum))#most frequent sequence_no_mod at top
+view(Sum_all_seq_no_mod %>% arrange(-Count))#most frequent sequence_no_mod at top
