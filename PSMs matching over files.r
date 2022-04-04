@@ -72,23 +72,35 @@ for (i in seq_along(mzTab_files)) {
 PSM <- set_names(psm, file_names_short) #names each file by file_names_short
 view(PSM[[1]])
 
-#
+#Finding matching peptide sequences between files
+#Work further with PSMs linked to TMTs, the index is needed
 PSM_TMT <- readRDS("~/Desktop/mzTab/Stored files/PSMs linked to TMT intensities")
-
-
-
-#Selecting the sequence column for all files
-seq <- list()
-for (i in seq_along(PSM)) {
-    seq[[i]] <- select(PSM[[1]], sequence, ) %>% 
-    add_column()
+view(PSM_TMT[[1]])
+    #Make an extra index column that includes the file_names_short
+new_col <- list()
+for (i in seq_along(PSM_TMT)) {
+    new_col[[i]] <- PSM_TMT[[i]] %>%
+    mutate(index_filename = paste0(index, " ",file_names_short[[i]]), .before = index)
 }
-seq
+view(new_col[[4]])
+    #Selecting the sequence column + index_filename
+seq <- list()
+for (i in seq_along(new_col)) {
+    seq[[i]] <- select(new_col[[i]], index_filename, sequence) %>% 
+    as_tibble() %>% arrange(sequence)
+
+}
+(all_seq <- bind_rows(seq))
+view(all_seq)
 
 
-seq1 <- PSM[[1]][2]
-seq2 <- PSM[[2]][2]
-seq3 <- PSM[[3]][2]
-seq4 <- PSM[[4]][2]
-seq5 <- PSM[[5]][2]
-data.frame(seq1, seq2, seq3, seq4, seq5)
+    #Selecting the sequence_no_mod column + index_filename
+seq_no_mod <- list()
+for (i in seq_along(new_col)) {
+    seq_no_mod[[i]] <- select(new_col[[i]], index_filename, sequence_no_mod) %>% 
+    as_tibble() %>%
+    arrange(sequence_no_mod)
+}
+(all_seq_no_mod <- bind_rows(seq_no_mod))
+view(all_seq_no_mod)
+
