@@ -88,16 +88,23 @@ seq <- list()
 for (i in seq_along(new_col)) {
     seq[[i]] <- select(new_col[[i]], index_filename, sequence)
 }
-(all_seq <- bind_rows(seq))
-view(all_seq)
-
-?arrange
-
+(all_seq <- bind_rows(seq) %>% arrange(sequence, index_filename))
+view(all_seq) #all rows arrenged by sequence
+Sum_all_seq <- all_seq %>% add_column(count = rep(1, nrow(all_seq))) %>% 
+group_by(sequence) %>%
+summarise(Count = sum(count))
+view(Sum_all_seq) #sequence summarized, with a counter
+view(Sum_all_seq %>% arrange(sum)) #most frequent sequence at top
     #Selecting the sequence_no_mod column + index_filename
 seq_no_mod <- list()
 for (i in seq_along(new_col)) {
     seq_no_mod[[i]] <- select(new_col[[i]], index_filename, sequence_no_mod)
 }
 (all_seq_no_mod <- bind_rows(seq_no_mod) %>% arrange(sequence_no_mod, index_filename))
-view(all_seq_no_mod)
-
+view(all_seq_no_mod) #all rows arrenged by sequence_no_mod
+Sum_all_seq_no_mod <- all_seq_no_mod %>%
+add_column(count = rep(1, nrow(all_seq_no_mod))) %>%
+group_by(sequence_no_mod) %>%
+summarise(Count = sum(count))
+view(Sum_all_seq_no_mod) #sequence_no_mod summarized, with a counter
+view(Sum_all_seq_no_mod %>% arrange(sum))#most frequent sequence_no_mod at top
