@@ -26,7 +26,7 @@ library("stringr")
     #This wd has to contain all the files that have to be analyzed
 mzML_WD <- setwd("~/Desktop/mzTab/mzML corresponding to mzTab")
 getwd()
-file_names_wd <- list.files(mzML_WD) #6 mzML files
+(file_names_wd <- list.files(mzML_WD)) #6 mzML files
     #The wanted files
 file_names_short <- substring(file_names_wd, 39, 46) #Character 39 untill 46 are unique
 file_names_short #6 file names, both mzML and mzTab loaded
