@@ -23,17 +23,15 @@ library("janitor")
 library("stringr")
 
 #Load 6 PSMs
-PSM_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/PSM column no modifications v2")
-PSM_6 #This is a Tibble
-view(PSM_6[[1]])
+PSM_6 <- readRDS(file = "~/Desktop/mzTab/Stored files/PSM column no modifications v2") 
+view(PSM_6[[1]]) 
 
 #Load 6 matching mzMLs
 wd <- setwd("~/Desktop/mzTab/mzML corresponding to mzTab")
 getwd() 
-file_names_wd <- list.files(wd) #The first 6 mzML files
-file_names_short <- substring(file_names_wd, 39, 46) #Character 39 untill 46 are unique
-file_paths <- fs::dir_ls("~/Desktop/mzTab/mzML corresponding to mzTab")
-file_paths 
+(file_names_wd <- list.files(wd)) #The first 6 mzML files
+(file_names_short <- substring(file_names_wd, 39, 46)) #Character 39 untill 46 are unique
+(file_paths <- fs::dir_ls("~/Desktop/mzTab/mzML corresponding to mzTab"))
 mzML <- list() #empty list
 for (i in seq_along(file_paths)) {
   mzML[[i]] <- readMSData(file_paths[[i]],
@@ -101,12 +99,7 @@ PSM_ready_for_matching <- set_names(ind_mzTab5, file_names_short)
 PSM_ready_for_matching
 view(PSM_ready_for_matching[[1]])
 
-#Merging the 2
-view(PSM_ready_for_matching[[1]])
-view(TMT_ready_for_machting[[1]])
-merge1 <- merge(PSM_ready_for_matching[[1]], TMT_ready_for_machting[[1]], by="index")
-view(merge1)
-
+#Merging by index
 merging <- list()
 for (i in seq_along(TMT_ready_for_machting)) {
   merging[[i]] <- merge(PSM_ready_for_matching[[i]], TMT_ready_for_machting[[i]], by="index") %>% 
@@ -115,10 +108,10 @@ for (i in seq_along(TMT_ready_for_machting)) {
 Merged_PSM_TMT <- set_names(merging, file_names_short)
 Merged_PSM_TMT
 view(Merged_PSM_TMT[[1]])
+view(Merged_PSM_TMT[[1]] %>% select(index, sequence_no_mod, 25:34))
   #Save outputs
 saveRDS(Merged_PSM_TMT, file = "~/Desktop/mzTab/Stored files/PSMs linked to TMT intensities")
 PSM_TMT <- readRDS("~/Desktop/mzTab/Stored files/PSMs linked to TMT intensities")
-
 
 #Checking if length stay the same after matching PSMs and TMTs
   #Length PSM
