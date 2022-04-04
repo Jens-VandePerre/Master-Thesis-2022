@@ -86,21 +86,18 @@ view(new_col[[4]])
     #Selecting the sequence column + index_filename
 seq <- list()
 for (i in seq_along(new_col)) {
-    seq[[i]] <- select(new_col[[i]], index_filename, sequence) %>% 
-    as_tibble() %>% arrange(sequence)
-
+    seq[[i]] <- select(new_col[[i]], index_filename, sequence)
 }
 (all_seq <- bind_rows(seq))
 view(all_seq)
 
+?arrange
 
     #Selecting the sequence_no_mod column + index_filename
 seq_no_mod <- list()
 for (i in seq_along(new_col)) {
-    seq_no_mod[[i]] <- select(new_col[[i]], index_filename, sequence_no_mod) %>% 
-    as_tibble() %>%
-    arrange(sequence_no_mod)
+    seq_no_mod[[i]] <- select(new_col[[i]], index_filename, sequence_no_mod)
 }
-(all_seq_no_mod <- bind_rows(seq_no_mod))
+(all_seq_no_mod <- bind_rows(seq_no_mod) %>% arrange(sequence_no_mod, index_filename))
 view(all_seq_no_mod)
 
