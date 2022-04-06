@@ -66,29 +66,18 @@ for (i in seq_along(mzML)) {
     TMT1[[j]] <- exprs(mzML_qnt1[[j]]) #outputs all spectra, unclear in terminal
   }
 }
-TMT_intensities1 <- set_names(TMT1, file_names_wd) #names each file by file_names_wd
-TMT_intensities1
+TMT_intensities1 <- set_names(TMT1, file_names_short) #names each file by file_names_wd
+view(TMT_intensities1[1])
     #Save output to different location: TMT outputs/Combined Files
-saveRDS(TMT_intensities1, file = "~/Desktop/Outputs/TMT/06.04.22_TMT")
-TMT_Intensities_06_04_22 <- readRDS(file = "~/Desktop/Outputs/TMT/06.04.22_TMT")
-TMT_Intensities_06_04_22
+saveRDS(TMT_intensities1, file = "~/Desktop/Outputs/TMTs/06.04.22_TMT")
+TMT_Intensities_06_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/06.04.22_TMT")
+view(TMT_Intensities_06_04_22[1])
          #1. Check missing data before imputation
 missing1 <- list () #empty list
 for (i in seq_along(TMT_Intensities_06_04_22)) {
    missing1[[i]] <- sum(is.na(TMT_Intensities_06_04_22[[i]]))}
 missing_tot1 <- set_names(missing1, file_names_wd) #names each file by file_names_wd
 missing_tot1 # Total missing for each file
-
-
-
-
-
-
-
-
-
-
-
 
 ######################################################
 #Loops Exploring Normalization and Imputation
