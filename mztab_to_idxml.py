@@ -1,7 +1,11 @@
 import pandas as pd
 import sys
 import getopt
+<<<<<<< HEAD
 import pyopenms as pyms
+=======
+import pyopenms as  pyms
+>>>>>>> 5da08ce1df3bbf0bd42d2a7f661c1410cbf1f163
 import argparse, pathlib
 
 parser = argparse.ArgumentParser()

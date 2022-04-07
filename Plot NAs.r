@@ -41,7 +41,7 @@ TMT_Intensities1_10_Imputation_Normalization <- readRDS(file= "~/Desktop/Read ra
 #File Names
 wd <- setwd("~/Desktop/Read raw file/Data mzML")
 getwd() 
-file_names_wd <- list.files(wd) #The first 10 mzML files of CPTAC
+(file_names_wd <- list.files(wd)) #The first 10 mzML files of CPTAC
 # Loading in multiple mzML files
 file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML")
 file_paths #The first 10 mzML files paths of CPTAC
@@ -149,8 +149,8 @@ missing_tot1_10_mean # Mean missing for each file
 data.frame(matrix(unlist(missing_tot1_10_mean), nrow=length(missing_tot1_10_mean), byrow=TRUE)) 
 Mean_Missing_Values1_10 <- matrix(unlist(missing_tot1_10_mean), nrow=length(missing_tot1_10_mean), byrow=TRUE, ncol=1)
 Mean_Missing_Values1_10
-df_missing_mean <- tibble(File_name=file_names , Mean_Missing_Values=Mean_Missing_Values1_10)
-df_missing_mean
+df_perc_spec_missing <- tibble(File_name=file_names , Mean_Missing_Values=Mean_Missing_Values1_10)
+df_perc_spec_missing
           #2.1 Check missing data after imputation: mean
 missing2_mean <- list () #empty list
 for (i in seq_along(TMT_Intensities1_10_Imputation)) {
@@ -188,7 +188,7 @@ Mean_Missing_Values1_10_Imputation_Normalization
 df_missing_imp_norm_mean <- tibble(File_name=file_names , Mean_Missing_Values=Mean_Missing_Values1_10_Imputation_Normalization)
 df_missing_imp_norm_mean
    #1.1-4.1 Plots
-p1_mean <- ggplot(df_missing_mean, mapping = aes(x=File_name, y=Mean_Missing_Values)) +
+p1_mean <- ggplot(df_perc_spec_missing, mapping = aes(x=File_name, y=Mean_Missing_Values)) +
    geom_col() +
    labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values: No Imputation", 
       subtitle="Mean missing values before imputation", tag="A") +
@@ -226,28 +226,31 @@ pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values 4 Plots.
    p1_mean + p2_mean + p3_mean + p4_mean
 dev.off()
 
-#5. Mean missing per spectrum 
-missing5 <- list () #empty list
+#5. Perc of Spectra with at least one missing TMT intensity
+missing5 <- list() #empty list
 for (i in seq_along(TMT_Intensities1_10)) {
-   missing5[[i]] <- mean(rowSums(is.na(TMT_Intensities1_10[[i]])))}
+   missing5[[i]] <- sum(rowSums(is.na(TMT_Intensities1_10[[i]])) > 0)/ nrow(TMT_Intensities1_10[[i]])*100
+}
 missing_row_mean <- set_names(missing5, file_names_wd) #names each file by file_names_wd
 missing_row_mean #missing for each  spectrum 
 data.frame(matrix(unlist(missing_row_mean), nrow=length(missing_row_mean), byrow=TRUE)) 
-Mean_Row_Missing <- matrix(unlist(missing_row_mean), nrow=length(missing_row_mean), byrow=TRUE)
-Mean_Row_Missing
-df_missing_mean <- tibble(File_name=file_names , Mean_Row_Missing=Mean_Row_Missing)
-df_missing_mean
+Perc_spec_missing <- matrix(unlist(missing_row_mean), nrow=length(missing_row_mean), byrow=TRUE)
+Perc_spec_missing
+df_perc_spec_missing <- tibble(File_name = file_names , Perc_spec_missing = Perc_spec_missing)
+df_perc_spec_missing
   #Plot 5
-p5 <- ggplot(df_missing_mean, mapping = aes(x=File_name, y=Mean_Row_Missing)) +
+p5 <- ggplot(df_perc_spec_missing, mapping = aes(x = File_name, y = Perc_spec_missing)) +
    geom_col() +
-   labs(x="File Name", y="Mean Missing Intensiteis per Spectrum", title="Mean Missing Values per Spectrum") +
-   geom_text(aes(label=round(Mean_Row_Missing, digits = 4)), 
-               position=position_dodge(width=0.9), vjust=-0.25, size = 3) +
-   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 10), axis.text.y = element_text(size = 10),
-            plot.title = element_text(size = 18))
+   labs(x = "File Name", y = "Percentage of Spectra", 
+   title = "Percentage of Spectra with Missing Intensities", 
+         subtitle = "Per file, the percentage of spectra with at least one missing TMT intensity") +
+   geom_text(aes(label = round(Perc_spec_missing, digits = 2)), 
+               position = position_dodge(width = 0.9), vjust = -0.25, size = 3) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 10), axis.text.y = element_text(size = 10),
+            plot.title = element_text(size = 18), plot.subtitle = element_text(size = 10))
    #Print plot 5
 p5
-pdf(file = "~/Desktop/Read raw file/TMT outputs/Plots/Mean Missing Values per Spectrum.pdf")
+pdf(file = "~/Desktop/Read raw file/TMT outputs/Plots/Percentage of Spectra with Missing Intensities.pdf")
    p5
 dev.off()
 
@@ -274,10 +277,10 @@ df_missing_col_mean <- tibble(File_name=file_names , Missing_Channel=tbl_tmt)
 df_missing_col_mean
 
    #Create Data Frame for Plot 6
-Labels=rep(TMT_Labels, each=10)
-File=rep(file_names, times=10)
-Missing_Values=(Mean_Missing_Channel)
-df=data.frame(Labels,File,Missing_Values)
+Labels = rep(TMT_Labels, each=10)
+File = rep(file_names, times=10)
+Missing_Values = (Mean_Missing_Channel)
+df = data.frame(Labels,File,Missing_Values)
 df
       #Lenghts have to be equal
 length(Labels) #100
@@ -355,7 +358,7 @@ Difference <- matrix(unlist(missing_diff), nrow=length(missing_diff), byrow=TRUE
 Difference
 df_diff <- tibble(File_name=file_names , Decrease_Missing_Values=Difference)
 df_diff
-  #percentage lowered missing values
+  #perc lowered missing values
 diff_perc <- mapply('/', missing_diff, missing_tot1_10, SIMPLIFY = FALSE)
 diff_perc2 <- mapply('*', diff_perc, 100, SIMPLIFY = FALSE)
 missing_diff_perc <- set_names(diff_perc2, file_names_wd)
@@ -363,7 +366,7 @@ missing_diff_perc
 data.frame(matrix(unlist(missing_diff_perc), nrow=length(missing_diff_perc), byrow=TRUE)) 
 Difference_Perc <- matrix(unlist(missing_diff_perc), nrow=length(missing_diff_perc), byrow=TRUE, ncol=1)
 Difference_Perc
-df_diff_perc <- tibble(File_name=file_names , Percentage_Decrease_Missing_Values=Difference_Perc)
+df_diff_perc <- tibble(File_name=file_names , Perc_Decrease_Missing_Values=Difference_Perc)
 df_diff_perc
    #Plots 9-10
 p9 <- ggplot(df_diff, mapping = aes(x=File_name, y=Decrease_Missing_Values)) +
@@ -373,20 +376,99 @@ p9 <- ggplot(df_diff, mapping = aes(x=File_name, y=Decrease_Missing_Values)) +
    geom_text(aes(label=Difference), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
-            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
-p10 <- ggplot(df_diff_perc, mapping = aes(x=File_name, y=Percentage_Decrease_Missing_Values)) +
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 6))
+p10 <- ggplot(df_diff_perc, mapping = aes(x=File_name, y=Perc_Decrease_Missing_Values)) +
    geom_col() +
-   labs(x="File Name", y="Percentage decrease missing values", title="Percentage Decrease Missing Values", 
-      subtitle="Percentage decrease in missing values after imputation and normalization", tag="B") +
+   labs(x="File Name", y="Perc decrease missing values", title="Perc Decrease Missing Values", 
+      subtitle="Perc decrease in missing values after imputation and normalization", tag="B") +
    geom_text(aes(label=round(Difference_Perc, digits = 0)), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 1.5) +
    theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
-            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 6))
   #Print 9-10 plots together
 p9 + p10
 pdf(file="~/Desktop/Read raw file/TMT outputs/Plots/Plots Differences Missing Values.pdf")
    p9 + p10
 dev.off()
+
+######################################
+#Check Missing Data from PSMs
+######################################
+
+#11. Perc of Spectra with at least one missing TMT intensity
+   #TMTs matched to PSMs
+PSM_TMT <- readRDS("~/Desktop/mzTab/Stored files/PSMs linked to TMT intensities")
+   #Selecting the TMT columns
+PSM_TMT[[1]]
+TMT_psm <- list()
+for (i in seq_along(PSM_TMT)) {
+   TMT_psm[[i]] <- PSM_TMT[[i]] %>% select(`126`:`131`)
+}
+TMT_psm #Tibblesof only TMT intensities
+file_names_short_typed <- c("B1S2_f10", "B1S3_f05", "B1S3_f10", "B1S4_f02", "B1S4_f06", "B2S4_f09")
+missing11 <- list() #empty list
+for (i in seq_along(TMT_psm)) {
+   missing11[[i]] <- sum(rowSums(is.na(TMT_psm[[i]])) > 0)/ nrow(TMT_psm[[i]])*100
+}
+PSM_missing_row <- set_names(missing11, file_names_short_typed) #names each file by file_names_short_typed
+PSM_missing_row #missing for each  spectrum 
+   #unlist
+data.frame(matrix(unlist(PSM_missing_row), nrow=length(PSM_missing_row), byrow=TRUE)) 
+PSM_Perc_spec_missing <- matrix(unlist(PSM_missing_row), nrow=length(PSM_missing_row), byrow=TRUE)
+PSM_Perc_spec_missing
+PSM_df_perc_spec_missing <- tibble(File_name = file_names_short_typed , Perc_spec_missing = PSM_Perc_spec_missing)
+PSM_df_perc_spec_missing
+  #Plot 11
+p11 <- ggplot(PSM_df_perc_spec_missing, mapping = aes(x = File_name, y = PSM_Perc_spec_missing)) +
+   geom_col() +
+   labs(x = "File Name", y = "Percentage of PSM Spectra", 
+   title = "Percentage of Spectra with Missing Intensities", 
+         subtitle = "Afeter matchin TMTs to PSMS. Per file, the percentage of spectra with at least one missing TMT intensity") +
+   geom_text(aes(label = round(PSM_Perc_spec_missing, digits = 2)), 
+               position = position_dodge(width = 0.9), vjust = -0.25, size = 3) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, size = 10), axis.text.y = element_text(size = 10),
+            plot.title = element_text(size = 18), plot.subtitle = element_text(size = 10))
+   #Print plot 11
+p11
+pdf(file = "~/Desktop/Read raw file/TMT outputs/Plots/Percentage_of_Spectra_Missing_Intensities_after_PSM_Matching.pdf")
+   p11
+dev.off()
+
+         #1.1 Check missing data before imputation: mean
+missing12_mean <- list () #empty list
+for (i in seq_along(TMT_psm)) {
+   missing12_mean[[i]] <- mean(is.na(TMT_psm[[i]]))}
+PSM_mm12 <- set_names(missing12_mean, file_names_short_typed) #names each file by file_names_wd
+PSM_mm12 # Mean missing for each file
+            #Transforming List Data
+data.frame(matrix(unlist(PSM_mm12), nrow=length(PSM_mm12), byrow=TRUE)) 
+PSM_MM12 <- matrix(unlist(PSM_mm12), nrow=length(PSM_mm12), byrow=TRUE, ncol=1)
+PSM_MM12
+df_perc_spec_missing <- tibble(File_name=file_names_short_typed , Mean_Missing_Values=PSM_MM12)
+df_perc_spec_missing
+
+p12 <- ggplot(df_perc_spec_missing, mapping = aes(x=File_name, y=Mean_Missing_Values)) +
+   geom_col() +
+   labs(x="File Name", y="Mean Missing Values", title="Mean Missing Values after PSM TMT Matching") +
+   geom_text(aes(label=round(PSM_MM12, digits=3)), 
+               position=position_dodge(width=0.9), vjust=-0.25, size = 1.75) +
+   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 5), 
+            plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+p12
+pdf(file = "~/Desktop/Read raw file/TMT outputs/Plots/Mean_Missing_Values_after_PSM_TMT_Matching.pdf")
+   p12
+dev.off()
+
+
+
+
+
+
+
+
+
+
+
 
 ###################################
 #Loops for exploring missing values

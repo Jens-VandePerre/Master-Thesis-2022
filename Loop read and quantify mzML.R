@@ -1,72 +1,54 @@
-library(rpx)
-library(mzR)
+library("rpx")
+library("mzR")
 library("OrgMassSpecR")
 library("biomaRt")
 library("Hmisc")
 library("gplots")
 library("limma")
-library(isobar)
-library(devtools)
-library(MSnbase)
-library(Biobase)
-library(dplyr)
-library(tidyverse)
-library(fs)
-library(proxyC)
+library("isobar")
+library("devtools")
+library("MSnbase")
+library("Biobase")
+library("dplyr")
+library("tidyverse")
+library("fs")
+library("proxyC")
+library("sjlabelled")
+library("expss")
+library("labelled")
+library("patchwork")
+library("msdata")
+library("remotes")
+library("janitor")
+library("stringr")
+library("purrr")
 
-########################################################################################
-#Load in outputs directly, not running loops
-############################################
-#1. Output intensities for ALL SPECTRA
-      #not removing NAs
-      #no imputation
-      #no normalisation
-TMT_Intensities1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10")
-TMT_Intensities1_10 
-
-#2. Output intensities for ALL spectra
-    #impute: method="MLE"
-    #no normalisation
-TMT_Intensities1_10_Imputation <- readRDS(file= "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Imputation")
-TMT_Intensities1_10_Imputation
-
-#3. Loop that outputs intensities for ALL spectra
-    #no imputation
-    #normalise: method="center.median"
-TMT_Intensities1_10_Normalization <- readRDS(file= "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Normalization")
-TMT_Intensities1_10_Normalization  
-
-#4. Output intensities for ALL spectra
-    #impute: method="MLE"
-    #normalise: method="center.median"
-TMT_Intensities1_10_Imputation_Normalization <- readRDS(file= "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Imputation+Normalization")
-TMT_Intensities1_10_Imputation_Normalization
-########################################################################################
-
-wd <- setwd("~/Desktop/Read raw file/Data mzML")
-getwd() 
-list.files(wd) #The first 10 mzML files of CPTAC
-# Loading in multiple mzML files
-file_paths <- fs::dir_ls("~/Desktop/Read raw file/Data mzML")
-file_paths #The first 10 mzML files paths of CPTAC
-
-
-mzML_files <- list() #empty list
-for (i in seq_along(file_paths)) {
-  mzML_files[[i]] <- readMSData(file_paths[[i]],
-                                   msLevel = 2, verbose = FALSE, mode = "onDisk")
+#Working directory with all the wanted files
+    #This wd has to contain all the files that have to be analyzed
+mzTab_WD <- setwd("~/Desktop/Inputs/ALL_mzML")
+getwd()
+(file_names_wd <- list.files(mzTab_WD)) #6 mzML files
+    #The wanted files
+(file_names_short <- substring(fs::dir_ls("~/Desktop/Inputs/ALL_mzTab"), 86, 93)) #Character 86 untill 93 are unique
+#Wanted mzMLs
+    #Listing based on file_names_short
+listed_mzMLs <- list()
+for (i in seq_along(file_names_short)) {
+  listed_mzMLs[[i]] <- dir(path = "~/Desktop/Inputs/ALL_mzML", pattern = file_names_short[[i]])
 }
-file_names_wd <- list.files(wd)
-file_names_wd
-mzML <- set_names(mzML_files, file_names_wd) #names each file by file_names_wd
-mzML
- #Save mzMLs to different location: TMT outputs
-saveRDS(mzML, file = "~/Desktop/Read raw file/TMT outputs/Combined Files/mzML1-10")
-readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/mzML1-10")
-
+listed_mzMLs #from 16 mzML, the 6 from file_names_short are selected
+    #Reading in listed mzMLs
+mzML_files <- list() #empty list
+for (i in seq_along(listed_mzMLs)) {
+  mzML_files[[i]] <- readMSData(listed_mzMLs[[i]], msLevel = 2, verbose = FALSE, mode = "onDisk")
+}
+(Selected_mzML <- set_names(mzML_files, file_names_short))
+ #Save read in mzMLs to output location
+saveRDS(Selected_mzML, file = "~/Desktop/Outputs/mzML_imported/06.04.22_mzML")
+mzML <- readRDS(file = "~/Desktop/Outputs/mzML_imported/06.04.22_mzML")
+view(mzML[[1]])
 
 #Loop extracting TMT intensities + Printing TMT intensities
-
   #1. Loop that outputs intensities for ALL SPECTRA
       #not removing NAs
       #no imputation
@@ -84,20 +66,22 @@ for (i in seq_along(mzML)) {
     TMT1[[j]] <- exprs(mzML_qnt1[[j]]) #outputs all spectra, unclear in terminal
   }
 }
-TMT_intensities1 <- set_names(TMT1, file_names_wd) #names each file by file_names_wd
-TMT_intensities1
+TMT_intensities1 <- set_names(TMT1, file_names_short) #names each file by file_names_wd
+view(TMT_intensities1[1])
     #Save output to different location: TMT outputs/Combined Files
-saveRDS(TMT_intensities1, file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10")
-TMT_Intensities1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10")
-TMT_Intensities1_10       
+saveRDS(TMT_intensities1, file = "~/Desktop/Outputs/TMTs/06.04.22_TMT")
+TMT_Intensities_06_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/06.04.22_TMT")
+view(TMT_Intensities_06_04_22[1])
          #1. Check missing data before imputation
 missing1 <- list () #empty list
-for (i in seq_along(TMT_Intensities1_10)) {
-   missing1[[i]] <- sum(is.na(TMT_Intensities1_10[[i]]))}
+for (i in seq_along(TMT_Intensities_06_04_22)) {
+   missing1[[i]] <- sum(is.na(TMT_Intensities_06_04_22[[i]]))}
 missing_tot1 <- set_names(missing1, file_names_wd) #names each file by file_names_wd
 missing_tot1 # Total missing for each file
 
-
+######################################################
+#Loops Exploring Normalization and Imputation
+######################################################
   #2. Loop that outputs intensities for ALL spectra
     #impute: method="MLE"
     #no normalisation
@@ -272,3 +256,31 @@ for (i in seq_along(mzML_qnt_extra2)) {
 } 
 intensities_extra2 <- set_names(intensities_extra, file_names_wd) #names each file
 intensities_extra2
+########################################################################################
+#TESTING FILES
+############################################
+#1. Output intensities for ALL SPECTRA
+      #not removing NAs
+      #no imputation
+      #no normalisation
+TMT_Intensities1_10 <- readRDS(file = "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10")
+TMT_Intensities1_10 
+
+#2. Output intensities for ALL spectra
+    #impute: method="MLE"
+    #no normalisation
+TMT_Intensities1_10_Imputation <- readRDS(file= "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Imputation")
+TMT_Intensities1_10_Imputation
+
+#3. Loop that outputs intensities for ALL spectra
+    #no imputation
+    #normalise: method="center.median"
+TMT_Intensities1_10_Normalization <- readRDS(file= "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Normalization")
+TMT_Intensities1_10_Normalization  
+
+#4. Output intensities for ALL spectra
+    #impute: method="MLE"
+    #normalise: method="center.median"
+TMT_Intensities1_10_Imputation_Normalization <- readRDS(file= "~/Desktop/Read raw file/TMT outputs/Combined Files/TMT_Intensities1-10_Imputation+Normalization")
+TMT_Intensities1_10_Imputation_Normalization
+########################################################################################
