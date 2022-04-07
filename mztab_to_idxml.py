@@ -9,10 +9,11 @@ parser.add_argument('mztab', type=pathlib.Path)
 parser.add_argument('bait', type=str)
 args = parser.parse_args()
 
-# path = "/Users/adams/Desktop/Inputs/ALL_mzTab"
-# bait = "qx017077"
-# mztab = path + 'mztab/' + bait + '.mztab'
-# output_path = path + 'peptideIndexer/test/' + bait + '.idxml'
+path = "/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab"
+bait = "CPTAC_COprospective"
+mztab = path + 'mztab/' + bait + '.mztab'
+out = "/Users/jensvandeperre/Desktop/Outputs/ALL_idXML"
+output_path = out + 'peptideIndexer/test/' + bait + '.idxml'
 
 output_path = args.bait + '.idxml'
 
