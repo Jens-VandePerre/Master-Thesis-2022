@@ -6,15 +6,15 @@ import argparse, pathlib
 
 parser = argparse.ArgumentParser()
 parser.add_argument('mztab', type=pathlib.Path)
-parser.add_argument('bait', type=str)
+parser.add_argument('idxml', type=pathlib.Path)
 args = parser.parse_args()
 
-# path = "/Users/adams/Documents/master/master 2/Stage en thesis/Data/sars_cov_2/"
+# path = "/Users/jensvandeperre/Master-Thesis-2022/mztab_to_idxml.py"
 # bait = "qx017077"
 # mztab = path + 'mztab/' + bait + '.mztab'
 # output_path = path + 'peptideIndexer/test/' + bait + '.idxml'
 
-output_path = args.bait + '.idxml'
+output_path = args.idxml
 
 run_name = 'unknown'
 skiplines = 0
