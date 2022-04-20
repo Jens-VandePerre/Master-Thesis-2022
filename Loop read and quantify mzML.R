@@ -33,12 +33,13 @@ getwd()
     #The wanted files
 (file_names_short <- substring(fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzML_19_04_22"), 90, 97)) #Character 90 untill 97 are unique
 
+#Not needed for this run
   #Wanted mzMLs
       #Listing based on file_names_short
-  listed_mzMLs <- list()
-    for (i in seq_along(file_names_short)) {
-      listed_mzMLs[[i]] <- dir(path = "/Users/jensvandeperre/Desktop/Inputs/mzML_19_04_22", pattern = file_names_short[[i]])
-      }
+  #listed_mzMLs <- list()
+    #for (i in seq_along(file_names_short)) {
+      #listed_mzMLs[[i]] <- dir(path = "/Users/jensvandeperre/Desktop/Inputs/mzML_19_04_22", pattern = file_names_short[[i]])
+      #}
 
     #Reading in listed mzMLs
 mzML_files <- list() #empty list
