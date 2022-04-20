@@ -22,18 +22,18 @@ library("remotes")
 library("janitor")
 library("stringr")
 
-wd <- setwd("~/Desktop/Inputs/ALL_mzTab")
+wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/mzTab_19_04_22")
 getwd() 
-list.files(wd) #all mzTabs as of now 
+list.files(wd)
 
 #Load PSMs 
-PSM_07_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/07_04_22_PSMs") #PSMs stored 07/04/22
+PSM_07_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/20_04_22_PSMs") #PSMs stored 07/04/22
 view(PSM_07_04_22[[1]]) 
 #Load matching mzMLs
-TMT_Intensities_06_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/06.04.22_TMT") #TMT intensities stored 06/04/22
+TMT_Intensities_06_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/20.04.22_TMT") #TMT intensities stored 06/04/22
     #Automate filename extraction
 (file_name_long <- list.files(wd))
-(file_paths <- fs::dir_ls("~/Desktop/Inputs/ALL_mzTab"))
+(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzTab_19_04_22"))
 (file_names_short <- substring(file_paths, 86, 93)) #Characters 86 untill 93 are uniqueue
 
 #Look for matching scan numbers
