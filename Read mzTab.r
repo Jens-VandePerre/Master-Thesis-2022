@@ -82,7 +82,7 @@ for (i in seq_along(mzTabs_20_04_22)) {
   MTD[[i]] <- extractMetadata(mzTabs_20_04_22[[i]])
 }
 mzTab_files_Metadata <- set_names(MTD, file_names_short) #names each file by file_names_short
-mzTab_files_Metadata
+view(mzTab_files_Metadata[[1]])
 
 #extractFeaturesPSM 
 extractFeaturesPSM <- function(mztab.table) {
@@ -139,7 +139,7 @@ p_perc <- ggplot(tbl_Identification_percentage, aes(x= File_Name , y= Identifica
             plot.title = element_text(size = 18))
   #Print p_perc
 p_perc
-pdf(file = "~/Desktop/Outputs/Plots/07_04_22_Identification_Percentage.pdf")
+pdf(file = "~/Desktop/Outputs/Plots/20_04_22_Identification_Percentage.pdf")
    p_perc
 dev.off()
 
