@@ -1,12 +1,11 @@
 import pandas as pd
 import sys
-import getopt
 import pyopenms as  pyms
 import argparse, pathlib
 
 parser = argparse.ArgumentParser()
 parser.add_argument('mztab', type=pathlib.Path)
-parser.add_argument('idxml', type=pathlib.Path)
+parser.add_argument('idxml', type=str)
 args = parser.parse_args()
 
 # path = "/Users/jensvandeperre/Master-Thesis-2022/mztab_to_idxml.py"
