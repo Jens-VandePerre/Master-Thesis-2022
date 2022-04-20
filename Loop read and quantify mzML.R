@@ -23,29 +23,31 @@ library("janitor")
 library("stringr")
 library("purrr")
 
+#Run for 39 mzMLs dowloaded 19/04/22
 #Working directory with all the wanted files
     #This wd has to contain all the files that have to be analyzed
-mzTab_WD <- setwd("~/Desktop/Inputs/ALL_mzML")
+mzML_WD <- setwd("/Users/jensvandeperre/Desktop/Inputs/mzML_19_04_22")
 getwd()
-(file_names_wd <- list.files(mzTab_WD)) #6 mzML files
+(file_names_wd <- list.files(mzML_WD)) #39 mzML files
     #The wanted files
-(file_names_short <- substring(fs::dir_ls("~/Desktop/Inputs/ALL_mzTab"), 86, 93)) #Character 86 untill 93 are unique
-#Wanted mzMLs
-    #Listing based on file_names_short
-listed_mzMLs <- list()
-for (i in seq_along(file_names_short)) {
-  listed_mzMLs[[i]] <- dir(path = "~/Desktop/Inputs/ALL_mzML", pattern = file_names_short[[i]])
-}
-listed_mzMLs #from 16 mzML, the 6 from file_names_short are selected
+(file_names_short <- substring(fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzML_19_04_22"), 90, 97)) #Character 90 untill 97 are unique
+
+  #Wanted mzMLs
+      #Listing based on file_names_short
+  listed_mzMLs <- list()
+    for (i in seq_along(file_names_short)) {
+      listed_mzMLs[[i]] <- dir(path = "/Users/jensvandeperre/Desktop/Inputs/mzML_19_04_22", pattern = file_names_short[[i]])
+      }
+
     #Reading in listed mzMLs
 mzML_files <- list() #empty list
-for (i in seq_along(listed_mzMLs)) {
+for (i in 1:length(listed_mzMLs)) {
   mzML_files[[i]] <- readMSData(listed_mzMLs[[i]], msLevel = 2, verbose = FALSE, mode = "onDisk")
 }
 (Selected_mzML <- set_names(mzML_files, file_names_short))
  #Save read in mzMLs to output location
-saveRDS(Selected_mzML, file = "~/Desktop/Outputs/mzML_imported/06.04.22_mzML")
-mzML <- readRDS(file = "~/Desktop/Outputs/mzML_imported/06.04.22_mzML")
+saveRDS(Selected_mzML, file = "~/Desktop/Outputs/mzML_imported/20.04.22_mzML")
+mzML <- readRDS(file = "~/Desktop/Outputs/mzML_imported/20.04.22_mzML")
 view(mzML[[1]])
 
 #Loop extracting TMT intensities + Printing TMT intensities
@@ -69,8 +71,8 @@ for (i in seq_along(mzML)) {
 TMT_intensities1 <- set_names(TMT1, file_names_short) #names each file by file_names_wd
 view(TMT_intensities1[1])
     #Save output to different location: TMT outputs/Combined Files
-saveRDS(TMT_intensities1, file = "~/Desktop/Outputs/TMTs/06.04.22_TMT")
-TMT_Intensities_06_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/06.04.22_TMT")
+saveRDS(TMT_intensities1, file = "~/Desktop/Outputs/TMTs/20.04.22_TMT")
+TMT_Intensities_06_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/20.04.22_TMT")
 view(TMT_Intensities_06_04_22[1])
          #1. Check missing data before imputation
 missing1 <- list () #empty list
