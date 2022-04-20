@@ -22,7 +22,7 @@ library("remotes")
 library("janitor")
 library("stringr")
 
-wd <- setwd("~/Desktop/Inputs/ALL_mzTab")
+wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/mzTab_19_04_22")
 getwd() 
 list.files(wd) #all mzTabs as of now 
 
@@ -38,23 +38,22 @@ readMzTab <- function(filename) {
                                   sep="\t", na.strings="null", quote = "")
   mztab.table
 }
-(Test <- readMzTab("02CPTAC_COprospective_W_PNNL_20170123_B1S2_f10.mztab")) #File for testing
 #Loop Reading in Files
   #File paths to direct the loop
-(file_paths <- fs::dir_ls("~/Desktop/Inputs/ALL_mzTab"))
+(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzTab_19_04_22"))
     #Automate filename extraction
 (file_name_long <- list.files(wd))
-(file_names_short <- substring(file_paths, 86, 93)) #Characters 86 untill 93 are uniqueue
+(file_names_short <- substring(file_paths, 91, 98)) #Characters 86 untill 93 are uniqueue
   #Loop reading mzTabs
 mzTab <- list() #empty list
 for (i in seq_along(file_paths)) {
   mzTab[[i]] <- readMzTab(file_paths[[i]])
 }
 mzTab_files <- set_names(mzTab, file_names_short) #names each file by file_names_short
-mzTab_files[[1]]
+view(mzTab_files[[1]])
  #Save mzMLs to different location: TMT outputs
-saveRDS(mzTab_files, file = "~/Desktop/Outputs/mzTabs_imported/07_04_22_mzTabs")
-mzTabs_07_04_22 <- readRDS(file = "~/Desktop/Outputs/mzTabs_imported/07_04_22_mzTabs")
+saveRDS(mzTab_files, file = "~/Desktop/Outputs/mzTabs_imported/20_04_22_mzTabs")
+mzTabs_20_04_22 <- readRDS(file = "~/Desktop/Outputs/mzTabs_imported/20_04_22_mzTabs")
 
 ##################
 #Extract functions
@@ -66,8 +65,8 @@ extractMetadata_long <- function(mztab.table) {
 }
   #Loop
 MTD_long <- list() #empty list
-for (i in seq_along(mzTabs_07_04_22)) {
-  MTD_long[[i]] <- extractMetadata_long(mzTabs_07_04_22[[i]])
+for (i in seq_along(mzTabs_20_04_22)) {
+  MTD_long[[i]] <- extractMetadata_long(mzTabs_20_04_22[[i]])
 }
 mzTab_files_Metadata_long <- set_names(MTD_long, file_names_short) #names each file by file_names_short
 mzTab_files_Metadata_long
@@ -79,8 +78,8 @@ extractMetadata <- function(mztab.table) {
 }
   #Loop
 MTD <- list() #empty list
-for (i in seq_along(mzTabs_07_04_22)) {
-  MTD[[i]] <- extractMetadata(mzTabs_07_04_22[[i]])
+for (i in seq_along(mzTabs_20_04_22)) {
+  MTD[[i]] <- extractMetadata(mzTabs_20_04_22[[i]])
 }
 mzTab_files_Metadata <- set_names(MTD, file_names_short) #names each file by file_names_short
 mzTab_files_Metadata
@@ -93,8 +92,8 @@ extractFeaturesPSM <- function(mztab.table) {
 }
   #Loop for all files
 PSM <- list() #empty list
-for (i in seq_along(mzTabs_07_04_22)) {
-  PSM[[i]] <- extractFeaturesPSM(mzTabs_07_04_22[[i]])
+for (i in seq_along(mzTabs_20_04_22)) {
+  PSM[[i]] <- extractFeaturesPSM(mzTabs_20_04_22[[i]])
 }
 mzTab_files_PSM <- set_names(PSM, file_names_short) #names each file by file_names_short
 view(mzTab_files_PSM[[1]])
@@ -110,11 +109,11 @@ for (i in seq_along(mzTab_files_PSM)) {
 Identified_peptides <- set_names(nrow_PSM, file_names_short) #names each file by file_names_short
 Identified_peptides
   #Row count original
-TMT_Intensities_06_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/06.04.22_TMT")
+TMT_Intensities_20_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/20.04.22_TMT")
     #Loop counting spectra
 nrow_TMT <- list() #empty list
-for (i in seq_along(TMT_Intensities_06_04_22)) { #Only for the first 6 spectra, 
-  nrow_TMT[[i]] <- n_distinct(TMT_Intensities_06_04_22[[i]])
+for (i in seq_along(TMT_Intensities_20_04_22)) { #Only for the first 6 spectra, 
+  nrow_TMT[[i]] <- n_distinct(TMT_Intensities_20_04_22[[i]])
 }
 Spectral_count <- set_names(nrow_TMT, file_names_short) #names each file by file_names_short
 Spectral_count
@@ -159,8 +158,8 @@ tbl_id_perc <- cbind(tbl_name, tbl_perc)
 #Add new column sequence_no_mod behind the sequence column
         #Loop for all files
 psm <- list() #empty list
-for (i in seq_along(mzTabs_07_04_22)) {
-  psm[[i]] <- extractFeaturesPSM(mzTabs_07_04_22[[i]]) %>%
+for (i in seq_along(mzTabs_20_04_22)) {
+  psm[[i]] <- extractFeaturesPSM(mzTabs_20_04_22[[i]]) %>%
   as_tibble() %>% row_to_names(row_number = 1) %>%
   mutate(sequence_no_mod = trimws(str_remove_all(sequence, "n"))) %>% #remove n
   mutate(sequence_no_mod = trimws(str_remove_all(sequence_no_mod, "[0123456789]"))) %>% # remove numbers
@@ -170,5 +169,5 @@ for (i in seq_along(mzTabs_07_04_22)) {
 PSM <- set_names(psm, file_names_short) #names each file by file_names_short
 view(PSM[[1]])
   #Store PSM files
-saveRDS(PSM, file = "~/Desktop/Outputs/PSMs/07_04_22_PSMs") 
-PSM_07_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/07_04_22_PSMs")
+saveRDS(PSM, file = "~/Desktop/Outputs/PSMs/20_04_22_PSMs") 
+PSM_20_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/20_04_22_PSMs")
