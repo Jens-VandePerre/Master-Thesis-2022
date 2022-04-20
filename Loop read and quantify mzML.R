@@ -70,6 +70,7 @@ for (i in seq_along(mzML)) {
 }
 TMT_intensities1 <- set_names(TMT1, file_names_short) #names each file by file_names_wd
 view(TMT_intensities1[1])
+view(TMT1[[1]])
     #Save output to different location: TMT outputs/Combined Files
 saveRDS(TMT_intensities1, file = "~/Desktop/Outputs/TMTs/20.04.22_TMT")
 TMT_Intensities_06_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/20.04.22_TMT")
