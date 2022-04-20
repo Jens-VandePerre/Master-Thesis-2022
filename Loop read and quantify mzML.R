@@ -29,6 +29,7 @@ library("purrr")
 mzML_WD <- setwd("/Users/jensvandeperre/Desktop/Inputs/mzML_19_04_22")
 getwd()
 (file_names_wd <- list.files(mzML_WD)) #39 mzML files
+(mzML_file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzML_19_04_22"))
     #The wanted files
 (file_names_short <- substring(fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzML_19_04_22"), 90, 97)) #Character 90 untill 97 are unique
 
@@ -41,7 +42,7 @@ getwd()
 
     #Reading in listed mzMLs
 mzML_files <- list() #empty list
-for (i in 1:length(listed_mzMLs)) {
+for (i in seq_along(mzML_file_paths)) {
   mzML_files[[i]] <- readMSData(listed_mzMLs[[i]], msLevel = 2, verbose = FALSE, mode = "onDisk")
 }
 (Selected_mzML <- set_names(mzML_files, file_names_short))
