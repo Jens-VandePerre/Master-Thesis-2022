@@ -22,35 +22,35 @@ library("remotes")
 library("janitor")
 library("stringr")
 
-wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/mzTab_19_04_22")
+wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/mzTab_21_04_22")
 getwd() 
 list.files(wd)
 #Load PSMs 
-PSM_20_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/20_04_22_PSMs") #PSMs stored 20/04/22
-view(PSM_20_04_22[[1]]) 
+PSM_22_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/22_04_22_PSMs") 
+view(PSM_22_04_22[[1]]) 
 #Load matching mzMLs
-TMT_Intensities_29_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/20.04.22_TMT") #TMT intensities stored 20/04/22
+TMT_Intensities_22_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/22.04.22_TMT") 
     #Automate filename extraction
 (file_name_long <- list.files(wd))
-(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzTab_19_04_22"))
+(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzTab_21_04_22"))
 (file_names_short <- substring(file_paths, 91, 98)) #Characters 86 untill 93 are uniqueue
 
 #Look for matching scan numbers
-view(PSM_20_04_22[[1]]["PSM_ID"]) #Column PSM_ID
-view(TMT_Intensities_20_04_22[[1]][, 0]) #These are row names
+view(PSM_22_04_22[[1]]["PSM_ID"]) #Column PSM_ID
+view(TMT_Intensities_22_04_22[[1]][, 0]) #These are row names
 
 #Make TMT tibble + add index column for matching
   #selecting index column
 ind_TMT1 <- list()
-for (i in seq_along(TMT_Intensities_20_04_22)) {
-  ind_TMT1[[i]] <- tibble(index=rownames(TMT_Intensities_20_04_22[[i]][, 0])) %>%
+for (i in seq_along(TMT_Intensities_22_04_22)) {
+  ind_TMT1[[i]] <- tibble(index=rownames(TMT_Intensities_22_04_22[[i]][, 0])) %>%
     mutate(index = trimws(str_remove_all(index, "F1.S"))) %>%
     mutate(index = trimws(str_remove_all(index, "^0"))) %>%
     mutate(index = trimws(str_remove_all(index, "^0"))) %>%
     mutate(index = trimws(str_remove_all(index, "^0"))) %>%
     mutate(index = trimws(str_remove_all(index, "^0"))) %>%
     select(index) %>%
-    cbind(TMT_Intensities_20_04_22[[i]]) %>% as_tibble
+    cbind(TMT_Intensities_22_04_22[[i]]) %>% as_tibble
 }
 TMT_ready_for_machting <- set_names(ind_TMT1, file_names_short)
 TMT_ready_for_machting[[1]]
@@ -59,13 +59,13 @@ view(TMT_ready_for_machting[[1]])
 #Make PSM index column for matching
   #Extract numbers from PSM_ID column + Adding this index column to PSM_6
 ind_mzTab5 <- list()
-for (i in seq_along(PSM_20_04_22)) {
-  ind_mzTab5[[i]] <- select(PSM_20_04_22[[i]], PSM_ID) %>% 
+for (i in seq_along(PSM_22_04_22)) {
+  ind_mzTab5[[i]] <- select(PSM_22_04_22[[i]], PSM_ID) %>% 
     mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
     mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
     mutate(index = trimws(str_remove_all(index, "scan="))) %>%
     select(index) %>%
-    cbind(PSM_20_04_22[[i]]) %>% as_tibble
+    cbind(PSM_22_04_22[[i]]) %>% as_tibble
 }
 PSM_ready_for_matching <- set_names(ind_mzTab5, file_names_short)
 PSM_ready_for_matching
@@ -82,14 +82,14 @@ Merged_PSM_TMT
 view(Merged_PSM_TMT[[1]]) 
 view(merging[[1]] %>% select(index, sequence_no_mod, 25:34) %>% arrange(sequence_no_mod)) 
   #Save outputs
-saveRDS(Merged_PSM_TMT, file = "~/Desktop/Outputs/PSM_TMT_linked/20_04_22_PSM_TMT_Linked")
-PSM_TMT_20_04_22 <- readRDS("~/Desktop/Outputs/PSM_TMT_linked/20_04_22_PSM_TMT_Linked")
+saveRDS(Merged_PSM_TMT, file = "~/Desktop/Outputs/PSM_TMT_linked/22_04_22_PSM_TMT_Linked")
+PSM_TMT_22_04_22 <- readRDS("~/Desktop/Outputs/PSM_TMT_linked/22_04_22_PSM_TMT_Linked")
 
 #Checking if length stay the same after matching PSMs and TMTs
   #Length PSM
 l_PSM <- list()
-for (i in seq_along(PSM_TMT_20_04_22)) {
-  l_PSM[[i]] <- nrow(PSM_TMT_20_04_22[[i]])
+for (i in seq_along(PSM_TMT_22_04_22)) {
+  l_PSM[[i]] <- nrow(PSM_TMT_22_04_22[[i]])
 }
 (PSM_length <- set_names(l_PSM, file_names_short))
   #Length matched
@@ -100,7 +100,7 @@ for (i in seq_along(Merged_PSM_TMT)) {
 (Merged_length <- set_names(l_matched, file_names_short)) 
   #Is there a difference?
 l_diff <- list()
-for (i in seq_along(PSM_TMT_20_04_22)) {
+for (i in seq_along(PSM_TMT_22_04_22)) {
   l_diff[[i]] <- (PSM_length[[i]]-Merged_length[[i]])
 }
 (Length_difference <- set_names(l_diff, file_names_short))#All 0 Merging SUCCESS
