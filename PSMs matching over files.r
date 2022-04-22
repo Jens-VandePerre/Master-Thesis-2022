@@ -22,20 +22,19 @@ library("remotes")
 library("janitor")
 library("stringr")
 
-wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/mzTab_19_04_22")
+wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/mzTab_21_04_22")
 getwd() 
 list.files(wd)
 (file_name_long <- list.files(wd))
-(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzTab_19_04_22"))
+(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzTab_21_04_22"))
 (file_names_short <- substring(file_paths, 91, 98)) #Characters 86 untill 93 are uniqueue
 
-
-#20/04/22 PSMs linked to TMT intensities for 23 files
-PSM_TMT_20_04_22 <- readRDS("~/Desktop/Outputs/PSM_TMT_linked/20_04_22_PSM_TMT_Linked")
+#22/04/22 PSMs linked to TMT intensities for 39 files
+PSM_TMT_22_04_22 <- readRDS("~/Desktop/Outputs/PSM_TMT_linked/22_04_22_PSM_TMT_Linked")
     #Make an extra index column that includes the file_names_short
 new_col <- list()
-for (i in seq_along(PSM_TMT_20_04_22)) {
-    new_col[[i]] <- PSM_TMT_20_04_22[[i]] %>%
+for (i in seq_along(PSM_TMT_22_04_22)) {
+    new_col[[i]] <- PSM_TMT_22_04_22[[i]] %>%
     mutate(index_filename = paste0(index, " ",file_names_short[[i]]), .before = index)
 }
 view(new_col[[1]])
@@ -69,15 +68,15 @@ view(Sum_all_seq_no_mod %>% arrange(-Count))#most frequent sequence_no_mod at to
 
 #Save the Outputs
   #Sequence_no_mod
-saveRDS(all_seq_no_mod, file = "~/Desktop/Outputs/PSMs/20_04_22_Count_identical_seq_no_mod")
-Count_identical_seq_no_mod_07_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/20_04_22_Count_identical_seq_no_mod")
-saveRDS(Sum_all_seq_no_mod, file = "~/Desktop/Outputs/PSMs/20_04_22_All_seq_no_mod")
-All_seq_no_mod_07_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/20_04_22_All_seq_no_mod")
+saveRDS(all_seq_no_mod, file = "~/Desktop/Outputs/PSMs/22_04_22_Count_identical_seq_no_mod")
+Count_identical_seq_no_mod_22_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/22_04_22_Count_identical_seq_no_mod")
+saveRDS(Sum_all_seq_no_mod, file = "~/Desktop/Outputs/PSMs/22_04_22_All_seq_no_mod")
+All_seq_no_mod_22_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/22_04_22_All_seq_no_mod")
   #Sequence
-saveRDS(Sum_all_seq, file = "~/Desktop/Outputs/PSMs/20_04_22_Count_identical_seq_with_mod")
-Count_identical_seq_with_mod_07_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/20_04_22_Count_identical_seq_with_mod")
-saveRDS(all_seq, file = "~/Desktop/Outputs/PSMs/20_04_22_All_seq_with_mod")
-All_seq_with_mod_07_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/20_04_22_All_seq_with_mod")
+saveRDS(Sum_all_seq, file = "~/Desktop/Outputs/PSMs/22_04_22_Count_identical_seq_with_mod")
+Count_identical_seq_with_mod_22_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/22_04_22_Count_identical_seq_with_mod")
+saveRDS(all_seq, file = "~/Desktop/Outputs/PSMs/22_04_22_All_seq_with_mod")
+All_seq_with_mod_22_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/22_04_22_All_seq_with_mod")
 
 
 ######################
