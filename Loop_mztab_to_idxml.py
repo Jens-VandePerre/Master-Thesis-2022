@@ -17,5 +17,14 @@ lines=`tail -n+1 $name_file`
 for line in $lines
 do
 IFS=';' read -r -a array <<< "$line"
-time peptideindexer -in /Users/jensvandeperre/Desktop/Inputs/idxml_test/${array[0]}.idxml -fasta /Users/jensvandeperre/Desktop/Inputs/Seq_database_fasta/Human_Proteome.fasta -missing_decoy_action "silent" -IL_equivalent -enzyme:name 'Trypsin' -enzyme:specificity "semi" -out /Users/jensvandeperre/Desktop/Outputs/peptideindexer/${array[0]}.idxml
+time peptideindexer -in /Users/jensvandeperre/Desktop/Inputs/idxml/${array[0]}.idxml -fasta /Users/jensvandeperre/Desktop/Inputs/Seq_database_fasta/Human_Proteome.fasta -missing_decoy_action "silent" -IL_equivalent -enzyme:name 'Trypsin' -enzyme:specificity "semi" -out /Users/jensvandeperre/Desktop/Outputs/peptideindexer/${array[0]}.idxml
+done
+
+#loop PIA
+name_file=/Users/jensvandeperre/Desktop/Inputs/file_names/idxml_names.txt
+lines=`tail -n+1 $name_file`
+for line in $lines
+do
+IFS=';' read -r -a array <<< "$line"
+java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Outputs/peptideindexer/${array[0]}.idxml -o /Users/jensvandeperre/Desktop/Outputs/PIA/${array[0]}.xml -c --example /Users/jensvandeperre/Desktop/Inputs/pia_parameter_file.xml
 done
