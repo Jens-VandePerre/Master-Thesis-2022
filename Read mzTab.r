@@ -22,7 +22,7 @@ library("remotes")
 library("janitor")
 library("stringr")
 
-wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/mzTab_21_04_22")
+wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab")
 getwd() 
 list.files(wd) #all mzTabs as of now 
 
@@ -40,7 +40,7 @@ readMzTab <- function(filename) {
 }
 #Loop Reading in Files
   #File paths to direct the loop
-(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzTab_21_04_22"))
+(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab"))
     #Automate filename extraction
 (file_name_long <- list.files(wd))
 (file_names_short <- substring(file_name_long, 39, 46)) #Characters 86 untill 93 are uniqueue
@@ -170,3 +170,11 @@ view(PSM[[1]])
   #Store PSM files
 saveRDS(PSM, file = "~/Desktop/Outputs/PSMs/22_04_22_PSMs") 
 PSM_20_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/22_04_22_PSMs")
+
+
+mzTab <- list() #empty list
+for (i in seq_along(file_paths)) {
+  mzTab[[i]] <- readMzTab(file_paths[[i]])
+}
+mzTab_files <- set_names(mzTab, file_names_short) #names each file by file_names_short
+view(mzTab_files[[1]])
