@@ -53,17 +53,15 @@ mzTab_files <- set_names(mzTab, file_names_short) #names each file by file_names
 view(mzTab_files[[1]])
 
 #extractMetadata
-  #Extracting the MTD: only columns first 3 have inforamtion
-extractMetadata <- function(mztab.table) {
-  mztab.table[startsWith(as.character(mztab.table$V1), "MTD"), 1:3]
+extractMetadata_long <- function(mztab.table) {
+  mztab.table[startsWith(as.character(mztab.table$V1), "MTD"),]
 }
   #Loop
-MTD <- list() #empty list
+MTD_long <- list() #empty list
 for (i in seq_along(mzTab_files)) {
-  MTD[[i]] <- extractMetadata(mzTab_files[[i]])
+  MTD_long[[i]] <- extractMetadata_long(mzTab_files[[i]])
 }
-mzTab_files_Metadata <- set_names(MTD, file_names_short) #names each file by file_names_short
-view(mzTab_files_Metadata[[1]])
+mzTab_files_Metadata_long <- set_names(MTD_long, file_names_short) #names each file by file_names_short
 
 #extractFeaturesPSM 
 extractFeaturesPSM <- function(mztab.table) {
@@ -79,18 +77,26 @@ for (i in seq_along(mzTab_files)) {
 mzTab_files_PSM <- set_names(PSM, file_names_short) #names each file by file_names_short
 view(mzTab_files_PSM[[3]])
 
-#Create column with unmodified peptide sequences
-#Make Tibble with PSMs and use PSH as column names
-#Select sequence column + Removing brackets + Removing numbers
-#Add new column sequence_no_mod behind the sequence column
+#Remove PTMs from sequence collumn
         #Loop for all files
 psm <- list() #empty list
 for (i in seq_along(mzTab_files)) {
   psm[[i]] <- extractFeaturesPSM(mzTab_files[[i]]) %>%
-  as_tibble() %>% row_to_names(row_number = 1) %>%
-  mutate(sequence = trimws(str_remove_all(sequence, "n"))) %>% #remove n
-  mutate(sequence = trimws(str_remove_all(sequence, "[0123456789]"))) %>% # remove numbers
-  mutate(sequence = trimws(str_remove_all(sequence, "\\[|\\]"))) %>% #remove []
+  as_tibble() %>% 
+mutate(V2 = trimws(str_remove_all(V2, "n"))) %>% #remove n
+  mutate(V2 = trimws(str_remove_all(V2, "[0123456789]"))) %>% # remove numbers
+  mutate(V2 = trimws(str_remove_all(V2, "\\[|\\]"))) #remove []
 }
 PSM <- set_names(psm, file_names_short) #names each file by file_names_short
 view(PSM[[1]])
+
+#Joining MTD and PTM again
+mzTab <- list()
+for (i in 1:length(PSM)) {
+    mzTab[[i]] <- rbind(MTD_long[[i]], psm[[i]])
+}
+
+
+?writeMzTabData()
+?row_to_names
+
