@@ -54,7 +54,10 @@ view(mzTab_files[[1]])
 
 #extractMetadata
 extractMetadata_long <- function(mztab.table) {
-  mztab.table[startsWith(as.character(mztab.table$V1), "MTD"),]
+  mtd <- mztab.table[startsWith(as.character(mztab.table$V1), "MTD"),]
+  psh <- mztab.table[startsWith(as.character(mztab.table$V1), "PSH"),]
+    rbind(mtd,psh)
+
 }
   #Loop
 MTD_long <- list() #empty list
@@ -62,12 +65,12 @@ for (i in seq_along(mzTab_files)) {
   MTD_long[[i]] <- extractMetadata_long(mzTab_files[[i]])
 }
 mzTab_files_Metadata_long <- set_names(MTD_long, file_names_short) #names each file by file_names_short
+view(mzTab_files_Metadata_long[[1]])
 
 #extractFeaturesPSM 
 extractFeaturesPSM <- function(mztab.table) {
   psm <- mztab.table[startsWith(as.character(mztab.table$V1), "PSM"),]
-  psh <- mztab.table[startsWith(as.character(mztab.table$V1), "PSH"),]
-  rbind(psh,psm)
+  rbind(psm)
 }
   #Loop for all files
 PSM <- list() #empty list
@@ -81,9 +84,8 @@ view(mzTab_files_PSM[[3]])
         #Loop for all files
 psm <- list() #empty list
 for (i in seq_along(mzTab_files)) {
-  psm[[i]] <- extractFeaturesPSM(mzTab_files[[i]]) %>%
-  as_tibble() %>% 
-mutate(V2 = trimws(str_remove_all(V2, "n"))) %>% #remove n
+  psm[[i]] <- mzTab_files_PSM[[i]] %>%
+  mutate(V2 = trimws(str_remove_all(V2, "n"))) %>% #remove n
   mutate(V2 = trimws(str_remove_all(V2, "[0123456789]"))) %>% # remove numbers
   mutate(V2 = trimws(str_remove_all(V2, "\\[|\\]"))) #remove []
 }
@@ -95,8 +97,14 @@ mzTab <- list()
 for (i in 1:length(PSM)) {
     mzTab[[i]] <- rbind(MTD_long[[i]], psm[[i]])
 }
+view(mzTab[[1]])
+MZTABBRO <- set_names(mzTab, file_name_long) #names each file by file_names_short
 
 
-?writeMzTabData()
-?row_to_names
+#Write these mzTabs, to be used as peptideindexer input
+write.csv(MZTABBRO[[1]], file="/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq/test.mztab")
+?writeMzTabData
+as_data_frame()
 
+writeMzTabData(MZTABBRO[[1]], what = "PEP", file = "/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq/test.mztab"
+               )
