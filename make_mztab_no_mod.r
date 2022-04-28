@@ -142,3 +142,10 @@ writeMzTab <- function(mztab, filename) {
   }
     
 }
+
+writeMzTab <- function(object, filename) {
+    write.table(object, file=filename,
+                row.names=FALSE, col.names=FALSE,
+                quote=TRUE, sep="\t", na="\"\"")
+
+}
