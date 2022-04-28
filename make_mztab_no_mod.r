@@ -66,7 +66,7 @@ for (i in seq_along(mzTab_files)) {
 }
 mzTab_files_Metadata_long <- set_names(MTD_long, file_names_short) #names each file by file_names_short
 view(mzTab_files_Metadata_long[[1]])
-
+class(mzTab_files_Metadata_long[[1]])
 #extractFeaturesPSM 
 extractFeaturesPSM <- function(mztab.table) {
   psm <- mztab.table[startsWith(as.character(mztab.table$V1), "PSM"),]
@@ -108,3 +108,37 @@ as_data_frame()
 
 writeMzTabData(MZTABBRO[[1]], what = "PEP", file = "/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq/test.mztab"
                )
+
+install.packages("faahKO", repos="https://www.freestatistics.org/cran/")
+library("faahKO")
+writeMzTab(MZTABBRO[[1]], "/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq/test.mztab")
+
+writeMzTab <- function(mztab, filename) {
+  if(is.null(mztab$metadata)) {
+    stop("Metadata must not be null!");
+  }
+  utils::write.table(mztab$metadata, file=filename,
+              row.names=FALSE, col.names=FALSE,
+              quote=TRUE, sep="\t", na="\"\"")
+  if(is.null(mztab$smallMoleculeSummary)) {
+    stop("SmallMoleculeSummary must not be null!");
+  }
+  utils::write.table(mztab$smallMoleculeSummary, file=filename,
+              row.names=FALSE, col.names=FALSE,
+              quote=TRUE, sep="\t", na="\"\"", append=TRUE)
+  if(is.null(mztab$smallMoleculeFeatures)) {
+    warning("SmallMoleculeFeatures should not be null!");
+  } else {
+    utils::write.table(mztab$smallMoleculeFeatures, file=filename,
+                row.names=FALSE, col.names=FALSE,
+                quote=TRUE, sep="\t", na="\"\"")
+  }
+  if(is.null(mztab$smallMoleculeEvidence)) {
+    warning("SmallMoleculeEvidence should not be null!");
+  } else {
+    utils::write.table(mztab$smallMoleculeEvidence, file=filename,
+                row.names=FALSE, col.names=FALSE,
+                quote=TRUE, sep="\t", na="\"\"")
+  }
+    
+}
