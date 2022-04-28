@@ -26,5 +26,8 @@ lines=`tail -n+1 $name_file`
 for line in $lines
 do
 IFS=';' read -r -a array <<< "$line"
-java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Outputs/peptideindexer/${array[0]}.idxml -o /Users/jensvandeperre/Desktop/Outputs/PIA/${array[0]}.xml -c --example /Users/jensvandeperre/Desktop/Inputs/pia_parameter_file.xml
+time java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Outputs/peptideindexer/${array[0]}.idxml -o /Users/jensvandeperre/Desktop/Outputs/PIA/${array[0]}.xml -c --example /Users/jensvandeperre/Desktop/Inputs/pia_parameter_file.xml
 done
+
+
+/Users/jensvandeperre/opt/anaconda3/bin/python3 /Users/jensvandeperre/Master-Thesis-2022/mztab_to_idxml.py //Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq/test.mztab /Users/jensvandeperre/Desktop/Inputs/idxml/ALL_idxml/test.idxml
