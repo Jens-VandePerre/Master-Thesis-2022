@@ -5,7 +5,6 @@ library("biomaRt")
 library("Hmisc")
 library("gplots")
 library("limma")
-library("isobar")
 library("devtools")
 library("MSnbase")
 library("Biobase")
@@ -21,8 +20,6 @@ library("msdata")
 library("remotes")
 library("janitor")
 library("stringr")
-library("faahKO")
-
 
 wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab")
 getwd() 
@@ -44,8 +41,8 @@ readMzTab <- function(filename) {
   #File paths to direct the loop
 (file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab"))
     #Automate filename extraction
-(file_name_long <- list.files(wd))
-(file_names_short <- substring(file_name_long, 39, 46)) #Characters 86 untill 93 are uniqueue
+(file_name_long <- substring(list.files(wd), 1, 46))
+(file_names_short <- substring(file_name_long, 39, 46))
   #Loop reading mzTabs
 mzTab <- list() #empty list
 for (i in seq_along(file_paths)) {
@@ -58,7 +55,6 @@ extractMetadata_long <- function(mztab.table) {
   mtd <- mztab.table[startsWith(as.character(mztab.table$V1), "MTD"),]
   psh <- mztab.table[startsWith(as.character(mztab.table$V1), "PSH"),]
     rbind(mtd,psh)
-
 }
   #Loop
 MTD_long <- list() #empty list
@@ -100,13 +96,13 @@ mzTab_no_mod <- set_names(mzTab, file_name_long) #names each file by file_names_
 length(mzTab_no_mod)
 length(file_name_long)
 
-
 #Write these mzTabs, to be used as peptideindexer input
-for(i in seq_along(mzTab_no_mod)) {                             
-  write.table(mzTab_no_mod[i],                              
-             file = paste0("Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq/",
-                    file_name_long[i],
-                    ".mztab"),
-             row.names = FALSE, quote=FALSE, sep='\t')
+for(i in seq_along(mzTab_no_mod)) {
+  write.table(mzTab_no_mod[[i]],
+   file = paste0('/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq/',
+                    file_name_long[[i]], '.mztab'
+                    ),
+             row.names = FALSE, quote=FALSE, sep='\t', col.names = FALSE)
 }
-
+test <- readMzTab('/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f02.mztab')
+view(test) #LOOKS VERY GOOD!
