@@ -10,6 +10,9 @@ IFS=';' read -r -a array <<< "$line"
 time /Users/jensvandeperre/opt/anaconda3/bin/python3 /Users/jensvandeperre/Master-Thesis-2022/mztab_to_idxml.py /Users/jensvandeperre/Desktop/Inputs/ALL_mzTab/${array[0]}.mztab /Users/jensvandeperre/Desktop/Inputs/idxml/ALL_idxml/${array[0]}.idxml
 done
 
+/Users/jensvandeperre/opt/anaconda3/bin/python3 /Users/jensvandeperre/Master-Thesis-2022/mztab_to_idxml.py /Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq/test.mztab /Users/jensvandeperre/Desktop/Inputs/idxml/TEST_WORKS.idxml
+
+
 
 #loop peptideindex n idxmls
 name_file=/Users/jensvandeperre/Desktop/Inputs/file_names/idxml_names.txt
@@ -30,4 +33,3 @@ time java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Outputs
 done
 
 
-/Users/jensvandeperre/opt/anaconda3/bin/python3 /Users/jensvandeperre/Master-Thesis-2022/mztab_to_idxml.py //Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq/test.mztab /Users/jensvandeperre/Desktop/Inputs/idxml/ALL_idxml/test.idxml
