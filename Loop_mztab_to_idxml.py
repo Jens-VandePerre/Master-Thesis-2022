@@ -20,7 +20,7 @@ lines=`tail -n+1 $name_file`
 for line in $lines
 do
 IFS=';' read -r -a array <<< "$line"
-time peptideindexer -in /Users/jensvandeperre/Desktop/Inputs/idxml/${array[0]}.idxml -fasta /Users/jensvandeperre/Desktop/Inputs/Seq_database_fasta/Human_Proteome.fasta -missing_decoy_action "silent" -IL_equivalent -enzyme:name 'Trypsin' -enzyme:specificity "semi" -out /Users/jensvandeperre/Desktop/Outputs/peptideindexer/${array[0]}.idxml
+time peptideindexer -in /Users/jensvandeperre/Desktop/Inputs/idxml/${array[0]}.idxml -fasta /Users/jensvandeperre/Desktop/Inputs/Seq_database_fasta/Human_Proteome.fasta -missing_decoy_action "silent" -IL_equivalent -enzyme:name 'Trypsin' -enzyme:specificity "semi" -out /Users/jensvandeperre/Desktop/Inputs/peptideindexer/${array[0]}.idxml
 done
 
 peptideindexer -in /Users/jensvandeperre/Desktop/Inputs/idxml/WORKS.idxml -fasta /Users/jensvandeperre/Desktop/Inputs/Seq_database_fasta/Human_Proteome.fasta -missing_decoy_action "silent" -IL_equivalent -enzyme:name 'Trypsin' -enzyme:specificity "semi" -out /Users/jensvandeperre/Desktop/Outputs/peptideindexer/WORKS.idxml
@@ -32,7 +32,7 @@ lines=`tail -n+1 $name_file`
 for line in $lines
 do
 IFS=';' read -r -a array <<< "$line"
-time java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Outputs/peptideindexer/${array[0]}.idxml -o /Users/jensvandeperre/Desktop/Inputs/PIA_compile/${array[0]}.xml --compile 
+time java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/peptideindexer/${array[0]}.idxml -o /Users/jensvandeperre/Desktop/Inputs/PIA_compile/${array[0]}.xml --compile 
 done
 
 java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Outputs/peptideindexer/WORKS.idxml -o /Users/jensvandeperre/Desktop/Inputs/PIA_compile/WORKS.xml --compile 
@@ -47,7 +47,7 @@ IFS=';' read -r -a array <<< "$line"
 time java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/pia_parameter_file.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/${array[0]}.xml
 done
 
-java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/pia_parameter_file.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/WORKS.xml 
+java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/pia_parameter_file.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f02.xml
 
 
 
