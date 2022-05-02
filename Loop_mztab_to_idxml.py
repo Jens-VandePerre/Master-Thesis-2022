@@ -44,7 +44,7 @@ lines=`tail -n+1 $name_file`
 for line in $lines
 do
 IFS=';' read -r -a array <<< "$line"
-time java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/pia_parameter_file.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/${array[0]}.xml 
+time java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/pia_parameter_file.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/${array[0]}.xml
 done
 
 java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/pia_parameter_file.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/WORKS.xml 
