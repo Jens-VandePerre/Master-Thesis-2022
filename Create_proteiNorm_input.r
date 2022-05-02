@@ -22,14 +22,6 @@ library("remotes")
 library("janitor")
 library("stringr")
 
-test1 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_1.csv', header = TRUE, sep = "\t")
-test2 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_2.csv', header = TRUE, sep = "\t")
-test3 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_2.csv', header = TRUE, sep = "\t")
-
-view(test1)
-view(test2)
-view(test3)
-
 
 wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq")
 getwd() 
@@ -113,6 +105,12 @@ TMT_ready_for_machting[[1]]
 view(TMT_ready_for_machting[[1]])
 
 #Load protein info from PIA output
+test1 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_1.csv', header = TRUE, sep = "\t")
+test2 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_2.csv', header = TRUE, sep = "\t")
+test3 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_2.csv', header = TRUE, sep = "\t")
+view(test1)
+view(test2)
+view(test3)
 
 
 
