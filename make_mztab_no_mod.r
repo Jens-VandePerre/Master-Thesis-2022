@@ -104,5 +104,5 @@ for(i in seq_along(mzTab_no_mod)) {
                     ),
              row.names = FALSE, quote=FALSE, sep='\t', col.names = FALSE)
 }
-test <- readMzTab('/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f02.mztab')
+test <- readMzTab('/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.mztab')
 view(test) #LOOKS VERY GOOD!
