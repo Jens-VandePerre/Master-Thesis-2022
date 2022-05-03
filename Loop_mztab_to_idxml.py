@@ -47,7 +47,9 @@ IFS=';' read -r -a array <<< "$line"
 time java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/pia_parameter_file.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/${array[0]}.xml
 done
 
-java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/pia_parameter_file.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f02.xml
+java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/test1_PIA_P.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.xml
+java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/test2_PIA_P.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.xml
+java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/test3_PIA_P.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.xml
 
 
 

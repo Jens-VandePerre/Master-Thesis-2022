@@ -26,7 +26,7 @@ library("purrr")
 #Run for 39 mzMLs dowloaded 19/04/22
 #Working directory with all the wanted files
     #This wd has to contain all the files that have to be analyzed
-mzML_WD <- setwd("/Users/jensvandeperre/Desktop/Inputs/mzML_28_04_22")
+mzML_WD <- setwd("/Users/jensvandeperre/Desktop/Inputs/mzML_2.5.22")
 getwd()
 (file_names_wd <- list.files(mzML_WD)) #39 mzML files
 (mzML_file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzML_28_04_22"))
