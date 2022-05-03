@@ -26,12 +26,12 @@ library("purrr")
 #Run for 39 mzMLs dowloaded 19/04/22
 #Working directory with all the wanted files
     #This wd has to contain all the files that have to be analyzed
-mzML_WD <- setwd("/Users/jensvandeperre/Desktop/Inputs/mzML_2.5.22")
+mzML_WD <- setwd("/Users/jensvandeperre/Desktop/Inputs/mzML_3.5.22")
 getwd()
 (file_names_wd <- list.files(mzML_WD)) #39 mzML files
-(mzML_file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzML_28_04_22"))
+(mzML_file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzML_3.5.22"))
     #The wanted files
-(file_names_short <- substring(fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzML_28_04_22"), 90, 97)) #Character 90 untill 97 are unique
+(file_names_short <- substring(fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzML_3.5.22"), 88, 95)) #Character 90 untill 97 are unique
 
 #Not needed for this run
   #Wanted mzMLs
@@ -48,8 +48,8 @@ for (i in seq_along(mzML_file_paths)) {
 }
 (Selected_mzML <- set_names(mzML_files, file_names_short))
  #Save read in mzMLs to output location
-saveRDS(Selected_mzML, file = "~/Desktop/Outputs/mzML_imported/28.04.22_mzML")
-mzML <- readRDS(file = "~/Desktop/Outputs/mzML_imported/28.04.22_mzML")
+saveRDS(Selected_mzML, file = "~/Desktop/Outputs/mzML_imported/03.05.22_mzML")
+mzML <- readRDS(file = "~/Desktop/Outputs/mzML_imported/03.05.22_mzML")
 view(mzML[[1]])
 
 #Loop extracting TMT intensities + Printing TMT intensities
@@ -74,9 +74,9 @@ TMT_intensities1 <- set_names(TMT1, file_names_short) #names each file by file_n
 view(TMT_intensities1[1])
 view(TMT1[[1]])
     #Save output to different location: TMT outputs/Combined Files
-saveRDS(TMT_intensities1, file = "~/Desktop/Outputs/TMTs/28.04.22_TMT")
-TMT_Intensities_28_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/28.04.22_TMT")
-view(TMT_Intensities_28_04_22[3])
+saveRDS(TMT_intensities1, file = "~/Desktop/Outputs/TMTs/03.05.22_TMT")
+TMT_Intensities_28_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/03.05.22_TMT")
+view(TMT_Intensities_28_04_22[18])
          #1. Check missing data before imputation
 missing1 <- list () #empty list
 for (i in seq_along(TMT_Intensities_22_04_22)) {
