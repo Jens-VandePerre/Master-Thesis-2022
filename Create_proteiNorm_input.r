@@ -33,6 +33,10 @@ list.files(wd)
 (file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq"))
 (file_names_short <- substring(file_paths, 91, 98)) 
 
+ALL_PSMs_4.5.22 <- readRDS(file = "~/Desktop/Outputs/PSMs/ALL_PSMs_4.5.22")
+
+
+
 #Read in mzTab without modifications
 readMzTab <- function(filename) {
   # read maximum number of columns in file
@@ -134,19 +138,25 @@ TMT_ready_for_machting[[1]]
 view(TMT_ready_for_machting[[1]])
 
 #Load protein info from PIA output
-test1 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_1.csv', header = TRUE, sep = "\t")
-test2 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_2.csv', header = TRUE, sep = "\t")
-test3 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_3.csv', header = TRUE, sep = "\t")
-test4_PSM <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/PSM_exp_test_4.csv', header = TRUE, sep = "\t")
-test4_PRO <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/PROT_exp_test_4.csv', header = TRUE, sep = "\t")
+test1 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_1.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
+test2 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_2.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
+test3 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_3.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
+test4_PSM <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/PSM_exp_test_4.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
+test4_PRO <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/PROT_exp_test_4.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
+test5 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/PROT_exp_test_5.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
+ 
+
 view(test1)
 view(test2)
 view(test3)
 view(test4_PSM)
 view(test4_PRO)
+view(test5)
 
 
-scan(text=str1, sep="_", what="", quiet=TRUE)[3]
+test4_PRO$V1
+
+scan(text=PROTEIN, sep=",", what="", quiet=TRUE)[3]
 
 
 
@@ -171,7 +181,18 @@ view(TMT_ready_for_machting[[1]])
 
 #Create Peptide.txt
   #Leading rezor peptide
-  test4_PRO %>% filter(COLS_PROTEIN.Proteins.Score.Coverages.nrPeptides.nrPSM.nrSpectra.ClusterID.Description.Decoy.FDR.q.valu, str_detect("PROTEIN"))
+  test4_PRO %>% as_tibble %>% filter(V1, str_detect("PROTEIN"))
+  ?select
+
+test4_PRO %>% rename(new_name = starts_with(V1))
+as_tibble
+ filter(str_detect("PROTEIN"))
+
+
+
+
+
+
   #Gene names
   #Reporter intensity corrected
   #Reverse
