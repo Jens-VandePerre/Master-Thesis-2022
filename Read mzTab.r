@@ -52,9 +52,9 @@ for (i in seq_along(file_paths)) {
 mzTab_files <- set_names(mzTab, file_names_short) #names each file by file_names_short
 view(mzTab_files[[1]])
  #Save mzMLs to different location: TMT outputs
-saveRDS(mzTab_files, file = "~/Desktop/Outputs/mzTabs_imported/22_04_22_mzTabs")
-mzTabs_22_04_22 <- readRDS(file = "~/Desktop/Outputs/mzTabs_imported/22_04_22_mzTabs")
-view(mzTabs_22_04_22[[1]])
+saveRDS(mzTab_files, file = "~/Desktop/Outputs/mzTabs_imported/ALL_mzTab_4.5.22")
+ALL_mzTab_4.5.22 <- readRDS(file = "~/Desktop/Outputs/mzTabs_imported/ALL_mzTab_4.5.22")
+view(ALL_mzTab_4.5.22[[1]])
 ##################
 #Extract functions
 ##################
@@ -65,8 +65,8 @@ extractMetadata_long <- function(mztab.table) {
 }
   #Loop
 MTD_long <- list() #empty list
-for (i in seq_along(mzTabs_22_04_22)) {
-  MTD_long[[i]] <- extractMetadata_long(mzTabs_22_04_22[[i]])
+for (i in seq_along(ALL_mzTab_4.5.22)) {
+  MTD_long[[i]] <- extractMetadata_long(ALL_mzTab_4.5.22[[i]])
 }
 mzTab_files_Metadata_long <- set_names(MTD_long, file_names_short) #names each file by file_names_short
 
@@ -77,8 +77,8 @@ extractMetadata <- function(mztab.table) {
 }
   #Loop
 MTD <- list() #empty list
-for (i in seq_along(mzTabs_22_04_22)) {
-  MTD[[i]] <- extractMetadata(mzTabs_22_04_22[[i]])
+for (i in seq_along(ALL_mzTab_4.5.22)) {
+  MTD[[i]] <- extractMetadata(ALL_mzTab_4.5.22[[i]])
 }
 mzTab_files_Metadata <- set_names(MTD, file_names_short) #names each file by file_names_short
 view(mzTab_files_Metadata[[1]])
@@ -91,8 +91,8 @@ extractFeaturesPSM <- function(mztab.table) {
 }
   #Loop for all files
 PSM <- list() #empty list
-for (i in seq_along(mzTabs_22_04_22)) {
-  PSM[[i]] <- extractFeaturesPSM(mzTabs_22_04_22[[i]])
+for (i in seq_along(ALL_mzTab_4.5.22)) {
+  PSM[[i]] <- extractFeaturesPSM(ALL_mzTab_4.5.22[[i]])
 }
 mzTab_files_PSM <- set_names(PSM, file_names_short) #names each file by file_names_short
 view(mzTab_files_PSM[[3]])
@@ -157,8 +157,8 @@ tbl_id_perc <- cbind(tbl_name, tbl_perc)
 #Add new column sequence_no_mod behind the sequence column
         #Loop for all files
 psm <- list() #empty list
-for (i in seq_along(mzTabs_22_04_22)) {
-  psm[[i]] <- extractFeaturesPSM(mzTabs_22_04_22[[i]]) %>%
+for (i in seq_along(ALL_mzTab_4.5.22)) {
+  psm[[i]] <- extractFeaturesPSM(ALL_mzTab_4.5.22[[i]]) %>%
   as_tibble() %>% row_to_names(row_number = 1) %>%
   mutate(sequence_no_mod = trimws(str_remove_all(sequence, "n"))) %>% #remove n
   mutate(sequence_no_mod = trimws(str_remove_all(sequence_no_mod, "[0123456789]"))) %>% # remove numbers
@@ -168,8 +168,8 @@ for (i in seq_along(mzTabs_22_04_22)) {
 PSM <- set_names(psm, file_names_short) #names each file by file_names_short
 view(PSM[[1]])
   #Store PSM files
-saveRDS(PSM, file = "~/Desktop/Outputs/PSMs/22_04_22_PSMs") 
-PSM_20_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/22_04_22_PSMs")
+saveRDS(PSM, file = "~/Desktop/Outputs/PSMs/ALL_PSMs_4.5.22") 
+ALL_PSMs_4.5.22 <- readRDS(file = "~/Desktop/Outputs/PSMs/ALL_PSMs_4.5.22")
 
 
 mzTab <- list() #empty list
