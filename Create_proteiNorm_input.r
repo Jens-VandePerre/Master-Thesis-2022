@@ -34,47 +34,11 @@ list.files(wd)
 (file_names_short <- substring(file_paths, 91, 98)) 
 
 ALL_PSMs_4.5.22 <- readRDS(file = "~/Desktop/Outputs/PSMs/ALL_PSMs_4.5.22")
+view(ALL_PSMs_4.5.22[1])
 
+nrow(ALL_PSMs_4.5.22[1] %>% as_tibble)
 
-
-#Read in mzTab without modifications
-readMzTab <- function(filename) {
-  # read maximum number of columns in file
-  ncol <- max(stats::na.omit(utils::count.fields(file=filename, sep = "\t")))
-  print(ncol)
-  mztab.table = utils::read.table(file=filename, header=FALSE,
-                                  row.names=NULL, dec = ".", fill = TRUE,
-                                  col.names = paste0("V", seq_len(ncol)),
-                                  sep="\t", na.strings="null", quote = "")
-  mztab.table
-}
-    #Loop
-mzTab <- list() #empty list
-for (i in seq_along(file_paths)) {
-  mzTab[[i]] <- readMzTab(file_paths[[i]])
-}
-mzTab_files <- set_names(mzTab, file_names_short) #names each file by file_names_short
-view(mzTab_files[[1]])
- #Save mzTabs to different location
-saveRDS(mzTab_files, file = "~/Desktop/Outputs/mzTabs_imported/mzTab_nomod_02.05.22")
-mzTab_no_mod <- readRDS(file = "~/Desktop/Outputs/mzTabs_imported/mzTab_nomod_02.05.22")
-
-#Select PSMs
-extractFeaturesPSM <- function(mztab.table) {
-  psm <- mztab.table[startsWith(as.character(mztab.table$V1), "PSM"),]
-  psh <- mztab.table[startsWith(as.character(mztab.table$V1), "PSH"),]
-  rbind(psh,psm)
-}
   #Loop for all files
-PSM <- list() #empty list
-for (i in seq_along(mzTab_no_mod)) {
-  PSM[[i]] <- extractFeaturesPSM(mzTab_no_mod[[i]]) %>% row_to_names(row_number = 1)
-}
-mzTab_no_mod_PSM <- set_names(PSM, file_names_short) #names each file by file_names_short
-view(mzTab_no_mod_PSM[[3]])
-    #Save PSM output
-saveRDS(mzTab_no_mod_PSM, file = "~/Desktop/Outputs/PSMs/All_PSMs_nomod_02.05.22")
-PSM_no_mod <- readRDS(file = "~/Desktop/Outputs/PSMs/All_PSMs_nomod_02.05.22")
     #Make an index collumn for mathcing to TMTs
 ind_mzTab <- list()
 for (i in seq_along(PSM_no_mod)) {
@@ -90,12 +54,17 @@ PSM_ready_for_matching
 view(PSM_ready_for_matching[[1]]) #PSM column could be removed
 
 
-PSM_B1S1_f01 <- select(PSM_no_mod[[1]], PSM_ID) %>% 
+
+
+names(ALL_PSMs_4.5.22[1])
+PSM_B1S1_f01 <- ALL_PSMs_4.5.22[[1]] %>% 
+    as_tibble %>%
+    select(PSM_ID) %>% 
     mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
     mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
     mutate(index = trimws(str_remove_all(index, "scan="))) %>%
     select(index) %>%
-    cbind(PSM_no_mod[[1]]) %>% as_tibble
+    cbind(ALL_PSMs_4.5.22[[1]]) %>% as_tibble
 
 #Match to TMTs
     #Load TMT saved
@@ -122,6 +91,10 @@ for (i in seq_along(TMT_part1_03.05.22)) {
     select(index) %>%
     cbind(TMT_part1_03.05.22[[i]]) %>% as_tibble
 }
+TMT_ready_for_machting <- set_names(ind_TMT1, file_names_short)
+TMT_ready_for_machting[[1]]
+view(TMT_ready_for_machting[[1]])
+
 
 TMT_B1S1_f01 <- tibble(index=rownames(TMT_part1_03.05.22[[1]][, 0])) %>%
     mutate(index = trimws(str_remove_all(index, "F1.S"))) %>%
@@ -133,9 +106,6 @@ TMT_B1S1_f01 <- tibble(index=rownames(TMT_part1_03.05.22[[1]][, 0])) %>%
     cbind(TMT_part1_03.05.22[[1]]) %>% as_tibble
 
 
-TMT_ready_for_machting <- set_names(ind_TMT1, file_names_short)
-TMT_ready_for_machting[[1]]
-view(TMT_ready_for_machting[[1]])
 
 #Load protein info from PIA output
 test1 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_1.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
@@ -154,9 +124,17 @@ view(test4_PRO)
 view(test5)
 
 
-test4_PRO$V1
+protein <- test4_PRO %>% as_tibble %>% filter(str_detect(V1, "PROTEIN")) %>% row_to_names(row_number = 1)
+peptide <- test4_PRO %>% as_tibble %>% filter(str_detect(V1, "PEPTIDE")) %>% row_to_names(row_number = 1)
+psmset <- test4_PRO %>% as_tibble %>% filter(str_detect(V1, "PSMSET")) %>% row_to_names(row_number = 1)
+psm <- test4_PRO %>% as_tibble  %>%  filter(str_detect(V1, "PSM")) %>% row_to_names(row_number = 1)
 
-scan(text=PROTEIN, sep=",", what="", quiet=TRUE)[3]
+
+view(protein) #columns OK
+view(peptide) #modifications column emprty
+view(psmset) #decoy column not aligned
+view(psm)
+
 
 
 
@@ -180,25 +158,55 @@ view(TMT_ready_for_machting[[1]])
 
 
 #Create Peptide.txt
+PepSeq_ProAcc <- test5 %>% 
+          as_tibble %>% 
+          filter(str_detect(V1, "PSMSET")) %>% 
+          row_to_names(row_number = 1) %>%
+          select(Sequence, Accessions)
+view(PepSeq_ProAcc)
+nrow(PepSeq_ProAcc)
+n_distinct(PepSeq_ProAcc)
+
+ClusID_Des <- test5 %>% 
+          as_tibble %>% 
+          filter(str_detect(V1, "PROTEIN")) %>% 
+          row_to_names(row_number = 1) %>%
+          select(Proteins, ClusterID, Description) %>%
+          rename(Accessions = Proteins)
+view(ClusID_Des)
+nrow(ClusID_Des)
+n_distinct(ClusID_Des)
+
+mergebro <- merge(PepSeq_ProAcc, ClusID_Des, by="Accessions")
+nrow(mergebro)
+view(mergebro)
+n_distinct(mergebro)
+
+mztab_TMT <- merge(TMT_B1S1_f01, PSM_B1S1_f01, by="index") %>%
+        select(index, "126":"131", sequence, sequence_no_mod)
+view(mztab_TMT)
+
+mztab_TMT %>%
+  rename(`Repoter intensity corrected 126` = `126`,
+        `Repoter intensity corrected 127N` = `127N`,
+        `Repoter intensity corrected 127C` = `127C`,
+        `Repoter intensity corrected 128N` = `128N`,
+        `Repoter intensity corrected 128C` = `128C`,
+        `Repoter intensity corrected 129N` = `129N`,
+        `Repoter intensity corrected 129C` = `129C`,
+        `Repoter intensity corrected 130N` = `130N`,
+        `Repoter intensity corrected 130C` = `130C`,
+        `Repoter intensity corrected 113` = `131`
+        )
+
+
   #Leading rezor peptide
-  test4_PRO %>% as_tibble %>% filter(V1, str_detect("PROTEIN"))
-  ?select
-
-test4_PRO %>% rename(new_name = starts_with(V1))
-as_tibble
- filter(str_detect("PROTEIN"))
-
-
-
-
-
-
-  #Gene names
+  #Gene names = Description
   #Reporter intensity corrected
-  #Reverse
-  #Potential contaminant
+  #Reverse = empty
+  #Potential contaminant = empty
   #id = just number
-  #Protein groups IDs
+  #Protein groups IDs = ClusterID????
 
 
 #Create ProteinGroup.txt
