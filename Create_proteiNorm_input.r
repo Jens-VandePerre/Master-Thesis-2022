@@ -156,8 +156,9 @@ mztab_TMT <- mztab_TMT %>%
         `Repoter intensity corrected 2 TMT129C` = `129C`,
         `Repoter intensity corrected 2 TMT130N` = `130N`,
         `Repoter intensity corrected 2 TMT130C` = `130C`,
-        `Repoter intensity corrected 3 TMT113` = `131`
+        `Repoter intensity corrected 3 TMT131` = `131`
         ) %>% as_tibble 
+view(mztab_TMT)
 
 
 
@@ -182,12 +183,41 @@ view(ClusID_Des)
 nrow(ClusID_Des)
 n_distinct(ClusID_Des)
 
-ProteiNorm <- merge(PepSeq_ProAcc, ClusID_Des, by="Accessions") %>%
+ProteiNorm <- merge(PepSeq_ProAcc, ClusID_Des, by= "Accessions") %>%
             as_tibble %>%
-            rename("Leading razor peptide" = Accessions)
+            rename("Leading razor peptide" = Accessions, "Protein group IDs" = ClusterID)
+            
+
+brobro <- merge(mztab_TMT, ProteiNorm, by = "sequence_no_mod") %>% distinct()
+
+view(brobro)
+nrow(brobro)
+n_distinct(brobro)
+
 nrow(ProteiNorm)
 view(ProteiNorm)
 n_distinct(ProteiNorm)
+nrow(mztab_TMT)
+n_distinct(mztab_TMT)
+
+peptide_txt <- ProteiNorm %>%
+          as_tibble %>%
+          rename("Gene names" = Description) %>%
+          select("Leading razor peptide", "Gene names", "Repoter intensity corrected 1 TMT126":"Repoter intensity corrected 3 TMT131", "Protein group IDs") %>%
+          add_column("Reverse" = NA, .after = "Repoter intensity corrected 3 TMT131") %>%
+          add_column("Potential contaminant" = NA, .after = "Reverse") %>%
+          add_column("id" = 1:nrow(ProteiNorm), .after="Potential contaminant")
+
+view(peptide_txt)
+#add id, empty Reverse and empty Potential contaminant
+
+
+protein_txt <- ProteiNorm %>%
+           as_tibble %>%
+           rename(id = "Leading razor peptide") %>%
+           select(id, `Repoter intensity corrected 1 TMT126`:`Repoter intensity corrected 3 TMT131`)
+view(protein_txt)
+
 
 
 
