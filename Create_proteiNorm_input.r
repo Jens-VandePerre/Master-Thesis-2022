@@ -56,7 +56,7 @@ view(PSM_ready_for_matching[[1]]) #PSM column could be removed
 
 
 
-names(ALL_PSMs_4.5.22[1])
+names(ALL_PSMs_4.5.22)
 PSM_B1S1_f01 <- ALL_PSMs_4.5.22[[1]] %>% 
     as_tibble %>%
     select(PSM_ID) %>% 
@@ -74,6 +74,8 @@ PSM_B1S1_f01 <- ALL_PSMs_4.5.22[[1]] %>%
 #TMT_28.04.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/28.04.22_TMT")
 
 TMT_part1_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/03.05.22_TMT_part1")
+names(TMT_part1_03.05.22)
+view(TMT_part1_03.05.22[[1]])
 
 #TMT_part2_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/03.05.22_TMT_part2")
 #TMT_part3_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/03.05.22_TMT_part3")
@@ -104,7 +106,7 @@ TMT_B1S1_f01 <- tibble(index=rownames(TMT_part1_03.05.22[[1]][, 0])) %>%
     mutate(index = trimws(str_remove_all(index, "^0"))) %>%
     select(index) %>%
     cbind(TMT_part1_03.05.22[[1]]) %>% as_tibble
-
+view(TMT_B1S1_f01)
 
 
 #Load protein info from PIA output
@@ -140,20 +142,22 @@ view(psm)
 
 #Make TMT tibble + add index column for matching
   #selecting index column
-ind_TMT1 <- list()
-for (i in seq_along(TMT_Intensities_22_04_22)) {
-  ind_TMT1[[i]] <- tibble(index=rownames(TMT_Intensities_22_04_22[[i]][, 0])) %>%
-    mutate(index = trimws(str_remove_all(index, "F1.S"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    select(index) %>%
-    cbind(TMT_Intensities_22_04_22[[i]]) %>% as_tibble
-}
-TMT_ready_for_machting <- set_names(ind_TMT1, file_names_short)
-TMT_ready_for_machting[[1]]
-view(TMT_ready_for_machting[[1]])
+mztab_TMT <- merge(TMT_B1S1_f01, PSM_B1S1_f01, by="index") %>%
+        select(index, "126":"131", sequence, sequence_no_mod)
+view(mztab_TMT)
+
+mztab_TMT <- mztab_TMT %>%
+  rename(`Repoter intensity corrected 1 TMT126` = `126`,
+        `Repoter intensity corrected 1 TMT127N` = `127N`,
+        `Repoter intensity corrected 2 TMT127C` = `127C`,
+        `Repoter intensity corrected 2 TMT128N` = `128N`,
+        `Repoter intensity corrected 2 TMT128C` = `128C`,
+        `Repoter intensity corrected 2 TMT129N` = `129N`,
+        `Repoter intensity corrected 2 TMT129C` = `129C`,
+        `Repoter intensity corrected 2 TMT130N` = `130N`,
+        `Repoter intensity corrected 2 TMT130C` = `130C`,
+        `Repoter intensity corrected 3 TMT113` = `131`
+        ) %>% as_tibble 
 
 
 
@@ -162,7 +166,8 @@ PepSeq_ProAcc <- test5 %>%
           as_tibble %>% 
           filter(str_detect(V1, "PSMSET")) %>% 
           row_to_names(row_number = 1) %>%
-          select(Sequence, Accessions)
+          select(Sequence, Accessions) %>%
+          rename(sequence_no_mod = Sequence)
 view(PepSeq_ProAcc)
 nrow(PepSeq_ProAcc)
 n_distinct(PepSeq_ProAcc)
@@ -177,27 +182,13 @@ view(ClusID_Des)
 nrow(ClusID_Des)
 n_distinct(ClusID_Des)
 
-mergebro <- merge(PepSeq_ProAcc, ClusID_Des, by="Accessions")
-nrow(mergebro)
-view(mergebro)
-n_distinct(mergebro)
+ProteiNorm <- merge(PepSeq_ProAcc, ClusID_Des, by="Accessions") %>%
+            as_tibble %>%
+            rename("Leading razor peptide" = Accessions)
+nrow(ProteiNorm)
+view(ProteiNorm)
+n_distinct(ProteiNorm)
 
-mztab_TMT <- merge(TMT_B1S1_f01, PSM_B1S1_f01, by="index") %>%
-        select(index, "126":"131", sequence, sequence_no_mod)
-view(mztab_TMT)
-
-mztab_TMT %>%
-  rename(`Repoter intensity corrected 126` = `126`,
-        `Repoter intensity corrected 127N` = `127N`,
-        `Repoter intensity corrected 127C` = `127C`,
-        `Repoter intensity corrected 128N` = `128N`,
-        `Repoter intensity corrected 128C` = `128C`,
-        `Repoter intensity corrected 129N` = `129N`,
-        `Repoter intensity corrected 129C` = `129C`,
-        `Repoter intensity corrected 130N` = `130N`,
-        `Repoter intensity corrected 130C` = `130C`,
-        `Repoter intensity corrected 113` = `131`
-        )
 
 
   #Leading rezor peptide
