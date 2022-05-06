@@ -65,6 +65,8 @@ PSM_B1S1_f01 <- ALL_PSMs_4.5.22[[1]] %>%
     mutate(index = trimws(str_remove_all(index, "scan="))) %>%
     select(index) %>%
     cbind(ALL_PSMs_4.5.22[[1]]) %>% as_tibble
+view(PSM_B1S1_f01)
+
 
 #Match to TMTs
     #Load TMT saved
@@ -143,21 +145,22 @@ view(psm)
 #Make TMT tibble + add index column for matching
   #selecting index column
 mztab_TMT <- merge(TMT_B1S1_f01, PSM_B1S1_f01, by="index") %>%
-        select(index, "126":"131", sequence, sequence_no_mod)
+        select(index, "126":"131", sequence, sequence_no_mod, charge)
 view(mztab_TMT)
 
-mztab_TMT <- mztab_TMT %>%
-  rename(`Reporter intensity corrected 1 TMT126` = `126`,
-        `Reporter intensity corrected 1 TMT127N` = `127N`,
-        `Reporter intensity corrected 2 TMT127C` = `127C`,
-        `Reporter intensity corrected 2 TMT128N` = `128N`,
-        `Reporter intensity corrected 2 TMT128C` = `128C`,
-        `Reporter intensity corrected 2 TMT129N` = `129N`,
-        `Reporter intensity corrected 2 TMT129C` = `129C`,
-        `Reporter intensity corrected 2 TMT130N` = `130N`,
-        `Reporter intensity corrected 2 TMT130C` = `130C`,
-        `Reporter intensity corrected 3 TMT131` = `131`
-        ) %>% as_tibble 
+#######################
+#mztab_TMT <- mztab_TMT %>%
+  #rename(`Reporter intensity corrected 1 TMT126` = `126`,
+        #`Reporter intensity corrected 1 TMT127N` = `127N`,
+        #`Reporter intensity corrected 2 TMT127C` = `127C`,
+ #       `Reporter intensity corrected 2 TMT128N` = `128N`,
+  #      `Reporter intensity corrected 2 TMT128C` = `128C`,
+  #      `Reporter intensity corrected 2 TMT129N` = `129N`,
+  #      `Reporter intensity corrected 2 TMT129C` = `129C`,
+  #      `Reporter intensity corrected 2 TMT130N` = `130N`,
+  #      `Reporter intensity corrected 2 TMT130C` = `130C`,
+  #      `Reporter intensity corrected 3 TMT131` = `131`
+  #      ) %>% as_tibble 
 view(mztab_TMT)
 
 
@@ -195,7 +198,6 @@ n_distinct(ProteiNorm)
 nrow(mztab_TMT)
 n_distinct(mztab_TMT)
 
-rep(" ", nrow(ProteiNorm))
 
           add_column("Reverse" = rep(" ", nrow(ProteiNorm)), .after = "Reporter intensity corrected 3 TMT131") 
           add_column("Potential contaminant" = rep(" ", nrow(ProteiNorm)), .after = "Reverse") 
@@ -211,8 +213,32 @@ peptide_txt <- ProteiNorm %>%
           add_column("id" = 1:nrow(ProteiNorm), .after="Potential contaminant") 
 write.table(protein_txt, file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/peptide/peptide.txt", append = FALSE, sep = "\t", dec = ".",
              col.names = TRUE)
-
 view(peptide_txt)
+
+MSstats <- merge(PepSeq_ProAcc, ClusID_Des, by= "Accessions") %>%
+            as_tibble %>%
+            rename("ProteinName" = Accessions, "Protein group IDs" = ClusterID) %>%
+            merge(mztab_TMT, by = "sequence_no_mod") %>% 
+            distinct() %>%
+            select(-sequence) %>%
+            rename("Charge" = charge, "PeptideSequence" = sequence_no_mod) %>%
+            mutate(PSM = PeptideSequence) %>%
+            mutate(Run = rep(file_name_long[[1]], nrow(MSstats))) %>%
+            mutate(Mixture = ) %>%
+            mutate(TechRepMixture = )
+view(MSstats)
+
+
+pls_work <- MSstats %>%
+  pivot_longer(
+    cols = c("126", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131" ),
+    names_to = "Channel",
+    names_prefix = "TMT",
+    values_to = "Intensity",
+    values_drop_na = TRUE
+  )
+view(pls_work)
+
 #add id, empty Reverse and empty Potential contaminant
 
 
