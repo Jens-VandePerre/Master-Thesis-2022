@@ -21,6 +21,7 @@ library("msdata")
 library("remotes")
 library("janitor")
 library("stringr")
+library("MSstatsTMT")
 
 
 wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq")
@@ -31,7 +32,7 @@ list.files(wd)
     #Automate filename extraction
 (file_name_long <- list.files(wd))
 (file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq"))
-(file_names_short <- substring(file_paths, 91, 98)) 
+(file_names_short <- substring(file_name_long, 39, 46)) 
 
 ALL_PSMs_4.5.22 <- readRDS(file = "~/Desktop/Outputs/PSMs/ALL_PSMs_4.5.22")
 view(ALL_PSMs_4.5.22[1])
@@ -223,21 +224,37 @@ MSstats <- merge(PepSeq_ProAcc, ClusID_Des, by= "Accessions") %>%
             select(-sequence) %>%
             rename("Charge" = charge, "PeptideSequence" = sequence_no_mod) %>%
             mutate(PSM = PeptideSequence) %>%
-            mutate(Run = rep(file_name_long[[1]], nrow(MSstats))) %>%
-            mutate(Mixture = ) %>%
-            mutate(TechRepMixture = )
+            mutate(Run = file_name_long[[1]]) %>%
+            mutate(Mixture = file_names_short[[1]]) %>%
+            mutate(TechRepMixture = file_names_short[[1]]) %>%
+
 view(MSstats)
 
 
-pls_work <- MSstats %>%
+LongFormat <- MSstats %>%
   pivot_longer(
     cols = c("126", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131" ),
     names_to = "Channel",
     names_prefix = "TMT",
     values_to = "Intensity",
     values_drop_na = TRUE
-  )
-view(pls_work)
+  ) %>%
+  mutate(BioReplicate = revalue(Channel, c("126"="B1S1_f01_Normal", "127N"="B1S1_f01_Normal", "127C"="B1S1_f01_Tumor", "128N"="B1S1_f01_Tumor", "128C"="B1S1_f01_Tumor", "129N"="B1S1_f01_Tumor", "129C"="B1S1_f01_Tumor", "130N"="B1S1_f01_Tumor", "130C"="B1S1_f01_Tumor", "131"="B1S1_f01_Reference"))) %>%
+  mutate(Condition = revalue(Channel, c("126"="Normal", "127N"="Normal", "127C"="Tumor", "128N"="Tumor", "128C"="Tumor", "129N"="Tumor", "129C"="Tumor", "130N"="Tumor", "130C"="Tumor", "131"="Reference")))
+
+
+view(LongFormat)
+nrow(LongFormat)
+
+quant.msstats <- proteinSummarization(LongFormat,
+                                      method="msstats",
+                                      global_norm=TRUE,
+                                      reference_norm=TRUE,
+                                      remove_norm_channel = TRUE,
+                                      remove_empty_channel = TRUE)
+
+
+ifelse(as.character(Channel) == "126", "Normal", as.character(BioReplicate)), ifelse(as.character(Channel) == "127N", "Normal", as.character(BioReplicate)), ifelse(as.character(Channel) == "127C", "Tumor", as.character(BioReplicate)), ifelse(as.character(Channel) == "128N", "Tumor", as.character(BioReplicate)), ifelse(as.character(Channel) == "128C", "Tumor", as.character(BioReplicate)), ifelse(as.character(Channel) == "129N", "Tumor", as.character(BioReplicate)), ifelse(as.character(Channel) == "129C", "Tumor", as.character(BioReplicate)), ifelse(as.character(Channel) == "130N", "Tumor", as.character(BioReplicate)), ifelse(as.character(Channel) == "130C", "Tumor", as.character(BioReplicate)), ifelse(as.character(Channel) == "131", "Reference", as.character(BioReplicate))
 
 #add id, empty Reverse and empty Potential contaminant
 
