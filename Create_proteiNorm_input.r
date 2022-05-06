@@ -249,11 +249,25 @@ LongFormat <- MSstats %>%
     values_drop_na = TRUE
   ) %>%
   mutate(BioReplicate = sub("126", "B1S1_f01_Normal", Channel)) %>%
-  mutate(Condition = sub(Channel))
-
-"126"="B1S1_f01_Normal", "127N"="B1S1_f01_Normal", "127C"="B1S1_f01_Tumor", "128N"="B1S1_f01_Tumor", "128C"="B1S1_f01_Tumor", "129N"="B1S1_f01_Tumor", "129C"="B1S1_f01_Tumor", "130N"="B1S1_f01_Tumor", "130C"="B1S1_f01_Tumor", "131"="B1S1_f01_Reference"
-"126"="Normal", "127N"="Normal", "127C"="Tumor", "128N"="Tumor", "128C"="Tumor", "129N"="Tumor", "129C"="Tumor", "130N"="Tumor", "130C"="Tumor", "131"="Reference"
-?sub
+  mutate(BioReplicate = sub("127N", "B1S1_f01_Normal", BioReplicate)) %>%
+  mutate(BioReplicate = sub("127C", "B1S1_f01_Tumor", BioReplicate)) %>%
+  mutate(BioReplicate = sub("128N", "B1S1_f01_Tumor", BioReplicate)) %>%
+  mutate(BioReplicate = sub("128C", "B1S1_f01_Tumor", BioReplicate)) %>%
+  mutate(BioReplicate = sub("129N", "B1S1_f01_Tumor", BioReplicate)) %>%
+  mutate(BioReplicate = sub("129C", "B1S1_f01_Tumor", BioReplicate)) %>%
+  mutate(BioReplicate = sub("130N", "B1S1_f01_Tumor", BioReplicate)) %>%
+  mutate(BioReplicate = sub("130C", "B1S1_f01_Tumor", BioReplicate)) %>%
+  mutate(BioReplicate = sub("131", "B1S1_f01_Reference", BioReplicate)) %>%
+  mutate(Condition = sub("126", "Normal",Channel)) %>%
+  mutate(Condition = sub("127N", "Normal",Condition)) %>%
+  mutate(Condition = sub("127C", "Tumor",Condition)) %>%
+  mutate(Condition = sub("128N", "Tumor",Condition)) %>%
+  mutate(Condition = sub("128C", "Tumor",Condition)) %>%
+  mutate(Condition = sub("129N", "Tumor",Condition)) %>%
+  mutate(Condition = sub("129C", "Tumor",Condition)) %>%
+  mutate(Condition = sub("130N", "Tumor",Condition)) %>%
+  mutate(Condition = sub("130C", "Tumor",Condition)) %>%
+  mutate(Condition = sub("131", "Reference",Condition))
 
 view(LongFormat)
 nrow(LongFormat)
