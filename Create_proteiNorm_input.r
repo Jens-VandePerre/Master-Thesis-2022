@@ -195,12 +195,19 @@ n_distinct(ProteiNorm)
 nrow(mztab_TMT)
 n_distinct(mztab_TMT)
 
+rep(" ", nrow(ProteiNorm))
+
+          add_column("Reverse" = rep(" ", nrow(ProteiNorm)), .after = "Reporter intensity corrected 3 TMT131") 
+          add_column("Potential contaminant" = rep(" ", nrow(ProteiNorm)), .after = "Reverse") 
+          add_column("id" = 1:nrow(ProteiNorm), .after="Potential contaminant") 
+
+
 peptide_txt <- ProteiNorm %>%
           as_tibble %>%
           rename("Gene names" = Description) %>%
           select("Leading razor peptide", "Gene names", "Reporter intensity corrected 1 TMT126":"Reporter intensity corrected 3 TMT131", "Protein group IDs") %>%
-          add_column("Reverse" = NA, .after = "Reporter intensity corrected 3 TMT131") %>%
-          add_column("Potential contaminant" = NA, .after = "Reverse") %>%
+          add_column("Reverse" = rep(" ", nrow(ProteiNorm)), .after = "Reporter intensity corrected 3 TMT131") %>%
+          add_column("Potential contaminant" = rep(" ", nrow(ProteiNorm)), .after = "Reverse") %>%
           add_column("id" = 1:nrow(ProteiNorm), .after="Potential contaminant") 
 write.table(protein_txt, file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/peptide/peptide.txt", append = FALSE, sep = "\t", dec = ".",
              col.names = TRUE)
