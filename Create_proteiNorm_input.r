@@ -218,17 +218,26 @@ view(peptide_txt)
 
 MSstats <- merge(PepSeq_ProAcc, ClusID_Des, by= "Accessions") %>%
             as_tibble %>%
-            rename("ProteinName" = Accessions, "Protein group IDs" = ClusterID) %>%
+            rename("ProteinName" = Accessions) %>%
             merge(mztab_TMT, by = "sequence_no_mod") %>% 
             distinct() %>%
             select(-sequence) %>%
             rename("Charge" = charge, "PeptideSequence" = sequence_no_mod) %>%
+            mutate("[K].a" = "[K].a") %>%
+            mutate("k.[I]" = "k.[I]") %>%
+            mutate("k.[I]_2" = "k.[I]_2") %>%
+            mutate(PeptideSequence = paste("[K].a", PeptideSequence, sep="")) %>%
             mutate(PSM = PeptideSequence) %>%
+            mutate(PeptideSequence = paste(PeptideSequence, "k.[I]", sep="")) %>%
+            mutate(PSM = paste(PSM, "k.[I]_2", sep="")) %>%
             mutate(Run = file_name_long[[1]]) %>%
             mutate(Mixture = file_names_short[[1]]) %>%
             mutate(TechRepMixture = file_names_short[[1]]) %>%
-
+            select(-"[K].a", -"k.[I]", -"k.[I]_2", -ClusterID, -index)
 view(MSstats)
+
+?sub
+
 
 
 LongFormat <- MSstats %>%
@@ -239,9 +248,12 @@ LongFormat <- MSstats %>%
     values_to = "Intensity",
     values_drop_na = TRUE
   ) %>%
-  mutate(BioReplicate = revalue(Channel, c("126"="B1S1_f01_Normal", "127N"="B1S1_f01_Normal", "127C"="B1S1_f01_Tumor", "128N"="B1S1_f01_Tumor", "128C"="B1S1_f01_Tumor", "129N"="B1S1_f01_Tumor", "129C"="B1S1_f01_Tumor", "130N"="B1S1_f01_Tumor", "130C"="B1S1_f01_Tumor", "131"="B1S1_f01_Reference"))) %>%
-  mutate(Condition = revalue(Channel, c("126"="Normal", "127N"="Normal", "127C"="Tumor", "128N"="Tumor", "128C"="Tumor", "129N"="Tumor", "129C"="Tumor", "130N"="Tumor", "130C"="Tumor", "131"="Reference")))
+  mutate(BioReplicate = sub("126", "B1S1_f01_Normal", Channel)) %>%
+  mutate(Condition = sub(Channel))
 
+"126"="B1S1_f01_Normal", "127N"="B1S1_f01_Normal", "127C"="B1S1_f01_Tumor", "128N"="B1S1_f01_Tumor", "128C"="B1S1_f01_Tumor", "129N"="B1S1_f01_Tumor", "129C"="B1S1_f01_Tumor", "130N"="B1S1_f01_Tumor", "130C"="B1S1_f01_Tumor", "131"="B1S1_f01_Reference"
+"126"="Normal", "127N"="Normal", "127C"="Tumor", "128N"="Tumor", "128C"="Tumor", "129N"="Tumor", "129C"="Tumor", "130N"="Tumor", "130C"="Tumor", "131"="Reference"
+?sub
 
 view(LongFormat)
 nrow(LongFormat)
@@ -254,11 +266,8 @@ quant.msstats <- proteinSummarization(LongFormat,
                                       remove_empty_channel = TRUE)
 
 
-ifelse(as.character(Channel) == "126", "Normal", as.character(BioReplicate)), ifelse(as.character(Channel) == "127N", "Normal", as.character(BioReplicate)), ifelse(as.character(Channel) == "127C", "Tumor", as.character(BioReplicate)), ifelse(as.character(Channel) == "128N", "Tumor", as.character(BioReplicate)), ifelse(as.character(Channel) == "128C", "Tumor", as.character(BioReplicate)), ifelse(as.character(Channel) == "129N", "Tumor", as.character(BioReplicate)), ifelse(as.character(Channel) == "129C", "Tumor", as.character(BioReplicate)), ifelse(as.character(Channel) == "130N", "Tumor", as.character(BioReplicate)), ifelse(as.character(Channel) == "130C", "Tumor", as.character(BioReplicate)), ifelse(as.character(Channel) == "131", "Reference", as.character(BioReplicate))
 
 #add id, empty Reverse and empty Potential contaminant
-
-
 proteinGroup_txt <- ProteiNorm %>%
            as_tibble %>%
            rename(id = "Leading razor peptide") %>%
