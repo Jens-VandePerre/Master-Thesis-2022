@@ -240,7 +240,7 @@ view(MSstats)
 
 
 
-LongFormat <- MSstats %>%
+LongFormat <- MSstats %>% 
   pivot_longer(
     cols = c("126", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131" ),
     names_to = "Channel",
@@ -267,7 +267,10 @@ LongFormat <- MSstats %>%
   mutate(Condition = sub("129C", "Tumor",Condition)) %>%
   mutate(Condition = sub("130N", "Tumor",Condition)) %>%
   mutate(Condition = sub("130C", "Tumor",Condition)) %>%
-  mutate(Condition = sub("131", "Reference",Condition))
+  mutate(Condition = sub("131", "Reference",Condition)) 
+
+str(LongFormat)
+
 
 view(LongFormat)
 nrow(LongFormat)
