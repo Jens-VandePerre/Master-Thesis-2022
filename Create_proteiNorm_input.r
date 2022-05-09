@@ -213,9 +213,8 @@ peptide_txt <- ProteiNorm %>%
           add_column("Potential contaminant" = rep("", nrow(ProteiNorm)), .after = "Reverse") %>%
           add_column("id" = 1:nrow(ProteiNorm), .after="Potential contaminant") 
 write.table(peptide_txt, file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/peptide/peptide.txt", append = FALSE, sep = "\t", dec = ".",
-             col.names = TRUE)
+             col.names = TRUE, quote = FALSE)
 view(peptide_txt)
-
 
 #add id, empty Reverse and empty Potential contaminant
 proteinGroup_txt <- ProteiNorm %>%
@@ -224,7 +223,7 @@ proteinGroup_txt <- ProteiNorm %>%
            select(id, `Reporter intensity corrected 1 TMT126`:`Reporter intensity corrected 3 TMT131`)
 view(proteinGroup_txt)
 write.table(proteinGroup_txt, file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/protein/proteinGroup.txt", append = FALSE, sep = "\t", dec = ".",
-             col.names = TRUE)
+             col.names = TRUE, quote = FALSE)
 
 
   #Leading rezor peptide
