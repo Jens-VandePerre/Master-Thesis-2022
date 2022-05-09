@@ -88,8 +88,8 @@ protein <- ProteiNorm %>%
            as_tibble %>%
            rename(id = "Leading razor peptide") %>%
            select(id, `Reporter intensity corrected 1 TMT126`:`Reporter intensity corrected 3 TMT131`)
-
-
+view(peptide)
+view(protein)
 
 extractColumnNames = function(columnNames){
   # check data type
@@ -141,7 +141,7 @@ extractProteinData = function(rawData, proteinAnnotationColums){
   extractedData = rawData[,c(proteinAnnotationColums, rawDataCols)]
   return(list(data = extractedData, isTMT = isTMT))
 }
-extractProteinData(protein)
+extractProteinData(protein, peptide)
 
 outlier = function(vector){
   vector < quantile(vector, na.rm = T)[2] - 1.5 * IQR(vector, na.rm = T) | 
