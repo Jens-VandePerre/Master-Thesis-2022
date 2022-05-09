@@ -1,3 +1,35 @@
+library("rpx")
+library("mzR")
+library("OrgMassSpecR")
+library("biomaRt")
+library("Hmisc")
+library("gplots")
+library("limma")
+library("isobar")
+library("devtools")
+library("MSnbase")
+library("Biobase")
+library("dplyr")
+library("tidyverse")
+library("fs")
+library("proxyC")
+library("sjlabelled")
+library("expss")
+library("labelled")
+library("patchwork")
+library("msdata")
+library("remotes")
+library("janitor")
+library("stringr")
+
+protein <- read.table(file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/protein/proteinGroup.txt", sep = "\t", dec = ".",
+             col.names = TRUE, quote = FALSE)
+peptide <- read.table(file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/peptide/peptide.txt", sep = "\t", dec = ".",
+             col.names = TRUE, quote = FALSE)
+view(protein)
+view(peptide)
+
+
 extractColumnNames = function(columnNames){
   # check data type
   isTMT = any(grepl("Reporter\\.intensity\\.corrected\\.[[:digit:]]+", columnNames))
@@ -18,6 +50,7 @@ extractColumnNames = function(columnNames){
   
   return(list(isTMT = isTMT, rawDataCols = rawDataCols))
 }
+extractColumnNames
 
 extractPeptideData = function(rawData, peptideAnnotationColums){
   # quality filter 
@@ -32,6 +65,7 @@ extractPeptideData = function(rawData, peptideAnnotationColums){
   
   return(list(data = extractedData, isTMT = isTMT))
 }
+extractPeptideData
 
 extractProteinData = function(rawData, proteinAnnotationColums){
   # quality filter 
@@ -46,13 +80,13 @@ extractProteinData = function(rawData, proteinAnnotationColums){
   extractedData = rawData[,c(proteinAnnotationColums, rawDataCols)]
   return(list(data = extractedData, isTMT = isTMT))
 }
-
+extractProteinData
 
 outlier = function(vector){
   vector < quantile(vector, na.rm = T)[2] - 1.5 * IQR(vector, na.rm = T) | 
     quantile(vector, na.rm = T)[4] + 1.5 * IQR(vector, na.rm = T) < vector
 }
-
+outlier
 
 filterPeptides = function(peptides, method){
   FilteredProteins = switch(method,
@@ -61,7 +95,7 @@ filterPeptides = function(peptides, method){
   )
   return(FilteredProteins)
 }
-
+filterPeptides
 
 Top3Filter = function(peptides){
   peptides = as.data.frame(peptides)
@@ -84,6 +118,7 @@ Top3Filter = function(peptides){
   FilteredProteins = cbind(id = unique(peptides$proteinIDs), FilteredProteins)
   return(FilteredProteins)
 }
+Top3Filter
 
 # ---
 # findDensityCutoff
@@ -103,6 +138,7 @@ findDensityCutoff <- function(longdat, cutoffPercent = .001) {
   }
   return(densityCutoff)
 }
+findDensityCutoff
 
 
 PCV = function(data, groups){
@@ -115,6 +151,7 @@ PCV = function(data, groups){
   }
   return(PCV)
 }
+PCV
 
 PMAD = function(data, groups){
   PMAD = NULL
@@ -125,7 +162,7 @@ PMAD = function(data, groups){
   }
   return(PMAD)
 }
-
+PMAD
 
 
 PEV = function(data, groups){
@@ -139,7 +176,7 @@ PEV = function(data, groups){
   }
   return(PEV)
 }
-
+PEV
 
 
 
@@ -157,7 +194,7 @@ COR = function(data, groups){
   }
   return(COR)
 }
-
+COR
 
 
 colorBatch = function(batch){
@@ -165,12 +202,15 @@ colorBatch = function(batch){
   names(batchCol) = sort(unique(batch))
   return(batchCol)
 }
+colorBatch
 
 colorGroup = function(groups){
   groupCol = viridis::viridis(length(unique(groups)))
   names(groupCol) = sort(unique(groups))
   return(groupCol)
 }
+colorGroup
+
 
 heatmapMissing = function(data, groups, batch, sampleLabels, showAllProtein){
   missing = !is.na(data)
@@ -189,6 +229,7 @@ heatmapMissing = function(data, groups, batch, sampleLabels, showAllProtein){
   
   draw(hm_clust+hm_group+hm_batch, heatmap_legend_side = "right", annotation_legend_side = "right", ht_gap = unit(2, "cm"), column_title = "Missing values")
 }
+heatmapMissing
 
 
 heatmapClustered = function(groups, batch, missing, groupCol, batchCol, sampleLabels){
@@ -213,7 +254,7 @@ heatmapClustered = function(groups, batch, missing, groupCol, batchCol, sampleLa
   # draw(hm_clust, heatmap_legend_side = "right", annotation_legend_side = "right")
   return(hm_clust)
 }
-
+heatmapClustered
 
 
 
@@ -242,6 +283,8 @@ heatmapGroup = function(groups, batch, missing, groupCol, batchCol, sampleLabels
   # draw(hm_group, heatmap_legend_side = "right", annotation_legend_side = "right")
   return(hm_group)
 }
+heatmapGroup
+
 
 heatmapBatch = function(groups, batch, missing, groupCol, batchCol, sampleLabels){
   orderBatch = order(batch, groups)
@@ -268,6 +311,7 @@ heatmapBatch = function(groups, batch, missing, groupCol, batchCol, sampleLabels
   # draw(hm_group, heatmap_legend_side = "right", annotation_legend_side = "right")
   return(hm_batch)
 }
+heatmapBatch
 
 
 heatmapCorr = function(data, groups, batch, sampleLabels){
@@ -308,7 +352,7 @@ heatmapCorr = function(data, groups, batch, sampleLabels){
   
   draw(hm_corr, heatmap_legend_side = "top")
 }
-
+heatmapCorr
 
 
 densityLog2Ratio = function(normList, groups){
@@ -342,7 +386,7 @@ densityLog2Ratio = function(normList, groups){
   }
   legend("topright", names(log2Ratio), lty=1:2, col = rainbow(length(log2Ratio)), lwd = 2)
 }
-
+densityLog2Ratio
 
 
 
@@ -372,6 +416,7 @@ impute = function(normData, imputMethod){
          stop("Imputation method not found")
   )
 }
+impute
 
 
 DAtestTestNames = c(
@@ -470,7 +515,7 @@ DAtest = function(normData, groups, batch, imputed, exludedTests, R, cores, effe
     return(res)
   } 
 }
-
+DAtest
 
 
 
@@ -491,6 +536,7 @@ plotBoxplotProtein = function(proteins, meta){
   legend("top", inset=c(0, -.14), levels(as.factor(meta$Group)), bty="n", xpd=TRUE,
          col=colorGroup(meta$Group), pch=15, horiz=TRUE)
 }
+plotBoxplotProtein
 
 plotBoxplotPeptide = function(peptides, meta){
   sampleCols = meta$Protein.Sample.Names
@@ -506,6 +552,7 @@ plotBoxplotPeptide = function(peptides, meta){
   legend("top", inset=c(0, -.14), levels(as.factor(meta$Group)), bty="n", xpd=TRUE,
          col=colorGroup(meta$Group), pch=15, horiz=TRUE)
 }
+plotBoxplotPeptide
 
 
 plotHistogramProtein = function(proteins, meta){
@@ -517,6 +564,7 @@ plotHistogramProtein = function(proteins, meta){
                   length.out=31)
   hist(longdat, main="Histogram of Proteins", breaks=breakSeq, xlab="Corrected Intensity", ylab="Counts")
 }
+plotHistogramProtein
 
 plotHistogramPeptide = function(peptides, meta){
   sampleCols = meta$Protein.Sample.Names
@@ -527,6 +575,8 @@ plotHistogramPeptide = function(peptides, meta){
                   length.out=31)
   hist(longdat, main="Histogram of Peptides", breaks=breakSeq, xlab="Corrected Intensity", ylab="Counts")
 }
+plotHistogramPeptide
+
 
 plotPCAProtein = function(proteins, meta, col){
   data = proteins[, meta$Protein.Sample.Names]
@@ -571,6 +621,7 @@ plotPCAProtein = function(proteins, meta, col){
          col = colGroup,
          text.col = colGroup)
 }
+plotPCAProtein
 
 
 plotPCAPeptide = function(peptides, meta, col){
@@ -615,6 +666,7 @@ plotPCAPeptide = function(peptides, meta, col){
          col = colGroup,
          text.col = colGroup)
 }
+plotPCAPeptide
 
 
 plotTotInten = function(normList, meta){
@@ -638,6 +690,8 @@ plotTotInten = function(normList, meta){
     abline(h = max(colSums(normList[[i]], na.rm = T)), lty = 2)
   }
 }
+plotTotInten
+
 
 plotPCA = function(normList, meta, method, col){
   data = normList[[method]]
@@ -679,6 +733,7 @@ plotPCA = function(normList, meta, method, col){
          col = colGroup,
          text.col = colGroup)
 }
+plotPCA
 
 
 plotPCV = function(normList, meta){
@@ -693,6 +748,8 @@ plotPCV = function(normList, meta){
   mtext(side = 2, text = "Pooled Coefficient of Variation", line = 4.5, cex = 1.5)
   points(rep(seq_along(normList), each = length(plotData[[1]])), unlist(plotData), pch = "*", cex = 1.3)
 }
+plotPCV
+
 
 plotPMAD = function(normList, meta){
   groups <- meta$Group
@@ -706,6 +763,7 @@ plotPMAD = function(normList, meta){
   mtext(side = 2, text = "Median Absolute Deviation", line = 4.5, cex = 1.5)
   points(rep(seq_along(normList), each = length(plotData[[1]])), unlist(plotData), pch = "*", cex = 1.3)
 }
+plotPMAD
 
 
 plotPEV = function(normList, meta){
@@ -720,6 +778,7 @@ plotPEV = function(normList, meta){
   mtext(side = 2, text = "Pooled Estimate of Variance", line = 4.5, cex = 1.5)
   points(rep(seq_along(normList), each = length(plotData[[1]])), unlist(plotData), pch = "*", cex = 1.3)
 }
+plotPEV
 
 
 plotCOR = function(normList, meta){
@@ -734,6 +793,7 @@ plotCOR = function(normList, meta){
   mtext(side = 2, text = "Intragroup Correlation", line = 4.5, cex = 1.5)
   points(rep(seq_along(normList), each = length(plotData[[1]])), unlist(plotData), pch = "*", cex = 1.3)
 }
+plotCOR
 
 
 plotNaHM = function(normList, meta, show){
@@ -747,6 +807,7 @@ plotNaHM = function(normList, meta, show){
   }
   heatmapMissing(normList[["Log2"]], groups, batch, sampleLabels, show)
 }
+plotNaHM
 
 
 plotCorHM = function(normList, meta, method){
@@ -761,12 +822,15 @@ plotCorHM = function(normList, meta, method){
   
   heatmapCorr(normList[[method]], groups, batch, sampleLabels)
 }
+plotCorHM
 
 
 plotLogRatio = function(normList, meta){
   groups <- meta$Group
   densityLog2Ratio(normList, groups)
 }
+plotLogRatio
+
 
 
 
