@@ -22,12 +22,73 @@ library("remotes")
 library("janitor")
 library("stringr")
 
-protein <- read.table(file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/protein/proteinGroup.txt", sep = "\t", dec = ".",
-             col.names = TRUE, quote = FALSE)
-peptide <- read.table(file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/peptide/peptide.txt", sep = "\t", dec = ".",
-             col.names = TRUE, quote = FALSE)
-view(protein)
-view(peptide)
+wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq")
+getwd() 
+list.files(wd)
+(file_name_long <- list.files(wd))
+(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq"))
+(file_names_short <- substring(file_name_long, 39, 46)) 
+ALL_PSMs_4.5.22 <- readRDS(file = "~/Desktop/Outputs/PSMs/ALL_PSMs_4.5.22")
+PSM_B1S1_f01 <- ALL_PSMs_4.5.22[[1]] %>% 
+    as_tibble %>%
+    select(PSM_ID) %>% 
+    mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
+    mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
+    mutate(index = trimws(str_remove_all(index, "scan="))) %>%
+    select(index) %>%
+    cbind(ALL_PSMs_4.5.22[[1]]) %>% as_tibble
+TMT_part1_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/03.05.22_TMT_part1")
+TMT_B1S1_f01 <- tibble(index=rownames(TMT_part1_03.05.22[[1]][, 0])) %>%
+    mutate(index = trimws(str_remove_all(index, "F1.S"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    select(index) %>%
+    cbind(TMT_part1_03.05.22[[1]]) %>% as_tibble
+test5 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/PROT_exp_test_5.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
+mztab_TMT <- merge(TMT_B1S1_f01, PSM_B1S1_f01, by="index") %>%
+        select(index, "126":"131", sequence, sequence_no_mod, charge)
+mztab_TMT2 <- mztab_TMT %>%
+  rename(`Reporter intensity corrected 1 TMT126` = `126`,
+        `Reporter intensity corrected 1 TMT127N` = `127N`,
+        `Reporter intensity corrected 2 TMT127C` = `127C`,
+        `Reporter intensity corrected 2 TMT128N` = `128N`,
+        `Reporter intensity corrected 2 TMT128C` = `128C`,
+        `Reporter intensity corrected 2 TMT129N` = `129N`,
+        `Reporter intensity corrected 2 TMT129C` = `129C`,
+        `Reporter intensity corrected 2 TMT130N` = `130N`,
+        `Reporter intensity corrected 2 TMT130C` = `130C`,
+        `Reporter intensity corrected 3 TMT131` = `131`
+        ) %>% as_tibble 
+PepSeq_ProAcc <- test5 %>% 
+          as_tibble %>% 
+          filter(str_detect(V1, "PSMSET")) %>% 
+          row_to_names(row_number = 1) %>%
+          select(Sequence, Accessions) %>%
+          rename(sequence_no_mod = Sequence)
+ClusID_Des <- test5 %>% 
+          as_tibble %>% 
+          filter(str_detect(V1, "PROTEIN")) %>% 
+          row_to_names(row_number = 1) %>%
+          select(Proteins, ClusterID, Description) %>%
+          rename(Accessions = Proteins)
+ProteiNorm <- merge(PepSeq_ProAcc, ClusID_Des, by= "Accessions") %>%
+            as_tibble %>%
+            rename("Leading razor peptide" = Accessions, "Protein group IDs" = ClusterID) %>%
+            merge(mztab_TMT2, by = "sequence_no_mod") %>% distinct()
+peptide <- ProteiNorm %>%
+          as_tibble %>%
+          rename("Gene names" = Description) %>%
+          select("Leading razor peptide", "Gene names", "Reporter intensity corrected 1 TMT126":"Reporter intensity corrected 3 TMT131", "Protein group IDs") %>%
+          add_column("Reverse" = rep("", nrow(ProteiNorm)), .after = "Reporter intensity corrected 3 TMT131") %>%
+          add_column("Potential contaminant" = rep("", nrow(ProteiNorm)), .after = "Reverse") %>%
+          add_column("id" = 1:nrow(ProteiNorm), .after="Potential contaminant") 
+protein <- ProteiNorm %>%
+           as_tibble %>%
+           rename(id = "Leading razor peptide") %>%
+           select(id, `Reporter intensity corrected 1 TMT126`:`Reporter intensity corrected 3 TMT131`)
+
 
 
 extractColumnNames = function(columnNames){
@@ -50,7 +111,7 @@ extractColumnNames = function(columnNames){
   
   return(list(isTMT = isTMT, rawDataCols = rawDataCols))
 }
-extractColumnNames
+
 
 extractPeptideData = function(rawData, peptideAnnotationColums){
   # quality filter 
@@ -65,7 +126,7 @@ extractPeptideData = function(rawData, peptideAnnotationColums){
   
   return(list(data = extractedData, isTMT = isTMT))
 }
-extractPeptideData
+extractPeptideData(peptide)
 
 extractProteinData = function(rawData, proteinAnnotationColums){
   # quality filter 
@@ -80,7 +141,7 @@ extractProteinData = function(rawData, proteinAnnotationColums){
   extractedData = rawData[,c(proteinAnnotationColums, rawDataCols)]
   return(list(data = extractedData, isTMT = isTMT))
 }
-extractProteinData
+extractProteinData(protein)
 
 outlier = function(vector){
   vector < quantile(vector, na.rm = T)[2] - 1.5 * IQR(vector, na.rm = T) | 
