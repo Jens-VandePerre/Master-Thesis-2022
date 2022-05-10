@@ -7,6 +7,8 @@ library(ComplexHeatmap) # normalization figures
 library(DAtest) # DAtest##################
 library(impute) # knn imputation
 library(pcaMethods) # bpca imputation
+library(gmm) #needed for imputeLCMD
+library(tmvtnorm) #needed for imputeLCMD
 library(imputeLCMD) # QRILC, MinDet imputation#####################
 library(sva) # combat
 library(shinyjs) # hiding button
@@ -19,13 +21,13 @@ library(NormalyzerDE) # PCA autoplot
 library(bit64) # handle large intensities
 
 
-install.packages('DAtest', repos='https://www.freestatistics.org/cran/')
-install.packages('imputeLCMD', repos='https://www.freestatistics.org/cran/')
-
-
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-source("/Users/jensvandeperre/Master-Thesis-2022/normFunctions.R")
-source("/Users/jensvandeperre/Master-Thesis-2022/functions.R")
+source("/Users/jensvandeperre/Master-Thesis-2022/normFunctions")
+source("/Users/jensvandeperre/Master-Thesis-2022/functions")
+
+install.packages("gmm", repos='https://www.freestatistics.org/cran/')
+
+
 
 # Sets maximum upload size to 5GB
 options(shiny.maxRequestSize = 5000*1024^2)
