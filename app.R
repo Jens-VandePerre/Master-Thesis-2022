@@ -73,15 +73,6 @@ tweaks <-
 DAtestTests = eval(formals(testDA)$tests)
 allChecks <- seq_along(DAtestTests)
 names(allChecks) <- DAtestTestNames[DAtestTests]
-controlsDAtest <-
-  list(h3("Test to be excluded:"), 
-       tags$div(align = 'left', 
-                class = 'multicol', 
-                checkboxGroupInput(inputId  = "checkboxDAtestTests", 
-                                   label    = NULL, 
-                                   choices  = allChecks,
-                                   selected = which(DAtestTests %in% "per"),
-                                   inline   = FALSE))) 
 
 controlsRmSamples <-
   list(h3("Samples:"), 
