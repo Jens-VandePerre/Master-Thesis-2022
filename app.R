@@ -3,33 +3,10 @@ library(data.table)
 library(DT)
 library(shiny)
 library(viridis)
-library(grid)
 library(ComplexHeatmap) # normalization figures
 library(DAtest) # DAtest
 library(impute) # knn imputation
-library(Biobase)
-library(BiocGenerics)
 library(pcaMethods) # bpca imputation
-library(sandwich)
-
-library(mvtnorm)
-library(Matrix)
-library(stats4)
-library(knitr)
-library(car)
-library(MASS)
-library(stabledist)
-library(timeDate)
-library(timeSeries)
-library(stats)
-library(methods)
-library(grDevices)
-library(graphics)
-library(norm)
-
-
-library(gmm) #needed for imputeLCMD
-library(tmvtnorm) #needed for imputeLCMD
 library(imputeLCMD) # QRILC, MinDet imputation
 library(sva) # combat
 library(shinyjs) # hiding button
@@ -40,53 +17,24 @@ library(rJava) # finding screen resolution
 library(ggfortify) # PCA autoplot
 library(NormalyzerDE) # PCA autoplot
 library(bit64) # handle large intensities
-library("rstudioapi")
 
-
-#remove.packages("gmm")
 
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 source("/Users/jensvandeperre/Master-Thesis-2022/normFunctions")
 source("/Users/jensvandeperre/Master-Thesis-2022/functions")
 
-#install.packages("norm", repos='https://ftp.belnet.be/mirror/CRAN/')
-#install.packages("gmm", repos="http://R-Forge.R-project.org")
-
-
-
-
-
-
 # Sets maximum upload size to 5GB
 options(shiny.maxRequestSize = 5000*1024^2)
 options(stringsAsFactors=FALSE)
 
 # finding screen resolution
-install.packages("protViz", repos='https://ftp.belnet.be/mirror/CRAN/')
-library(protViz)
 .jinit()
 toolkit <- J("java.awt.Toolkit")
 default_toolkit <- .jrcall(toolkit, "getDefaultToolkit")
 screenDim <- .jrcall(default_toolkit, "getScreenSize")
 screenHeight <- .jcall(screenDim, "D", "getHeight")
 screenWidth <- .jcall(screenDim, "D", "getWidth")
-
-
-
-
-
-
-system("wmic desktopmonitor get screenheight")
-
-
-(scr_width <- system("wmic desktopmonitor get screenwidth", intern=TRUE))
-(scr_height <- system("wmic desktopmonitor get screenheight", intern=TRUE))
-as.numeric(c(
-  scr_width[-c(1, length(scr_width))], 
-  scr_height[-c(1, length(scr_height))]
-))
-
 
 tweaks <- 
   list(tags$head(tags$style(HTML("
