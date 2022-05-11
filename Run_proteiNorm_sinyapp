@@ -11,7 +11,6 @@ library(Biobase)
 library(BiocGenerics)
 library(pcaMethods) # bpca imputation
 library(sandwich)
-
 library(mvtnorm)
 library(Matrix)
 library(stats4)
@@ -26,8 +25,6 @@ library(methods)
 library(grDevices)
 library(graphics)
 library(norm)
-
-
 library(gmm) #needed for imputeLCMD
 library(tmvtnorm) #needed for imputeLCMD
 library(imputeLCMD) # QRILC, MinDet imputation
@@ -63,29 +60,11 @@ options(shiny.maxRequestSize = 5000*1024^2)
 options(stringsAsFactors=FALSE)
 
 # finding screen resolution
-install.packages("protViz", repos='https://ftp.belnet.be/mirror/CRAN/')
-library(protViz)
 .jinit()
 toolkit <- J("java.awt.Toolkit")
 default_toolkit <- .jrcall(toolkit, "getDefaultToolkit")
-screenDim <- .jrcall(default_toolkit, "getScreenSize")
-screenHeight <- .jcall(screenDim, "D", "getHeight")
-screenWidth <- .jcall(screenDim, "D", "getWidth")
-
-
-
-
-
-
-system("wmic desktopmonitor get screenheight")
-
-
-(scr_width <- system("wmic desktopmonitor get screenwidth", intern=TRUE))
-(scr_height <- system("wmic desktopmonitor get screenheight", intern=TRUE))
-as.numeric(c(
-  scr_width[-c(1, length(scr_width))], 
-  scr_height[-c(1, length(scr_height))]
-))
+screenHeight <- 1600
+screenWidth <- 2560
 
 
 tweaks <- 

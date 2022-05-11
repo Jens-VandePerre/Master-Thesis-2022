@@ -3,10 +3,30 @@ library(data.table)
 library(DT)
 library(shiny)
 library(viridis)
+library(grid)
 library(ComplexHeatmap) # normalization figures
 library(DAtest) # DAtest
 library(impute) # knn imputation
+library(Biobase)
+library(BiocGenerics)
 library(pcaMethods) # bpca imputation
+library(sandwich)
+library(mvtnorm)
+library(Matrix)
+library(stats4)
+library(knitr)
+library(car)
+library(MASS)
+library(stabledist)
+library(timeDate)
+library(timeSeries)
+library(stats)
+library(methods)
+library(grDevices)
+library(graphics)
+library(norm)
+library(gmm) #needed for imputeLCMD
+library(tmvtnorm) #needed for imputeLCMD
 library(imputeLCMD) # QRILC, MinDet imputation
 library(sva) # combat
 library(shinyjs) # hiding button
@@ -17,6 +37,7 @@ library(rJava) # finding screen resolution
 library(ggfortify) # PCA autoplot
 library(NormalyzerDE) # PCA autoplot
 library(bit64) # handle large intensities
+library("rstudioapi")
 
 
 
