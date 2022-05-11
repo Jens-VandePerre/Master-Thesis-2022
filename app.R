@@ -53,9 +53,8 @@ options(stringsAsFactors=FALSE)
 .jinit()
 toolkit <- J("java.awt.Toolkit")
 default_toolkit <- .jrcall(toolkit, "getDefaultToolkit")
-screenDim <- .jrcall(default_toolkit, "getScreenSize")
-screenHeight <- .jcall(screenDim, "D", "getHeight")
-screenWidth <- .jcall(screenDim, "D", "getWidth")
+screenHeight <- 1500
+screenWidth <- 2560
 
 tweaks <- 
   list(tags$head(tags$style(HTML("
