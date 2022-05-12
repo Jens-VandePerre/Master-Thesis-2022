@@ -5,7 +5,7 @@ library("biomaRt")
 library("Hmisc")
 library("gplots")
 library("limma")
-library("isobar")
+library("isobar") #
 library("devtools")
 library("MSnbase")
 library("Biobase")
@@ -150,7 +150,7 @@ nrow(ClusID_Des)
 ProteiNorm <- merge(PepSeq_ProAcc, ClusID_Des, by= "Accessions") %>%
             as_tibble %>%
             rename("Leading razor protein" = Accessions, "Protein group IDs" = ClusterID) %>%
-            merge(mztab_TMT2, by = "sequence_no_mod") 
+            merge(mztab_TMT2, by = "sequence_no_mod") %>% distinct()
 nrow(ProteiNorm)
 
 peptide_txt <- ProteiNorm %>%
