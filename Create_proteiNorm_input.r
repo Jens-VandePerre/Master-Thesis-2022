@@ -34,13 +34,23 @@ list.files(wd)
 (file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq"))
 (file_names_short <- substring(file_name_long, 39, 46)) 
 
+#Load in all PSMs
 ALL_PSMs_4.5.22 <- readRDS(file = "~/Desktop/Outputs/PSMs/ALL_PSMs_4.5.22")
 view(ALL_PSMs_4.5.22[1])
-
 nrow(ALL_PSMs_4.5.22[1] %>% as_tibble)
-
-  #Loop for all files
-    #Make an index collumn for mathcing to TMTs
+  
+  #Make an index collumn for mathcing to TMTs
+    #For 1st file
+PSM_B1S1_f01 <- ALL_PSMs_4.5.22[[1]] %>% 
+    as_tibble %>%
+    select(PSM_ID) %>% 
+    mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
+    mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
+    mutate(index = trimws(str_remove_all(index, "scan="))) %>%
+    select(index) %>%
+    cbind(ALL_PSMs_4.5.22[[1]]) %>% as_tibble
+view(PSM_B1S1_f01)
+    #Loop for all files
 ind_mzTab <- list()
 for (i in seq_along(PSM_no_mod)) {
   ind_mzTab[[i]] <- select(PSM_no_mod[[i]], PSM_ID) %>% 
@@ -54,22 +64,6 @@ PSM_ready_for_matching <- set_names(ind_mzTab, file_names_short)
 PSM_ready_for_matching
 view(PSM_ready_for_matching[[1]]) #PSM column could be removed
 
-
-
-
-names(ALL_PSMs_4.5.22)
-PSM_B1S1_f01 <- ALL_PSMs_4.5.22[[1]] %>% 
-    as_tibble %>%
-    select(PSM_ID) %>% 
-    mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
-    mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
-    mutate(index = trimws(str_remove_all(index, "scan="))) %>%
-    select(index) %>%
-    cbind(ALL_PSMs_4.5.22[[1]]) %>% as_tibble
-view(PSM_B1S1_f01)
-
-
-#Match to TMTs
     #Load TMT saved
 #TMT_06.04.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/06.04.22_TMT")
 #TMT_20.04.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/20.04.22_TMT")
@@ -85,6 +79,17 @@ view(TMT_part1_03.05.22[[1]])
 
 
     #Create index collumn
+      #For 1st file
+TMT_B1S1_f01 <- tibble(index=rownames(TMT_part1_03.05.22[[1]][, 0])) %>%
+    mutate(index = trimws(str_remove_all(index, "F1.S"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    select(index) %>%
+    cbind(TMT_part1_03.05.22[[1]]) %>% as_tibble
+view(TMT_B1S1_f01)
+      #Loop for all files
 ind_TMT1 <- list()
 for (i in seq_along(TMT_part1_03.05.22)) {
   ind_TMT1[[i]] <- tibble(index=rownames(TMT_part1_03.05.22[[i]][, 0])) %>%
@@ -100,56 +105,15 @@ TMT_ready_for_machting <- set_names(ind_TMT1, file_names_short)
 TMT_ready_for_machting[[1]]
 view(TMT_ready_for_machting[[1]])
 
-
-TMT_B1S1_f01 <- tibble(index=rownames(TMT_part1_03.05.22[[1]][, 0])) %>%
-    mutate(index = trimws(str_remove_all(index, "F1.S"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    select(index) %>%
-    cbind(TMT_part1_03.05.22[[1]]) %>% as_tibble
-view(TMT_B1S1_f01)
-
-
 #Load protein info from PIA output
-test1 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_1.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
-test2 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_2.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
-test3 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/test_3.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
-test4_PSM <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/PSM_exp_test_4.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
-test4_PRO <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/PROT_exp_test_4.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
-test5 <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/PROT_exp_test_5.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
- 
+PIA <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/PROT_exp_test_5.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
 
-view(test1)
-view(test2)
-view(test3)
-view(test4_PSM)
-view(test4_PRO)
-view(test5)
-
-
-protein <- test4_PRO %>% as_tibble %>% filter(str_detect(V1, "PROTEIN")) %>% row_to_names(row_number = 1)
-peptide <- test4_PRO %>% as_tibble %>% filter(str_detect(V1, "PEPTIDE")) %>% row_to_names(row_number = 1)
-psmset <- test4_PRO %>% as_tibble %>% filter(str_detect(V1, "PSMSET")) %>% row_to_names(row_number = 1)
-psm <- test4_PRO %>% as_tibble  %>%  filter(str_detect(V1, "PSM")) %>% row_to_names(row_number = 1)
-
-
-view(protein) #columns OK
-view(peptide) #modifications column emprty
-view(psmset) #decoy column not aligned
-view(psm)
-
-
-
-
-#Make TMT tibble + add index column for matching
-  #selecting index column
+#Link PSMs and TMTs by index column
+  #Select the needed columns
 mztab_TMT <- merge(TMT_B1S1_f01, PSM_B1S1_f01, by="index") %>%
         select(index, "126":"131", sequence, sequence_no_mod, charge)
 view(mztab_TMT)
-
-#######################
+  #Change Reporter names
 mztab_TMT2 <- mztab_TMT %>%
   rename(`Reporter intensity corrected 1 TMT126` = `126`,
         `Reporter intensity corrected 1 TMT127N` = `127N`,
@@ -164,10 +128,8 @@ mztab_TMT2 <- mztab_TMT %>%
         ) %>% as_tibble 
 view(mztab_TMT2)
 
-
-
 #Create Peptide.txt
-PepSeq_ProAcc <- test5 %>% 
+PepSeq_ProAcc <- PIA %>% 
           as_tibble %>% 
           filter(str_detect(V1, "PSMSET")) %>% 
           row_to_names(row_number = 1) %>%
@@ -177,7 +139,7 @@ view(PepSeq_ProAcc)
 nrow(PepSeq_ProAcc)
 n_distinct(PepSeq_ProAcc)
 
-ClusID_Des <- test5 %>% 
+ClusID_Des <- PIA %>% 
           as_tibble %>% 
           filter(str_detect(V1, "PROTEIN")) %>% 
           row_to_names(row_number = 1) %>%
@@ -198,12 +160,6 @@ view(ProteiNorm)
 n_distinct(ProteiNorm)
 nrow(mztab_TMT)
 n_distinct(mztab_TMT)
-
-
-          add_column("Reverse" = rep(" ", nrow(ProteiNorm)), .after = "Reporter intensity corrected 3 TMT131") 
-          add_column("Potential contaminant" = rep(" ", nrow(ProteiNorm)), .after = "Reverse") 
-          add_column("id" = 1:nrow(ProteiNorm), .after="Potential contaminant") 
-
 
 peptide_txt <- ProteiNorm %>%
           as_tibble %>%
