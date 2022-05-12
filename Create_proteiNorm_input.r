@@ -137,7 +137,6 @@ PepSeq_ProAcc <- PIA %>%
           rename(sequence_no_mod = Sequence)
 view(PepSeq_ProAcc)
 nrow(PepSeq_ProAcc)
-n_distinct(PepSeq_ProAcc)
 
 ClusID_Des <- PIA %>% 
           as_tibble %>% 
@@ -147,24 +146,17 @@ ClusID_Des <- PIA %>%
           rename(Accessions = Proteins)
 view(ClusID_Des)
 nrow(ClusID_Des)
-n_distinct(ClusID_Des)
 
 ProteiNorm <- merge(PepSeq_ProAcc, ClusID_Des, by= "Accessions") %>%
             as_tibble %>%
-            rename("Leading razor peptide" = Accessions, "Protein group IDs" = ClusterID) %>%
-            merge(mztab_TMT2, by = "sequence_no_mod") %>% distinct()
-
-
+            rename("Leading razor protein" = Accessions, "Protein group IDs" = ClusterID) %>%
+            merge(mztab_TMT2, by = "sequence_no_mod") 
 nrow(ProteiNorm)
-view(ProteiNorm)
-n_distinct(ProteiNorm)
-nrow(mztab_TMT)
-n_distinct(mztab_TMT)
 
 peptide_txt <- ProteiNorm %>%
           as_tibble %>%
           rename("Gene names" = Description) %>%
-          select("Leading razor peptide", "Gene names", "Reporter intensity corrected 1 TMT126":"Reporter intensity corrected 3 TMT131", "Protein group IDs") %>%
+          select("Leading razor protein", "Gene names", "Reporter intensity corrected 1 TMT126":"Reporter intensity corrected 3 TMT131", "Protein group IDs") %>%
           add_column("Reverse" = rep("", nrow(ProteiNorm)), .after = "Reporter intensity corrected 3 TMT131") %>%
           add_column("Potential contaminant" = rep("", nrow(ProteiNorm)), .after = "Reverse") %>%
           add_column("id" = 1:nrow(ProteiNorm), .after="Potential contaminant") 
@@ -172,10 +164,10 @@ write.table(peptide_txt, file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/p
              col.names = TRUE, quote = FALSE)
 view(peptide_txt)
 
-#add id, empty Reverse and empty Potential contaminant
+#proteinGroup_txt
 proteinGroup_txt <- ProteiNorm %>%
            as_tibble %>%
-           rename(id = "Leading razor peptide") %>%
+           rename(id = "Leading razor protein") %>%
            select(id, `Reporter intensity corrected 1 TMT126`:`Reporter intensity corrected 3 TMT131`)
 view(proteinGroup_txt)
 write.table(proteinGroup_txt, file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/protein/proteinGroup.txt", append = FALSE, sep = "\t", dec = ".",

@@ -39,7 +39,7 @@ library(NormalyzerDE) # PCA autoplot
 library(bit64) # handle large intensities
 library("rstudioapi")
 
-
+#ylim
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 source("/Users/jensvandeperre/Master-Thesis-2022/normFunctions")
@@ -53,7 +53,7 @@ options(stringsAsFactors=FALSE)
 .jinit()
 toolkit <- J("java.awt.Toolkit")
 default_toolkit <- .jrcall(toolkit, "getDefaultToolkit")
-screenHeight <- 1500
+screenHeight <- 1600
 screenWidth <- 2560
 
 tweaks <- 
