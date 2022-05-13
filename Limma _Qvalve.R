@@ -1,0 +1,331 @@
+source("http://bioconductor.org/biocLite.R")
+
+BiocManager::install("limma")
+BiocManager::install("qvalue")
+library("limma")
+library("qvalue")
+library(rpx)
+library(mzR)
+library("OrgMassSpecR")
+library("biomaRt")
+library("Hmisc")
+library("gplots")
+library("limma")
+library(isobar)
+library(devtools)
+library(MSnbase)
+library(Biobase)
+library(dplyr)
+library(tidyverse)
+library(fs)
+library("rpx")
+library("mzR")
+library("OrgMassSpecR")
+library("biomaRt")
+library("Hmisc")
+library("gplots")
+library("limma")
+library("isobar") #
+library("devtools")
+library("MSnbase")
+library("Biobase")
+library("dplyr")
+library("tidyverse")
+library("fs")
+library("proxyC")
+library("sjlabelled")
+library("expss")
+library("labelled")
+library("patchwork")
+library("msdata")
+library("remotes")
+library("janitor")
+library("stringr")
+library("MSstatsTMT")
+
+
+wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq")
+getwd() 
+list.files(wd)
+#Load PSMs 
+#Load matching mzMLs
+    #Automate filename extraction
+(file_name_long <- list.files(wd))
+(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq"))
+(file_names_short <- substring(file_name_long, 39, 46)) 
+
+#Load in all PSMs
+ALL_PSMs_4.5.22 <- readRDS(file = "~/Desktop/Outputs/PSMs/ALL_PSMs_4.5.22")
+view(ALL_PSMs_4.5.22[1])
+nrow(ALL_PSMs_4.5.22[1] %>% as_tibble)
+  
+  #Make an index collumn for mathcing to TMTs
+    #For 1st file
+PSM_B1S1_f01 <- ALL_PSMs_4.5.22[[1]] %>% 
+    as_tibble %>%
+    select(PSM_ID) %>% 
+    mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
+    mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
+    mutate(index = trimws(str_remove_all(index, "scan="))) %>%
+    select(index) %>%
+    cbind(ALL_PSMs_4.5.22[[1]]) %>% as_tibble
+view(PSM_B1S1_f01)
+    #Loop for all files
+ind_mzTab <- list()
+for (i in seq_along(PSM_no_mod)) {
+  ind_mzTab[[i]] <- select(PSM_no_mod[[i]], PSM_ID) %>% 
+    mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
+    mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
+    mutate(index = trimws(str_remove_all(index, "scan="))) %>%
+    select(index) %>%
+    cbind(PSM_no_mod[[i]]) %>% as_tibble
+}
+PSM_ready_for_matching <- set_names(ind_mzTab, file_names_short)
+PSM_ready_for_matching
+view(PSM_ready_for_matching[[1]]) #PSM column could be removed
+
+    #Load TMT saved
+#TMT_06.04.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/06.04.22_TMT")
+#TMT_20.04.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/20.04.22_TMT")
+#TMT_22.04.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/22.04.22_TMT")
+#TMT_28.04.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/28.04.22_TMT")
+
+TMT_part1_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/03.05.22_TMT_part1")
+names(TMT_part1_03.05.22)
+view(TMT_part1_03.05.22[[1]])
+
+#TMT_part2_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/03.05.22_TMT_part2")
+#TMT_part3_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/03.05.22_TMT_part3")
+
+
+    #Create index collumn
+      #For 1st file
+TMT_B1S1_f01 <- tibble(index=rownames(TMT_part1_03.05.22[[1]][, 0])) %>%
+    mutate(index = trimws(str_remove_all(index, "F1.S"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    select(index) %>%
+    cbind(TMT_part1_03.05.22[[1]]) %>% as_tibble
+view(TMT_B1S1_f01)
+      #Loop for all files
+ind_TMT1 <- list()
+for (i in seq_along(TMT_part1_03.05.22)) {
+  ind_TMT1[[i]] <- tibble(index=rownames(TMT_part1_03.05.22[[i]][, 0])) %>%
+    mutate(index = trimws(str_remove_all(index, "F1.S"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
+    select(index) %>%
+    cbind(TMT_part1_03.05.22[[i]]) %>% as_tibble
+}
+TMT_ready_for_machting <- set_names(ind_TMT1, file_names_short)
+TMT_ready_for_machting[[1]]
+view(TMT_ready_for_machting[[1]])
+
+#Load protein info from PIA output
+PIA <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/PROT_exp_test_5.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
+
+#Link PSMs and TMTs by index column
+  #Select the needed columns
+mztab_TMT <- merge(TMT_B1S1_f01, PSM_B1S1_f01, by="index") %>%
+        select(index, "126":"131", sequence, sequence_no_mod, charge)
+view(mztab_TMT)
+
+#Create Peptide.txt
+PepSeq_ProAcc <- PIA %>% 
+          as_tibble %>% 
+          filter(str_detect(V1, "PSMSET")) %>% 
+          row_to_names(row_number = 1) %>%
+          select(Sequence, Accessions) %>%
+          rename(sequence_no_mod = Sequence)
+view(PepSeq_ProAcc)
+nrow(PepSeq_ProAcc)
+
+Des <- PIA %>% 
+          as_tibble %>% 
+          filter(str_detect(V1, "PROTEIN")) %>% 
+          row_to_names(row_number = 1) %>%
+          select(Proteins, Description) %>%
+          rename(Accessions = Proteins)
+view(Des)
+nrow(Des)
+
+data <- merge(PepSeq_ProAcc, Des, by= "Accessions") %>%
+            as_tibble %>%
+            rename("Protein.Group.Accessions" = Accessions, "Protein.Descriptions"= Description) %>%
+            merge(mztab_TMT, by = "sequence_no_mod") %>%
+            distinct() 
+view(data)
+nrow(data)
+
+mydat <- data %>%
+          as_tibble %>%
+          select("Protein.Group.Accessions", "Protein.Descriptions", "sequence_no_mod",
+          "126":"131") %>%
+          rename("Sequence" = sequence_no_mod) %>%
+          add_column("Quan.Usage" = "Used", .after = "Sequence") %>%
+          add_column("Quan.Info" = "Unique", .after = "Quan.Usage") %>%
+          add_column("Isolation.Interference" = 30 , .after = "Quan.Info") 
+view(mydat)
+nrow(mydat)
+
+dat <- read.csv("http://www.biostat.jhsph.edu/~kkammers/software/eupa/example_iTRAQ.csv")
+view(dat)
+
+(cha <- c("126","127N","127C","128N","128C","129N","129C","130N","130C","131"))
+dim(mydat)
+str(mydat)
+
+read.peptides <- function(dat, cha){
+  output <- NULL
+  
+  dat$Sequence <- as.character(dat$Sequence)
+  dat$Protein.Group.Accessions <- as.character(dat$Protein.Group.Accessions)
+  dat$Quan.Usage <- as.character(dat$Quan.Usage)
+  dat$Quan.Info <- as.character(dat$Quan.Info)
+  dat$Isolation.Interference <- as.numeric(as.character(dat$Isolation.Interference))
+  
+  dat <- subset(dat, Isolation.Interference<=30)  
+  dat <- subset(dat, Quan.Usage=="Used")
+  dat <- subset(dat, Protein.Group.Accessions!="")
+  dat <- subset(dat, !apply(dat[cha], 1, f <- function(x) any(is.na(x))))  
+}
+
+quantify.proteins <- function(dat, cha){
+  e.function <- function(x, seq) tapply(x, seq, median)
+  output <- NULL
+  
+  dat$Sequence <- toupper(dat$Sequence) # Capital letters
+  accessions <- as.character(unique(dat$Protein.Group.Accessions))
+  n.proteins <- length(accessions)
+  n.cha <- length(cha)
+  
+  for(k in 1:n.proteins){
+    id <- accessions[k]
+    sdat <- subset(dat, Protein.Group.Accessions==id)[c("Sequence", cha)]
+    sdat[cha] <- log2(sdat[cha])
+    sdat[cha] <- sdat[cha] - apply(sdat[cha], 1, median)
+    pdat <- sdat[, -1]
+    n.spectra <- ifelse(is.integer(dim(pdat)), nrow(pdat), 1)
+    temp <- apply(sdat[,-1], 2, e.function,seq=sdat[, 1])          
+    n.peptides <- ifelse(is.integer(dim(temp)), nrow(temp), 1)    
+    if(is.integer(dim(pdat))) pdat <- apply(pdat, 2, median)
+    pdat <- c(pdat, n.peptides=n.peptides, n.spectra=n.spectra)
+    output <- rbind(output, pdat)
+  }
+  output[,1:n.cha] <- sweep(output[,1:n.cha],1,apply(output[,1:n.cha],1,median))
+  output[,1:n.cha] <- sweep(output[,1:n.cha],2,apply(output[,1:n.cha],2,median))
+  output[,1:n.cha] <- sweep(output[,1:n.cha],1,apply(output[,1:n.cha],1,median))
+  output[,1:n.cha] <- round(output[,1:n.cha],3)
+  row.names(output) <- accessions
+  output <- as.data.frame(output)
+  return(output)
+}
+
+eb.fit <- function(dat, design){
+  n <- dim(dat)[1]
+  fit <- lmFit(dat, design)
+  fit.eb <- eBayes(fit)
+  log2FC <- fit.eb$coefficients[, 2]
+  df.r <- fit.eb$df.residual
+  df.0 <- rep(fit.eb$df.prior, n)
+  s2.0 <- rep(fit.eb$s2.prior, n)
+  s2 <- (fit.eb$sigma)^2
+  s2.post <- fit.eb$s2.post
+  t.ord <- fit.eb$coefficients[, 2]/fit.eb$sigma/fit.eb$stdev.unscaled[, 2]
+  t.mod <- fit.eb$t[, 2]
+  p.ord <- 2*pt(-abs(t.ord), fit.eb$df.residual)
+  p.mod <- fit.eb$p.value[, 2]
+  q.ord <- qvalue(p.ord)$q
+  q.mod <- qvalue(p.mod)$q
+  results.eb <- data.frame(log2FC, t.ord, t.mod, p.ord, p.mod, q.ord, q.mod, df.r, df.0, s2.0, s2, s2.post)
+  results.eb <- results.eb[order(results.eb$p.mod), ]
+  return(results.eb)
+}
+
+eb.fit.mult <- function(dat, design){
+  n <- dim(dat)[1]
+  fit <- lmFit(dat, design)
+  fit.eb <- eBayes(fit)
+  log2FC <- fit.eb$coef[, "tr2"]
+  df.0 <- rep(fit.eb$df.prior, n)
+  df.r <- fit.eb$df.residual
+  s2.0 <- rep(fit.eb$s2.prior, n)
+  s2 <- (fit.eb$sigma)^2
+  s2.post <- fit.eb$s2.post
+  t.ord <- fit.eb$coef[, "tr2"]/fit.eb$sigma/fit.eb$stdev.unscaled[, "tr2"]
+  t.mod <- fit.eb$t[, "tr2"]
+  p.ord <- 2*pt(-abs(t.ord), fit.eb$df.residual)
+  p.mod <- fit.eb$p.value[, "tr2"]
+  q.ord <- q.mod <- rep(NA,n)
+  ids <- which(!is.na(p.ord))
+  k <- 0
+  q1 <- qvalue(p.ord[!is.na(p.ord)])$q
+  q2 <- qvalue(p.mod[!is.na(p.mod)])$q
+  for(i in ids){ 
+    k <- k+1
+    q.ord[i] <- q1[k] 
+    q.mod[i] <- q2[k]
+  }
+  results.eb.mult <- data.frame(log2FC, t.ord, t.mod, p.ord, p.mod, q.ord, q.mod, df.r, df.0, s2.0, s2, s2.post)
+  results.eb.mult <- results.eb.mult[order(results.eb.mult$p.mod), ]
+  return(results.eb.mult)
+}
+
+
+(dat <- read.peptides(mydat, cha))
+dim(dat)
+####HIER DELEN??? door ref
+dat <- quantify.proteins(dat, cha)
+view(dat)
+dat.onehit <- subset(dat, dat$n.peptides == 1) 
+view(dat)
+######OF HIER DELEN??? door ref
+dim(dat.onehit)
+dat <- subset(dat, dat$n.peptides != 1)
+dim(dat)
+par(mfrow=c(1,1), font.lab=2, cex.lab=1.2, font.axis=2, cex.axis=1.2)
+boxplot(dat[, 1:length(cha)],  ylim = c(-3, 3), main="Boxplot normalized Intensities")
+
+
+
+
+
+
+nor <- c("126", "127N")
+tum <- c("127C","128N","128C","129N","129C","130N","130C")
+
+design <- model.matrix(~factor(c(2,2,2,2,2,1,1,1,1)))
+design
+colnames(design) <- c("Intercept", "Diff")
+res.eb <- eb.fit(dat[, c(nor,tum)], design)
+str(res.eb)
+view(res.eb)
+
+rx <- c(-1, 1)*max(abs(res.eb$log2FC))*1.1
+ry <- c(0, ceiling(max(-log10(res.eb$p.ord), -log10(res.eb$p.mod))))
+
+par(mfrow=c(1,2), font.lab=2, cex.lab=1.2, font.axis=2, cex.axis=1.2)
+par(las=1, xaxs="i", yaxs="i")
+
+plot(res.eb$log2FC, -log10(res.eb$p.ord), pch=21, bg="lightgrey", cex=0.9, 
+     xlim=rx, ylim=ry, xaxt="n",
+     xlab="fold change", ylab="-log10  p-value")
+abline(v=seq(-2,2,1), col="lightgray", lty="dotted")
+abline(h=seq(0,ry[2],1), col="lightgray", lty="dotted")
+axis(1, seq(-2,2,1), paste(c("1/4","1/2","1/1","2/1","4/1")))
+title("volcano plot of ordinary p-values")
+
+plot(res.eb$log2FC, -log10(res.eb$p.mod), pch=21, bg="lightgrey", cex=0.9,
+     xlim=rx, ylim=ry, xaxt="n",
+     xlab="fold change", ylab="-log10  p-value")
+abline(v=seq(-2,2,1), col="lightgray", lty="dotted")
+abline(h=seq(0,ry[2],1), col="lightgray", lty="dotted")
+axis(1, seq(-2,2,1), paste(c("1/4","1/2","1/1","2/1","4/1")))
+title("volcano plot of moderated p-values")
+
+
+
