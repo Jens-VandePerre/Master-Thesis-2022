@@ -177,27 +177,34 @@ replace_na(list("Reporter intensity corrected 3 TMT131" = 0))
 
 
 
-
 write.table(peptide_txt, file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/peptide.txt", append = FALSE, sep = "\t", dec = ".", 
              col.names = TRUE, quote = FALSE, row.names=FALSE)
 view(peptide_txt)
+sum(is.na(peptide_txt))
+sapply(peptide_txt, class)
 
-max(proteinGroup_txt$"Reporter intensity corrected 1 TMT126")
-min(proteinGroup_txt$"Reporter intensity corrected 1 TMT126")
 
 read_peptide <- read.table(file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/peptide.txt", sep = "\t", dec = ".")
 view(read_peptide)
 max(read_peptide[,6])
 min(read_peptide[,4])
+sapply(read_peptide, class)
+
 
 #proteinGroup_txt
 proteinGroup_txt <- ProteiNorm %>%
            as_tibble %>%
            rename(id = "Leading razor protein") %>%
-           select(id, `Reporter intensity corrected 1 TMT126`:`Reporter intensity corrected 3 TMT131`)
+           select(id, `Reporter intensity corrected 1 TMT126`:`Reporter intensity corrected 3 TMT131`) %>%
+           replace_na(list("Reporter intensity corrected 1 TMT126" = 0)) 
+
 view(proteinGroup_txt)
 write.table(proteinGroup_txt, file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/proteinGroup.txt", 
-append = FALSE, sep = "\t", dec = ".", col.names = TRUE, quote = FALSE, row.names=FALSE)
+append = FALSE, sep = "\t", dec = ".", col.names = TRUE, quote = FALSE, row.names=FALSE, na = "NA")
+sum(is.na(proteinGroup_txt))
+sapply(proteinGroup_txt, class)
+
+
 
 
   #Leading rezor peptide
@@ -234,6 +241,7 @@ append = FALSE, sep = "\t", dec = ".", col.names = TRUE, quote = FALSE, row.name
 view(MSstats)
 
 ?sub
+
 
 
 
