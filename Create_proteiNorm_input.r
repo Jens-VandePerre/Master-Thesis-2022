@@ -157,11 +157,27 @@ nrow(ProteiNorm)
 peptide_txt <- ProteiNorm %>%
           as_tibble %>%
           rename("Gene names" = Description) %>%
-          select("Leading razor protein", "Gene names", "Reporter intensity corrected 1 TMT126":"Reporter intensity corrected 3 TMT131", "Protein group IDs") %>%
-          add_column("Reverse" = rep("", nrow(ProteiNorm)), .after = "Reporter intensity corrected 3 TMT131") %>%
-          add_column("Potential contaminant" = rep("", nrow(ProteiNorm)), .after = "Reverse") %>%
-          add_column("id" = 1:nrow(ProteiNorm), .after="Potential contaminant") %>%
-          mutate_all(~replace(., is.na(.), 0))
+          select("Leading razor protein", "Gene names", 
+          "Reporter intensity corrected 1 TMT126":"Reporter intensity corrected 3 TMT131", "Protein group IDs") %>%
+          add_column("id" = 1:nrow(ProteiNorm), .before = "Protein group IDs") %>%
+replace_na(list("Reporter intensity corrected 1 TMT126" = 0)) %>%
+replace_na(list("Reporter intensity corrected 1 TMT127N" = 0)) %>%
+replace_na(list("Reporter intensity corrected 2 TMT127C" = 0)) %>%
+replace_na(list("Reporter intensity corrected 2 TMT128N" = 0)) %>%
+replace_na(list("Reporter intensity corrected 2 TMT128C" = 0)) %>%
+replace_na(list("Reporter intensity corrected 2 TMT129N" = 0)) %>%
+replace_na(list("Reporter intensity corrected 2 TMT129C" = 0)) %>%
+replace_na(list("Reporter intensity corrected 2 TMT130N" = 0)) %>%
+replace_na(list("Reporter intensity corrected 2 TMT130C" = 0)) %>%
+replace_na(list("Reporter intensity corrected 3 TMT131" = 0))
+
+
+          add_column("Reverse" = rep("", nrow(ProteiNorm)), .after = "Reporter intensity corrected 3 TMT131") 
+          add_column("Potential contaminant" = rep("", nrow(ProteiNorm)), .after = "Reverse") 
+
+
+
+
 write.table(peptide_txt, file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/peptide.txt", append = FALSE, sep = "\t", dec = ".", 
              col.names = TRUE, quote = FALSE, row.names=FALSE)
 view(peptide_txt)
@@ -169,10 +185,9 @@ view(peptide_txt)
 max(proteinGroup_txt$"Reporter intensity corrected 1 TMT126")
 min(proteinGroup_txt$"Reporter intensity corrected 1 TMT126")
 
-read_peptide <- read.table(file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/peptide.txt", sep = "\t", dec = ".", 
-            )
+read_peptide <- read.table(file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/peptide.txt", sep = "\t", dec = ".")
 view(read_peptide)
-max(read_peptide[,4])
+max(read_peptide[,6])
 min(read_peptide[,4])
 
 #proteinGroup_txt
@@ -181,8 +196,8 @@ proteinGroup_txt <- ProteiNorm %>%
            rename(id = "Leading razor protein") %>%
            select(id, `Reporter intensity corrected 1 TMT126`:`Reporter intensity corrected 3 TMT131`)
 view(proteinGroup_txt)
-write.table(proteinGroup_txt, file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/proteinGroup.txt", append = FALSE, sep = "\t", dec = ".",
-             col.names = TRUE, quote = FALSE, row.names=FALSE)
+write.table(proteinGroup_txt, file="/Users/jensvandeperre/Desktop/Inputs/ProteiNorm/proteinGroup.txt", 
+append = FALSE, sep = "\t", dec = ".", col.names = TRUE, quote = FALSE, row.names=FALSE)
 
 
   #Leading rezor peptide
