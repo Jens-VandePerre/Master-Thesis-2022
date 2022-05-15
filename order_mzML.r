@@ -73,7 +73,7 @@ view(mzML[[1]])
 
 all <- bind_rows(order_mzML, .id = "column_label")
 arrange(all, namemzml)
-
+view(all)
 
 all
 
@@ -82,9 +82,5 @@ all
 newlist <- lapply(order_mzML, function(df){arrange(df, namemzml)})
 newlist[[1]]
 
-?arrange
-sort(namemzml)
 
 
-order_mzML[[1]]%>%
-select(namemzml)
