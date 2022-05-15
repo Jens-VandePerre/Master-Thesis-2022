@@ -62,14 +62,22 @@ length(mzTab)
 order(names(mzML))
 ?order
 
-namemzml <- names(mzML)
 order_mzML <- list()
+namemzml <- names(mzML)
 for (i in seq_along(mzML)) {
     order_mzML[[i]] <- mzML[[i]] %>% as_tibble() %>%
     add_column(namemzml= namemzml[[i]], .before = "126") 
 }
 view(order_mzML[[1]]) 
 view(mzML[[1]])
+
+all <- bind_rows(order_mzML, .id = "column_label")
+arrange(all, namemzml)
+
+
+all
+
+
 
 newlist <- lapply(order_mzML, function(df){arrange(df, namemzml)})
 newlist[[1]]
