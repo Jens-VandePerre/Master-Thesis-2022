@@ -48,8 +48,8 @@ for (i in seq_along(mzML_file_paths)) {
 }
 (Selected_mzML <- set_names(mzML_files, file_names_short))
  #Save read in mzMLs to output location
-saveRDS(Selected_mzML, file = "~/Desktop/Outputs/mzML_imported/03.05.22_mzML_part7")
-mzML <- readRDS(file = "~/Desktop/Outputs/mzML_imported/03.05.22_mzML_part7")
+saveRDS(Selected_mzML, file = "~/Desktop/Outputs/mzML_imported/03.05.22_mzML_f03")
+mzML <- readRDS(file = "~/Desktop/Outputs/mzML_imported/03.05.22_mzML_f03")
 view(mzML[[1]])
 length(mzML)
 names(mzML)
@@ -76,8 +76,8 @@ TMT_intensities1 <- set_names(TMT1, file_names_short) #names each file by file_n
 view(TMT_intensities1[[1]])
 view(TMT1[[1]])
     #Save output to different location: TMT outputs/Combined Files
-saveRDS(TMT_intensities1, file = "~/Desktop/Outputs/TMTs/03.05.22_TMT_part7")
-TMT_Intensities_28_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/03.05.22_TMT_part7")
+saveRDS(TMT_intensities1, file = "~/Desktop/Outputs/TMTs/03.05.22_TMT_f03")
+TMT_Intensities_28_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/03.05.22_TMT_f03")
 view(TMT_Intensities_28_04_22[[17]])
          #1. Check missing data before imputation
 missing1 <- list () #empty list
