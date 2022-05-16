@@ -22,74 +22,72 @@ library("remotes")
 library("janitor")
 library("stringr")
 
-wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/mzTab_21_04_22")
+wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab")
 getwd() 
 list.files(wd)
-#Load PSMs 
-PSM_22_04_22 <- readRDS(file = "~/Desktop/Outputs/PSMs/22_04_22_PSMs") 
-view(PSM_22_04_22[[1]]) 
-#Load matching mzMLs
-TMT_Intensities_22_04_22 <- readRDS(file = "~/Desktop/Outputs/TMTs/22.04.22_TMT") 
     #Automate filename extraction
 (file_name_long <- list.files(wd))
-(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/mzTab_21_04_22"))
-(file_names_short <- substring(file_paths, 91, 98)) #Characters 86 untill 93 are uniqueue
+(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab"))
+(file_names_short <- substring(file_name_long, 39, 46)) 
+length(file_names_short)
+
+#Load PSMs 
+PSM_all <- readRDS(file = "~/Desktop/Outputs/PSMs/ALL_PSMs_4.5.22") 
+view(PSM_all[[1]]) 
+length(PSM_all)
+  #Create column no_mod
+psm <- list() #empty list
+for (i in seq_along(PSM_all)) {
+  psm[[i]] <- PSM_all[[i]] %>%
+  as_tibble() %>% 
+  mutate(sequence_no_mod = trimws(str_remove_all(sequence, "n"))) %>% #remove n
+  mutate(sequence_no_mod = trimws(str_remove_all(sequence_no_mod, "[0123456789]"))) %>% # remove numbers
+  mutate(sequence_no_mod = trimws(str_remove_all(sequence_no_mod, "\\[|\\]"))) %>% #remove []
+  relocate(sequence_no_mod, .after = sequence)
+}
+PSM <- set_names(psm, file_names_short) #names each file by file_names_short
+view(PSM[[1]])
+
+#Load matching TMTs
+TMT_all <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/ALL_TMTs_16.05.22") 
 
 #Look for matching scan numbers
-view(PSM_22_04_22[[1]]["PSM_ID"]) #Column PSM_ID
-view(TMT_Intensities_22_04_22[[1]][, 0]) #These are row names
-
-#Make TMT tibble + add index column for matching
-  #selecting index column
-ind_TMT1 <- list()
-for (i in seq_along(TMT_Intensities_22_04_22)) {
-  ind_TMT1[[i]] <- tibble(index=rownames(TMT_Intensities_22_04_22[[i]][, 0])) %>%
-    mutate(index = trimws(str_remove_all(index, "F1.S"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    select(index) %>%
-    cbind(TMT_Intensities_22_04_22[[i]]) %>% as_tibble
-}
-TMT_ready_for_machting <- set_names(ind_TMT1, file_names_short)
-TMT_ready_for_machting[[1]]
-view(TMT_ready_for_machting[[1]])
+view(PSM_all[[1]]["PSM_ID"]) #Column PSM_ID
+view(TMT_all[[1]]$index) #These are row names
 
 #Make PSM index column for matching
   #Extract numbers from PSM_ID column + Adding this index column to PSM_6
-ind_mzTab5 <- list()
-for (i in seq_along(PSM_22_04_22)) {
-  ind_mzTab5[[i]] <- select(PSM_22_04_22[[i]], PSM_ID) %>% 
+ind_PSM <- list()
+for (i in seq_along(PSM)) {
+  ind_PSM[[i]] <- select(PSM[[i]], PSM_ID) %>% 
     mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
     mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
     mutate(index = trimws(str_remove_all(index, "scan="))) %>%
     select(index) %>%
-    cbind(PSM_22_04_22[[i]]) %>% as_tibble
+    cbind(PSM[[i]]) %>% as_tibble
 }
-PSM_ready_for_matching <- set_names(ind_mzTab5, file_names_short)
+PSM_ready_for_matching <- set_names(ind_PSM, file_names_short)
 PSM_ready_for_matching
-view(PSM_ready_for_matching[[1]]) #PSM column could be removed
+view(PSM_ready_for_matching[[1]])
 
 #Merging by index
 merging <- list()
-for (i in seq_along(TMT_ready_for_machting)) {
-  merging[[i]] <- merge(PSM_ready_for_matching[[i]], TMT_ready_for_machting[[i]], by="index") %>% 
+for (i in seq_along(TMT_all)) {
+  merging[[i]] <- merge(PSM_ready_for_matching[[i]], TMT_all[[i]], by="index") %>% 
   as_tibble
 }
 Merged_PSM_TMT <- set_names(merging, file_names_short)
-Merged_PSM_TMT
 view(Merged_PSM_TMT[[1]]) 
-view(merging[[1]] %>% select(index, sequence_no_mod, 25:34) %>% arrange(sequence_no_mod)) 
+view(merging[[1]] %>% select(index, sequence_no_mod, 27:36) %>% arrange(sequence_no_mod)) 
   #Save outputs
-saveRDS(Merged_PSM_TMT, file = "~/Desktop/Outputs/PSM_TMT_linked/22_04_22_PSM_TMT_Linked")
-PSM_TMT_22_04_22 <- readRDS("~/Desktop/Outputs/PSM_TMT_linked/22_04_22_PSM_TMT_Linked")
+saveRDS(Merged_PSM_TMT, file = "~/Desktop/Outputs/PSM_TMT_linked/ALL_PSM_TMT_Linked")
+PSM_TMT_all <- readRDS("~/Desktop/Outputs/PSM_TMT_linked/ALL_PSM_TMT_Linked")
 
 #Checking if length stay the same after matching PSMs and TMTs
   #Length PSM
 l_PSM <- list()
-for (i in seq_along(PSM_TMT_22_04_22)) {
-  l_PSM[[i]] <- nrow(PSM_TMT_22_04_22[[i]])
+for (i in seq_along(PSM_TMT_all)) {
+  l_PSM[[i]] <- nrow(PSM_TMT_all[[i]])
 }
 (PSM_length <- set_names(l_PSM, file_names_short))
   #Length matched
@@ -100,27 +98,8 @@ for (i in seq_along(Merged_PSM_TMT)) {
 (Merged_length <- set_names(l_matched, file_names_short)) 
   #Is there a difference?
 l_diff <- list()
-for (i in seq_along(PSM_TMT_22_04_22)) {
+for (i in seq_along(PSM_TMT_all)) {
   l_diff[[i]] <- (PSM_length[[i]]-Merged_length[[i]])
 }
 (Length_difference <- set_names(l_diff, file_names_short))#All 0 Merging SUCCESS
 
-#Selecting the collumn for relative quantification
-selected <- list()
-for (i in seq_along(Merged_PSM_TMT)) {
-  selected[[i]] <- Merged_PSM_TMT[[i]] %>% 
-  select("sequence_no_mod", "126":"131") %>%
-  rename(Peptide_sequence = sequence_no_mod, 
-        `Repoter intensity corrected 126` = `126`,
-        `Repoter intensity corrected 127N` = `127N`,
-        `Repoter intensity corrected 127C` = `127C`,
-        `Repoter intensity corrected 128N` = `128N`,
-        `Repoter intensity corrected 128C` = `128C`,
-        `Repoter intensity corrected 129N` = `129N`,
-        `Repoter intensity corrected 129C` = `129C`,
-        `Repoter intensity corrected 130N` = `130N`,
-        `Repoter intensity corrected 130C` = `130C`,
-        `Repoter intensity corrected 113` = `131`
-        )
-}
-view(selected[[1]])
