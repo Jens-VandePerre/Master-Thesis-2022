@@ -32,6 +32,7 @@ getwd()
 (file_names_short <- substring(fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab"), 86, 93)) #Character 86 untill 93 are unique
 
 
+saveRDS(TMT_part7_03.05.22, file = "~/Desktop/Outputs/mzML_imported/03.05.22_mzML_part7")
 
 
 
@@ -46,10 +47,12 @@ TMT_part4_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs
 TMT_part5_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/03.05.22_TMT_part5")
 TMT_part6_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/03.05.22_TMT_part6")
 TMT_part7_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/03.05.22_TMT_part7")
+TMT_f03_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/03.05.22_TMT_")
 
 mzML <- c(TMT_06.04.22, TMT_20.04.22, TMT_22.04.22, TMT_28.04.22, TMT_part1_03.05.22, TMT_part2_03.05.22, 
         TMT_part3_03.05.22, TMT_part4_03.05.22, TMT_part5_03.05.22, TMT_part6_03.05.22, TMT_part7_03.05.22)
 names(mzML)
+distinct(mzML)
 length(mzML)
 file_names_short
 
@@ -59,9 +62,7 @@ length(mzTab)
 
 
 #Reorder based on mzTab file order
-order(names(mzML))
-?order
-
+    #Add filename column
 order_mzML <- list()
 namemzml <- names(mzML)
 for (i in seq_along(mzML)) {
@@ -69,18 +70,33 @@ for (i in seq_along(mzML)) {
     add_column(namemzml= namemzml[[i]], .before = "126") 
 }
 view(order_mzML[[1]]) 
+length(order_mzML)
 view(mzML[[1]])
 
-all <- bind_rows(order_mzML, .id = "column_label")
+
+view(sort(namemzml))
+
+
+
+
+    #Arrange with new column
+all <- bind_rows(order_mzML)
 arrange(all, namemzml)
-view(all)
+all #264 files put in one file
 
-all
+all %>% select(namemzml) %>%
+distinct()
 
 
 
-newlist <- lapply(order_mzML, function(df){arrange(df, namemzml)})
-newlist[[1]]
+    #Split file back up, in right order
+data_list <- split(all, f = all$namemzml)                    
+data_list[[1]]
+data_list[[263]]
+data_list[[12]]
+data_list[[88]]
+length(data_list)
+length(namemzml)
 
 
 
