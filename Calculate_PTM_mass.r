@@ -23,7 +23,7 @@ mztab_mtol <- PSM_TMT_all[[1]] %>% as_tibble %>%
     mutate(charge = as.numeric(charge)) %>%
     mutate(mass_diff = (exp_mass_to_charge - calc_mass_to_charge)*charge) %>%
     mutate(exp_mass = exp_mass_to_charge * charge) %>%
-    mutate(mass_tol = mass_tolerance * exp_mass * 10**-6) %>%
+    mutate(mass_tol = mass_tolerance * exp_mass * 10**-6) %>%   #something goes wrong here
     mutate(mass_tol_pos = mass_diff + mass_tol) %>%
     mutate(mass_tol_neg = mass_diff - mass_tol) %>%
     filter(!(mass_tol_neg < 0 & mass_tol_pos > 0)) %>%      # filter out unmodified psms
