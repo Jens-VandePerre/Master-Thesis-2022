@@ -47,9 +47,26 @@ IFS=';' read -r -a array <<< "$line"
 time java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/PIA_parameter_files/${array[0]}.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/${array[0]}.xml
 done
 
-java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/test1_PIA_P.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.xml
-java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/test2_PIA_P.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.xml
-java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/test3_PIA_P.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.xml
+java -jar /Applications/pia-1/pia.jar /Users/jensvandeperre/Desktop/Inputs/PIA_parameter_files/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.json /Users/jensvandeperre/Desktop/Inputs/PIA_compile/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.xml
+
+
+#loop PTM identification mass tolerance 10
+name_file=/Users/jensvandeperre/Desktop/Inputs/file_names/mztab_names.txt
+lines=`tail -n+1 $name_file`
+for line in $lines
+do
+IFS=';' read -r -a array <<< "$line"
+time /Users/jensvandeperre/opt/anaconda3/bin/python3 /Users/jensvandeperre/Master-Thesis-2022/PTM_identification.py /Users/jensvandeperre/Desktop/Inputs/PTM_mass_differences/Mass_tolerance_10/${array[0]}.csv /Users/jensvandeperre/Desktop/Outputs/PTM_identification/Mass_tolerance_10/${array[0]}.csv
+done
+
+#loop PTM identification mass tolerance 20
+name_file=/Users/jensvandeperre/Desktop/Inputs/file_names/mztab_names.txt
+lines=`tail -n+1 $name_file`
+for line in $lines
+do
+IFS=';' read -r -a array <<< "$line"
+time /Users/jensvandeperre/opt/anaconda3/bin/python3 /Users/jensvandeperre/Master-Thesis-2022/PTM_identification.py /Users/jensvandeperre/Desktop/Inputs/PTM_mass_differences/Mass_tolerance_20/${array[0]}.csv /Users/jensvandeperre/Desktop/Outputs/PTM_identification/Mass_tolerance_20/${array[0]}.csv
+done
 
 
 
