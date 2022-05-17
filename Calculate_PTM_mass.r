@@ -28,11 +28,17 @@ library("rlist")
 
 
 #   command line
-args <- commandArgs(trailingOnly = TRUE)
-csv <- args[1]
-bait <- args[2]
-mass_tolerance <- as.numeric(args[3])
-output_path <- paste(bait, "_tol_py.csv", sep = "")
+#args <- commandArgs(trailingOnly = TRUE)
+#csv <- args[1]
+#bait <- args[2]
+#mass_tolerance <- as.numeric(args[3])
+#output_path <- paste(bait, "_tol_py.csv", sep = "")
+
+args <- TRUE
+csv <- csv
+bait <- name
+mass_tolerance <- 20
+output_path <- outputpath
 
 #   mztab file
 mztab = fread(file=csv, sep = '\t')
