@@ -35,7 +35,8 @@ list.files(wd)
 
 #Select the WHOLE string!!!
 text_before <- #from here
-'"considerModifications": false,
+'{
+    "considerModifications": false,
 "createPSMsets": true,
 "errorOnNoDecoys": false,
 "psmLevelFileID": 0,
@@ -58,7 +59,7 @@ text_after <-
 '.csv",
 "proteinExportWithPSMs": true,
 "proteinExportWithPeptides": true,
-"proteinExportWithProteinSequences": false`'
+"proteinExportWithProteinSequences": false`}'
 
 #Loop pasting filename in text
 parameter_tex <- list()
