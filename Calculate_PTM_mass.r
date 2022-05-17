@@ -1,9 +1,34 @@
 library(tidyverse)
 library(data.table)
+library("rpx")
+library("mzR")
+library("OrgMassSpecR")
+library("biomaRt")
+library("Hmisc")
+library("gplots")
+library("limma")
+library("isobar")
+library("devtools")
+library("MSnbase")
+library("Biobase")
+library("dplyr")
+library("tidyverse")
+library("fs")
+library("proxyC")
+library("sjlabelled")
+library("expss")
+library("labelled")
+library("patchwork")
+library("msdata")
+library("remotes")
+library("janitor")
+library("stringr")
+library("purrr")
+library("rlist")
+
 
 #   command line
 args <- commandArgs(trailingOnly = TRUE)
-
 csv <- args[1]
 bait <- args[2]
 mass_tolerance <- as.numeric(args[3])
@@ -31,6 +56,7 @@ mztab_mtol <- PSM_TMT_all[[1]] %>% as_tibble %>%
     arrange(mass_tol_pos)
 
 view(mztab_mtol)
+str(mztab_mtol)
 
 #   save to file for python
 fwrite(mztab_mtol, output_path, na = "NA", append = FALSE, col.names = TRUE)
