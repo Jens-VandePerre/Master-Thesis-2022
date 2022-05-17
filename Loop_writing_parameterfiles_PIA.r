@@ -53,13 +53,13 @@ text_before <- #from here
 ],
 "proteinExportFile": "/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/PIA_output_' #until here
 
-#Filename
-
-text_after <-
+#Select the WHOLE string!!!
+text_after <- #from here
 '.csv",
 "proteinExportWithPSMs": true,
 "proteinExportWithPeptides": true,
-"proteinExportWithProteinSequences": false`}'
+"proteinExportWithProteinSequences": false
+}' #until here
 
 #Loop pasting filename in text
 parameter_tex <- list()
