@@ -27,18 +27,18 @@ library("remotes")
 library("janitor")
 library("stringr")
 
-wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_20")
+wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_10")
 getwd() 
 list.files(wd)
 #Load PSMs 
 #Load matching mzMLs
     #Automate filename extraction
 (file_name_long <- list.files(wd))
-(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_20"))
+(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_10"))
 (file_names_short <- substring(file_name_long, 54, 62))
 
 #Load in all PSMs
-  #PSM files, with calulated mass differences at mass_tolerance = 20
+  #PSM files, with calulated mass differences at mass_tolerance = 10
 PSM_TMT <- list()
 for (i in 1:264) {
   PSM_TMT[[i]] <- read.csv(file_paths[[i]])
@@ -59,7 +59,7 @@ for (i in 1:264){
   rename("129C" = "X129C") %>%
   rename("130N" = "X130N") %>%
   rename("130C" = "X130C") %>%
-  rename("131" = "X131") 
+  rename("131" = "X131")
 }
 view(PSM_TMT_input[[1]])
 

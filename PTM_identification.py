@@ -7,9 +7,9 @@ import sys
 import argparse, pathlib
 
 parser = argparse.ArgumentParser()
-parser.add_argument('output_path', type=pathlib.Path)					# Filename
+parser.add_argument('input_path', type=pathlib.Path)					# Filename
 parser.add_argument('unimod_path', type=str)
-parser.add_argument('input_path', type=pathlib.Path)	# Output of modifications.R
+parser.add_argument('output_path', type=pathlib.Path)	# Output of modifications.R
 args = parser.parse_args()
 
 output_path = args.output_path
