@@ -56,9 +56,7 @@ lines=`tail -n+1 $name_file`
 for line in $lines
 do
 IFS=';' read -r -a array <<< "$line"
-time /Users/jensvandeperre/opt/anaconda3/bin/python3 /Users/jensvandeperre/Master-Thesis-2022/PTM_identification.py /Users/jensvandeperre/Desktop/Inputs/PTM_mass_differences/Mass_tolerance_10/${array[0]}.csv
-/Users/jensvandeperre/Desktop/Inputs/Unimod_library/
-/Users/jensvandeperre/Desktop/Outputs/PTM_identification/Mass_tolerance_10/Mod_${array[0]}.csv
+time /Users/jensvandeperre/opt/anaconda3/bin/python3 /Users/jensvandeperre/Master-Thesis-2022/PTM_identification.py /Users/jensvandeperre/Desktop/Inputs/PTM_mass_differences/Mass_tolerance_10/${array[0]}.csv /Users/jensvandeperre/Desktop/Inputs/Unimod_library/unimod_py.csv /Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10/Mod_${array[0]}.csv
 done
 
 #loop PTM identification mass tolerance 20
