@@ -1,31 +1,16 @@
-source("http://bioconductor.org/biocLite.R")
-
-BiocManager::install("limma")
-BiocManager::install("qvalue")
 library("limma")
 library("qvalue")
-library(rpx)
-library(mzR)
 library("OrgMassSpecR")
 library("biomaRt")
 library("Hmisc")
 library("gplots")
-library("limma")
-library(isobar)
-library(devtools)
-library(MSnbase)
-library(Biobase)
-library(dplyr)
-library(tidyverse)
-library(fs)
 library("rpx")
 library("mzR")
 library("OrgMassSpecR")
 library("biomaRt")
 library("Hmisc")
 library("gplots")
-library("limma")
-library("isobar") #
+library("isobar") 
 library("devtools")
 library("MSnbase")
 library("Biobase")
@@ -43,124 +28,92 @@ library("janitor")
 library("stringr")
 library("MSstatsTMT")
 
-
-wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq")
+wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_20")
 getwd() 
 list.files(wd)
 #Load PSMs 
 #Load matching mzMLs
     #Automate filename extraction
 (file_name_long <- list.files(wd))
-(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab_pure_seq"))
-(file_names_short <- substring(file_name_long, 39, 46)) 
+(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_20"))
+(file_names_short <- substring(file_name_long, 39, 46))
 
 #Load in all PSMs
-ALL_PSMs_4.5.22 <- readRDS(file = "~/Desktop/Outputs/PSMs/ALL_PSMs_4.5.22")
-view(ALL_PSMs_4.5.22[1])
-nrow(ALL_PSMs_4.5.22[1] %>% as_tibble)
-  
-  #Make an index collumn for mathcing to TMTs
-    #For 1st file
-PSM_B1S1_f01 <- ALL_PSMs_4.5.22[[1]] %>% 
-    as_tibble %>%
-    select(PSM_ID) %>% 
-    mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
-    mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
-    mutate(index = trimws(str_remove_all(index, "scan="))) %>%
-    select(index) %>%
-    cbind(ALL_PSMs_4.5.22[[1]]) %>% as_tibble
-view(PSM_B1S1_f01)
-    #Loop for all files
-ind_mzTab <- list()
-for (i in seq_along(PSM_no_mod)) {
-  ind_mzTab[[i]] <- select(PSM_no_mod[[i]], PSM_ID) %>% 
-    mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
-    mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
-    mutate(index = trimws(str_remove_all(index, "scan="))) %>%
-    select(index) %>%
-    cbind(PSM_no_mod[[i]]) %>% as_tibble
+  #PSM files, with calulated mass differences at mass_tolerance = 20
+PSM_TMT <- list()
+for (i in 1:264) {
+  PSM_TMT[[i]] <- read.csv(file_paths[[i]])
 }
-PSM_ready_for_matching <- set_names(ind_mzTab, file_names_short)
-PSM_ready_for_matching
-view(PSM_ready_for_matching[[1]]) #PSM column could be removed
-
-    #Load TMT saved
-#TMT_06.04.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/06.04.22_TMT")
-#TMT_20.04.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/20.04.22_TMT")
-#TMT_22.04.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/22.04.22_TMT")
-#TMT_28.04.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/28.04.22_TMT")
-
-TMT_part1_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/03.05.22_TMT_part1")
-names(TMT_part1_03.05.22)
-view(TMT_part1_03.05.22[[1]])
-
-#TMT_part2_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/03.05.22_TMT_part2")
-#TMT_part3_03.05.22 <- readRDS(file = "/Users/jensvandeperre/Desktop/Outputs/TMTs/03.05.22_TMT_part3")
-
-
-    #Create index collumn
-      #For 1st file
-TMT_B1S1_f01 <- tibble(index=rownames(TMT_part1_03.05.22[[1]][, 0])) %>%
-    mutate(index = trimws(str_remove_all(index, "F1.S"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    select(index) %>%
-    cbind(TMT_part1_03.05.22[[1]]) %>% as_tibble
-view(TMT_B1S1_f01)
-      #Loop for all files
-ind_TMT1 <- list()
-for (i in seq_along(TMT_part1_03.05.22)) {
-  ind_TMT1[[i]] <- tibble(index=rownames(TMT_part1_03.05.22[[i]][, 0])) %>%
-    mutate(index = trimws(str_remove_all(index, "F1.S"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    mutate(index = trimws(str_remove_all(index, "^0"))) %>%
-    select(index) %>%
-    cbind(TMT_part1_03.05.22[[i]]) %>% as_tibble
-}
-TMT_ready_for_machting <- set_names(ind_TMT1, file_names_short)
-TMT_ready_for_machting[[1]]
-view(TMT_ready_for_machting[[1]])
+view(PSM_TMT[[1]])
+nrow(PSM_TMT[[1]])
+  #Select the needed columns
+PSM_TMT_input <- PSM_TMT
+        select(index, "126":"131", sequence, sequence_no_mod, charge)
+view(PSM_TMT_input)
 
 #Load protein info from PIA output
-PIA <- read.csv(file = '/Users/jensvandeperre/Desktop/Outputs/PIA_analysis/PROT_exp_test_5.csv', header = FALSE, sep = ",", stringsAsFactors = TRUE)
+(file_paths_PIA <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PIA_analysis"))
+PIA <- list()
+for (i in 1:264) {
+  PIA[[i]] <- read.csv(file_paths_PIA[[i]], header = FALSE, sep = ",", stringsAsFactors = TRUE)
+}
+view(PIA[[1]])
+nrow(PIA[[1]])
 
-#Link PSMs and TMTs by index column
-  #Select the needed columns
-mztab_TMT <- merge(TMT_B1S1_f01, PSM_B1S1_f01, by="index") %>%
-        select(index, "126":"131", sequence, sequence_no_mod, charge)
-view(mztab_TMT)
+count(PIA[[1]]$V1, "PROTEIN")
 
 #Create Peptide.txt
-PepSeq_ProAcc <- PIA %>% 
-          as_tibble %>% 
-          filter(str_detect(V1, "PSMSET")) %>% 
-          row_to_names(row_number = 1) %>%
-          select(Sequence, Accessions) %>%
-          rename(sequence_no_mod = Sequence)
-view(PepSeq_ProAcc)
-nrow(PepSeq_ProAcc)
+PepSeq_ProAcc <- list()
+for (i in 1:264) {
+PepSeq_ProAcc[[i]] <- PIA[[i]] %>%
+          as_tibble() %>%
+          filter(str_detect(V1, "PSMSET")) %>%
+          mutate(sequence_no_mod = V2) %>%
+          mutate(HELLO = V3) %>%
+          dplyr::select(sequence_no_mod, HELLO) %>%
+          slice(-1) %>%
+          as_tibble()
+}
+view(PepSeq_ProAcc[[1]])
+nrow(PepSeq_ProAcc[[1]])
+length(PepSeq_ProAcc)
+str(PepSeq_ProAcc[[1]])
 
-Des <- PIA %>% 
-          as_tibble %>% 
-          filter(str_detect(V1, "PROTEIN")) %>% 
-          row_to_names(row_number = 1) %>%
-          select(Proteins, Description) %>%
-          rename(Accessions = Proteins)
-view(Des)
-nrow(Des)
+Des <- list()
+for (i in 1:264) {
+Des[[i]] <- PIA[[i]] %>%
+          as_tibble() %>%
+          filter(str_detect(V1, "PROTEIN")) %>%
+          mutate(HELLO = V2) %>%
+          mutate(ClusterID = V8) %>%
+          mutate(Description = V9) %>%
+          dplyr::select(HELLO, ClusterID, Description) %>%
+          slice(-1) %>%
+          as_tibble()
+}
+str(Des[[1]])
+view(Des[[1]])
+nrow(Des[[1]])
+length(Des)
 
-data <- merge(PepSeq_ProAcc, Des, by= "Accessions") %>%
-            as_tibble %>%
-            rename("Protein.Group.Accessions" = Accessions, "Protein.Descriptions"= Description) %>%
-            merge(mztab_TMT, by = "sequence_no_mod") %>%
-            distinct() 
+#Merge: proteins, genes, peptide seq/PSM and TMTs
+data <- list()
+for (i in 1:264) {
+data[[i]] <- merge(PepSeq_ProAcc[[i]], Des[[i]], by = HELLO)} %>%
+            as_tibble() %>%
+            rename("Protein.Group.Accessions" = Accessions, "Protein.Descriptions" = Description) %>%
+            merge(PSM_TMT_input[[i]], by = "sequence_no_mod") %>%
+            distinct()
+}
 view(data)
 nrow(data)
 
+merge(PepSeq_ProAcc[[1]], Des[[1]], by = Accessions)
+
+
+
+
+#Start creating input file
 mydat <- data %>%
           as_tibble %>%
           select("Protein.Group.Accessions", "Protein.Descriptions", "sequence_no_mod",
