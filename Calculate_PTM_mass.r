@@ -137,15 +137,14 @@ for (i in 1:264) {
 view(PSMl_10[[1]])
 length(PSM_10)
 
-
 # Save files for Relative Quantification
     # mass_tolerance = 20
 for (i in 1:264) {
-    fwrite(PSM_20[[i]], file = paste("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_20/"
+    fwrite(PSM_20[[i]], file = paste("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_20/Mass_diff_tol_20"
     , file_name_long[[i]], ".csv", sep = ""), na = "NA", append = FALSE, col.names = TRUE)
 }
     # mass_tolerance = 10
 for (i in 1:264) {
-    fwrite(PSMl_10[[i]], file = paste("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_10/"
+    fwrite(PSM_10[[i]], file = paste("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_10/Mass_diff_tol_10"
     , file_name_long[[i]], ".csv", sep = ""), na = "NA", append = FALSE, col.names = TRUE)
 }

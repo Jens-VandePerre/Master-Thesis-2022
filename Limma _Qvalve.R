@@ -26,7 +26,6 @@ library("msdata")
 library("remotes")
 library("janitor")
 library("stringr")
-library("MSstatsTMT")
 
 wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_20")
 getwd() 
@@ -36,7 +35,7 @@ list.files(wd)
     #Automate filename extraction
 (file_name_long <- list.files(wd))
 (file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_20"))
-(file_names_short <- substring(file_name_long, 39, 46))
+(file_names_short <- substring(file_name_long, 54, 62))
 
 #Load in all PSMs
   #PSM files, with calulated mass differences at mass_tolerance = 20
@@ -47,30 +46,42 @@ for (i in 1:264) {
 view(PSM_TMT[[1]])
 nrow(PSM_TMT[[1]])
   #Select the needed columns
-PSM_TMT_input <- PSM_TMT
-        select(index, "126":"131", sequence, sequence_no_mod, charge)
-view(PSM_TMT_input)
+PSM_TMT_input <- list()
+for (i in 1:264){
+  PSM_TMT_input[[i]] <- PSM_TMT[[i]] %>% 
+  select(index, "X126":"X131", sequence, sequence_no_mod, charge) %>%
+  rename("126" = "X126") %>%
+  rename("127N" = "X127N") %>%
+  rename("127C" = "X127C") %>%
+  rename("128N" = "X128N") %>%
+  rename("128C" = "X128C") %>%
+  rename("129N" = "X129N") %>%
+  rename("129C" = "X129C") %>%
+  rename("130N" = "X130N") %>%
+  rename("130C" = "X130C") %>%
+  rename("131" = "X131") 
+}
+view(PSM_TMT_input[[1]])
 
 #Load protein info from PIA output
 (file_paths_PIA <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PIA_analysis"))
 PIA <- list()
 for (i in 1:264) {
-  PIA[[i]] <- read.csv(file_paths_PIA[[i]], header = FALSE, sep = ",", stringsAsFactors = TRUE)
+  PIA[[i]] <- read.csv(file_paths_PIA[[i]], header = FALSE, sep = ",")
 }
 view(PIA[[1]])
 nrow(PIA[[1]])
 
-count(PIA[[1]]$V1, "PROTEIN")
-
-#Create Peptide.txt
+#Merging: Proteins, Peptides and TMTs
+  #Select peptide seq and proteins from PIA
 PepSeq_ProAcc <- list()
 for (i in 1:264) {
 PepSeq_ProAcc[[i]] <- PIA[[i]] %>%
           as_tibble() %>%
           filter(str_detect(V1, "PSMSET")) %>%
           mutate(sequence_no_mod = V2) %>%
-          mutate(HELLO = V3) %>%
-          dplyr::select(sequence_no_mod, HELLO) %>%
+          mutate(Accessions = V3) %>%
+          dplyr::select(sequence_no_mod, Accessions) %>%
           slice(-1) %>%
           as_tibble()
 }
@@ -79,15 +90,16 @@ nrow(PepSeq_ProAcc[[1]])
 length(PepSeq_ProAcc)
 str(PepSeq_ProAcc[[1]])
 
+  #Select proteins and genes from PIA
 Des <- list()
 for (i in 1:264) {
 Des[[i]] <- PIA[[i]] %>%
           as_tibble() %>%
           filter(str_detect(V1, "PROTEIN")) %>%
-          mutate(HELLO = V2) %>%
+          mutate(Accessions = V2) %>%
           mutate(ClusterID = V8) %>%
           mutate(Description = V9) %>%
-          dplyr::select(HELLO, ClusterID, Description) %>%
+          dplyr::select(Accessions, ClusterID, Description) %>%
           slice(-1) %>%
           as_tibble()
 }
@@ -96,22 +108,17 @@ view(Des[[1]])
 nrow(Des[[1]])
 length(Des)
 
-#Merge: proteins, genes, peptide seq/PSM and TMTs
+  #Merge: proteins, genes, peptide seq/PSM and TMTs
 data <- list()
 for (i in 1:264) {
-data[[i]] <- merge(PepSeq_ProAcc[[i]], Des[[i]], by = HELLO)} %>%
+data[[i]] <- merge(PepSeq_ProAcc[[i]], Des[[i]], by = "Accessions") %>%
             as_tibble() %>%
             rename("Protein.Group.Accessions" = Accessions, "Protein.Descriptions" = Description) %>%
             merge(PSM_TMT_input[[i]], by = "sequence_no_mod") %>%
             distinct()
 }
-view(data)
-nrow(data)
-
-merge(PepSeq_ProAcc[[1]], Des[[1]], by = Accessions)
-
-
-
+view(data[[1]])
+nrow(data[[1]])
 
 #Start creating input file
 mydat <- data %>%
