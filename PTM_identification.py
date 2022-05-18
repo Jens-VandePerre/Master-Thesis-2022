@@ -12,13 +12,13 @@ parser.add_argument('unimod_path', type=str)
 parser.add_argument('output_path', type=pathlib.Path)	# Output of modifications.R
 args = parser.parse_args()
 
-output_path = args.output_path
+#   load psm file
+psms_modified = pd.read_csv(args.input_path)
 
 #   load unimod file:
 unimod = pd.read_csv(args.unimod_path)
 
-#   load psm file
-psms_modified = pd.read_csv(args.input_path)
+output_path = args.output_path
 
 mod_names, mod_masses = [], []
 
