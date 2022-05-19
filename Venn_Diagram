@@ -1,0 +1,45 @@
+library("limma")
+library("qvalue")
+library("OrgMassSpecR")
+library("biomaRt")
+library("Hmisc")
+library("gplots")
+library("rpx")
+library("mzR")
+library("OrgMassSpecR")
+library("biomaRt")
+library("Hmisc")
+library("gplots")
+library("isobar") 
+library("devtools")
+library("MSnbase")
+library("Biobase")
+library("dplyr")
+library("tidyverse")
+library("fs")
+library("proxyC")
+library("sjlabelled")
+library("expss")
+library("labelled")
+library("patchwork")
+library("msdata")
+library("remotes")
+library("janitor")
+library("stringr")
+library("ggVennDiagram")
+
+
+file1 <- read.csv2("/Users/jensvandeperre/Desktop/Inputs/Org_study_PSMs/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.raw.cap.psm", header=FALSE, sep="\t")
+view(file1)
+
+org <- file1 %>%
+        as_tibble() %>%
+        row_to_names()
+        select ()
+
+x <- list (
+    Original_study = 
+    ANN_SoLo = 
+)
+
+
