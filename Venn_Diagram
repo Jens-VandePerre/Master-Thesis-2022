@@ -27,19 +27,33 @@ library("remotes")
 library("janitor")
 library("stringr")
 library("ggVennDiagram")
+library("ggvenn")
 
 
 file1 <- read.csv2("/Users/jensvandeperre/Desktop/Inputs/Org_study_PSMs/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.raw.cap.psm", header=FALSE, sep="\t")
 view(file1)
-
 org <- file1 %>%
         as_tibble() %>%
-        row_to_names()
-        select ()
+        row_to_names(row_number = 1) %>%
+        select(PeptideSequence) %>%
+        mutate(sequence = trimws(str_remove_all(PeptideSequence, "[[:digit:]]+"))) %>%
+        mutate(sequence = trimws(str_remove_all(sequence, "[+.]"))) %>%
+        select(sequence)
+view(org)
+str(org)
+
+annsolo1 <- read.csv2("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_10/Mass_diff_tol_1001CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.csv", header=TRUE, sep=",")
+ANNSOLO <- annsolo1 %>%
+            as_tibble() %>%
+            select(sequence_no_mod) %>%
+            rename(sequence = sequence_no_mod)
+view(ANNSOLO)
+str(ANNSOLO)
 
 x <- list (
-    Original_study = 
-    ANN_SoLo = 
+    Original_study = org, 
+    ANN_SoLo = ANNSOLO
 )
 
-
+ggvenn(x)
+ggVennDiagram(x)
