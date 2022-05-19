@@ -45,11 +45,43 @@ for (i in 1:264) {
 }
 view(PSM_TMT[[1]])
 nrow(PSM_TMT[[1]])
-  #Select the needed columns
-PSM_TMT_input <- list()
-for (i in 1:264){
-  PSM_TMT_input[[i]] <- PSM_TMT[[i]] %>% 
-  select(index, "X126":"X131", sequence, sequence_no_mod, charge) %>%
+
+#Load identified PTMs
+(ptm_filepaths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10"))
+PTM <- list()
+for (i in 1:264) {
+  PTM[[i]] <- read.csv(ptm_filepaths[[i]], sep = ",", header = TRUE)
+}
+view(PTM[[1]])
+length(PTM)
+  #Create index for matching to PSM_TMT
+ptm_index <- list()
+for (i in 1:264) {
+  ptm_index[[i]] <- PTM[[i]] %>%
+    as_tibble() %>%
+    mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
+    mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
+    mutate(index = trimws(str_remove_all(index, "scan=")))
+}
+view(ptm_index[[1]])
+
+  #merge to PSM_TMT
+PTM_PSM_TMT <- list()
+for (i in 1:264) {
+  PTM_PSM_TMT[[i]] <- merge(PSM_TMT[[i]], ptm_index[[i]], by = "index")
+}
+view(PTM_PSM_TMT[[1]])
+length(PTM_PSM_TMT)
+
+#Make PTM_PSM_TMT ready for merge to PIA output
+#Select the needed columns
+PTM_PSM_TMT_input <- list()
+for (i in 1:264) {
+  PTM_PSM_TMT_input[[i]] <- PTM_PSM_TMT[[i]] %>% 
+  as_tibble() %>%
+  select(index, namemzml, sequence.x, sequence_no_mod, "X126":"X131", charge.x, mod, mod_mass) %>%
+  rename(file_name = namemzml) %>%
+  rename(sequence_mod = "sequence.x") %>%
   rename("126" = "X126") %>%
   rename("127N" = "X127N") %>%
   rename("127C" = "X127C") %>%
@@ -59,9 +91,13 @@ for (i in 1:264){
   rename("129C" = "X129C") %>%
   rename("130N" = "X130N") %>%
   rename("130C" = "X130C") %>%
-  rename("131" = "X131")
+  rename("131" = "X131") %>%
+  rename(charge = "charge.x")
 }
-view(PSM_TMT_input[[1]])
+view(PTM_PSM_TMT_input[[1]])
+view(PTM_PSM_TMT_input[[2]])
+view(PTM_PSM_TMT_input[[69]])
+length(PTM_PSM_TMT_input)
 
 #Load protein info from PIA output
 (file_paths_PIA <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PIA_analysis"))
@@ -114,7 +150,7 @@ for (i in 1:264) {
 data[[i]] <- merge(PepSeq_ProAcc[[i]], Des[[i]], by = "Accessions") %>%
             as_tibble() %>%
             rename("Protein.Group.Accessions" = Accessions, "Protein.Descriptions" = Description) %>%
-            merge(PSM_TMT_input[[i]], by = "sequence_no_mod") %>%
+            merge(PTM_PSM_TMT_input[[i]], by = "sequence_no_mod") %>%
             distinct()
 }
 view(data[[1]])
