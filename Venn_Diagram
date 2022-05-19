@@ -26,11 +26,22 @@ library("msdata")
 library("remotes")
 library("janitor")
 library("stringr")
-library("ggVennDiagram")
-library("ggvenn")
 
 
-file1 <- read.csv2("/Users/jensvandeperre/Desktop/Inputs/Org_study_PSMs/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.raw.cap.psm", header=FALSE, sep="\t")
+(file_paths_ori_study <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/Org_study_PSMs"))
+ori_study <- list()
+for (i in 1:264) {
+    ori_study[[i]] <- read.csv(file_paths_ori_study, header = FALSE, sep = "\t")
+}
+
+(file_paths_annsolo <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10"))
+annsolo <- list()
+for (i in 1:264) {
+    annsolo[[i]] <- read.table(file_paths_annsolo, header = FALSE, sep = "\t")
+}
+
+
+file1 <- read.csv2("/Users/jensvandeperre/Desktop/Inputs/Org_study_PSMs/01CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.raw.cap.psm", header = FALSE, sep = "\t")
 view(file1)
 org <- file1 %>%
         as_tibble() %>%
@@ -43,17 +54,35 @@ view(org)
 str(org)
 
 annsolo1 <- read.csv2("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_10/Mass_diff_tol_1001CPTAC_COprospective_W_PNNL_20170123_B1S1_f01.csv", header=TRUE, sep=",")
-ANNSOLO <- annsolo1 %>%
+annsolo2 <- read.csv2("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_10/Mass_diff_tol_1001CPTAC_COprospective_W_PNNL_20170123_B1S1_f02.csv", header=TRUE, sep=",")
+
+ANNSOLO1 <- annsolo1 %>%
             as_tibble() %>%
             select(sequence_no_mod) %>%
-            rename(sequence = sequence_no_mod)
-view(ANNSOLO)
-str(ANNSOLO)
+            rename(sequence = sequence_no_mod) 
+ANNSOLO2 <- annsolo2 %>%
+            as_tibble() %>%
+            select(sequence_no_mod) %>%
+            rename(sequence = sequence_no_mod) 
+nrow(ANNSOLO1)
+nrow(ANNSOLO2)
+n_distinct(ANNSOLO1)
+n_distinct(ANNSOLO2)
+
+
+z <- list(
+    ANN_SoLo = as.vector(unlist(ANNSOLO1)),
+    Original_study = as.vector(unlist(org))
+)
+view(z)
 
 x <- list (
-    Original_study = org, 
+    Original_study = org,
     ANN_SoLo = ANNSOLO
 )
 
-ggvenn(x)
-ggVennDiagram(x)
+y <- c(org, ANNSOLO)
+
+
+ggvenn(z)
+ggVennDiagram(z)
