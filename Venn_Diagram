@@ -26,6 +26,8 @@ library("msdata")
 library("remotes")
 library("janitor")
 library("stringr")
+library("ggvenn")
+library("ggVennDiagram")
 
 wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab")
 getwd() 
@@ -59,9 +61,7 @@ view(Ori_Stud[[1]])
     #Turn into 1 dataframe
 Original_study <- bind_rows(Ori_Stud)
 view(Original_study)
-length(Original_study)
 nrow(Original_study)
-
 
 #ANN-SoLo PSMs 
     #Load list of dataframes, all identifed peptides
@@ -88,19 +88,20 @@ annsolo_mod <- list()
 for (i in 1:264) {
     annsolo_mod[[i]] <- PSM_only_mod[[i]] %>%
     row_to_names(row_number = 1) %>%
+    slice(-c("")) %>%
+    select(sequence) %>%     
     mutate(sequence = trimws(str_remove_all(sequence, "n"))) %>% #remove n
     mutate(sequence = trimws(str_remove_all(sequence, "[0123456789]"))) %>% # remove numbers
-    mutate(sequence = trimws(str_remove_all(sequence, "\\[|\\]"))) %>%
-    select(sequence)
+    mutate(sequence = trimws(str_remove_all(sequence, "\\[|\\]"))) 
 }
+view(annsolo_mod[[1]])
 ANN_SoLo_only_mod <- bind_rows(annsolo_mod)
-length(ANN_SoLo_only_mod)
 nrow(ANN_SoLo_only_mod)
 
 #Creating Venn Diagram 
     #Coparing all ANN-SoLo peptides to original study
 ANN_vs_ORG <- list(
-    ANN_SoLo = as.vector(unlist(ANNSOLO1)),
+    ANN_SoLo = as.vector(unlist(ANN_SoLo_no_mod)),
     Original_study = as.vector(unlist(Original_study))
 )
 ggvenn(ANN_vs_ORG)
@@ -108,7 +109,7 @@ ggVennDiagram(ANN_vs_ORG)
 
     #Comparing only the modified peptides to original study
 ANNMOD_vs_ORG <- list (
-    ANN_SoLo_modified_peptides = as.vector(unlist(ANNSOLO1)),
+    ANN_SoLo_modified_peptides = as.vector(unlist(ANN_SoLo_only_mod)),
     Original_study = as.vector(unlist(Original_study))
 )
 ggvenn(ANNMOD_vs_ORG)
