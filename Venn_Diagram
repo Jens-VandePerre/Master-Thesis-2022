@@ -27,12 +27,23 @@ library("remotes")
 library("janitor")
 library("stringr")
 
-#Load in original studies
+wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab")
+getwd() 
+list.files(wd)
+    #Automate filename extraction
+(file_name_long <- list.files(wd))
+(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab"))
+(file_names_short <- substring(file_name_long, 39, 46)) 
+length(file_names_short)
+
+#Original study psms
+    #Load in original studies
 (file_paths_ori_study <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/Orig_study_PSMs"))
 ori_study <- list()
 for (i in seq_along(file_paths_ori_study)) {
     ori_study[[i]] <- read.csv(file_paths_ori_study[[i]], header = FALSE, sep = "\t")
 }
+    #Select sequences
 orig <- list()
 for (i in 1:264) {
 orig[[i]] <- ori_study[[i]] %>%
@@ -43,28 +54,64 @@ orig[[i]] <- ori_study[[i]] %>%
         mutate(sequence = trimws(str_remove_all(sequence, "[+.]"))) %>%
         select(sequence)
 }
-view(orig[[1]])
-#Turn into 1 dataframe
+Ori_Stud <- set_names(orig, paste("Original_study_", file_names_short, sep = "")) #names each file by file_names_short
+view(Ori_Stud[[1]])
+    #Turn into 1 dataframe
+Original_study <- bind_rows(Ori_Stud)
+view(Original_study)
+length(Original_study)
+nrow(Original_study)
 
 
-
+#ANN-SoLo PSMs 
+    #Load list of dataframes, all identifed peptides
 PSM <- readRDS("/Users/jensvandeperre/Desktop/Outputs/PSMs/ALL_PSMs_4.5.22")
 view(PSM[[1]])
+    #Select sequences
+annsolo <- list()
+for (i in 1:264) {
+    annsolo[[i]] <- PSM[[i]] %>%
+        select(sequence_no_mod)
+}
+ANN_SoLo_no_mod <- bind_rows(annsolo)
+nrow(ANN_SoLo_no_mod) #Over 4.5 million peptides identified
 
+    #Load dataframes, only modified peptides
+file_paths_annsolo_mod <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10")
+PSM_only_mod <- list()
+for (i in seq_along(file_paths_annsolo_mod)) {
+    PSM_only_mod[[i]] <- read.csv(file_paths_annsolo_mod[[i]], header = FALSE, sep = ",") 
+}
+view(PSM_only_mod[[1]])
+    #Select sequences
+annsolo_mod <- list()
+for (i in 1:264) {
+    annsolo_mod[[i]] <- PSM_only_mod[[i]] %>%
+    row_to_names(row_number = 1) %>%
+    mutate(sequence = trimws(str_remove_all(sequence, "n"))) %>% #remove n
+    mutate(sequence = trimws(str_remove_all(sequence, "[0123456789]"))) %>% # remove numbers
+    mutate(sequence = trimws(str_remove_all(sequence, "\\[|\\]"))) %>%
+    select(sequence)
+}
+ANN_SoLo_only_mod <- bind_rows(annsolo_mod)
+length(ANN_SoLo_only_mod)
+nrow(ANN_SoLo_only_mod)
 
-z <- list(
+#Creating Venn Diagram 
+    #Coparing all ANN-SoLo peptides to original study
+ANN_vs_ORG <- list(
     ANN_SoLo = as.vector(unlist(ANNSOLO1)),
-    Original_study = as.vector(unlist(orig))
+    Original_study = as.vector(unlist(Original_study))
 )
-view(z)
+ggvenn(ANN_vs_ORG)
+ggVennDiagram(ANN_vs_ORG)
 
-x <- list (
-    Original_study = orig,
-    ANN_SoLo = ANNSOLO
+    #Comparing only the modified peptides to original study
+ANNMOD_vs_ORG <- list (
+    ANN_SoLo_modified_peptides = as.vector(unlist(ANNSOLO1)),
+    Original_study = as.vector(unlist(Original_study))
 )
+ggvenn(ANNMOD_vs_ORG)
+ggVennDiagram(ANNMOD_vs_ORG)
 
-y <- c(org, ANNSOLO)
 
-
-ggvenn(z)
-ggVennDiagram(z)
