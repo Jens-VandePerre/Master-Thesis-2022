@@ -60,8 +60,9 @@ Ori_Stud <- set_names(orig, paste("Original_study_", file_names_short, sep = "")
 view(Ori_Stud[[1]])
     #Turn into 1 dataframe
 Original_study <- bind_rows(Ori_Stud)
-view(Original_study)
-nrow(Original_study)
+Original_study_unique <- bind_rows(Ori_Stud) %>% distinct()
+nrow(Original_study) #over 3 million peptides identified
+nrow(Original_study_unique) #Over 20000 unique peptides identified
 
 #ANN-SoLo PSMs 
     #Load list of dataframes, all identifed peptides
@@ -74,7 +75,9 @@ for (i in 1:264) {
         select(sequence_no_mod)
 }
 ANN_SoLo_no_mod <- bind_rows(annsolo)
+ANN_SoLo_no_mod_unique <- bind_rows(annsolo) %>% distinct()
 nrow(ANN_SoLo_no_mod) #Over 4.5 million peptides identified
+nrow(ANN_SoLo_no_mod_unique) #Over 20000 unique peptides identified
 
     #Load dataframes, only modified peptides
 file_paths_annsolo_mod <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10")
@@ -83,13 +86,14 @@ for (i in seq_along(file_paths_annsolo_mod)) {
     PSM_only_mod[[i]] <- read.csv(file_paths_annsolo_mod[[i]], header = FALSE, sep = ",") 
 }
 view(PSM_only_mod[[1]])
+str(PSM_only_mod[[1]])
     #Select sequences
 annsolo_mod <- list()
 for (i in 1:264) {
     annsolo_mod[[i]] <- PSM_only_mod[[i]] %>%
+    filter(PSM_only_mod[[i]]$V12 != "No direct match found in Unimod") %>%
     row_to_names(row_number = 1) %>%
-    slice(-c("")) %>%
-    select(sequence) %>%     
+    dplyr::select(sequence) %>%
     mutate(sequence = trimws(str_remove_all(sequence, "n"))) %>% #remove n
     mutate(sequence = trimws(str_remove_all(sequence, "[0123456789]"))) %>% # remove numbers
     mutate(sequence = trimws(str_remove_all(sequence, "\\[|\\]"))) 
@@ -105,6 +109,14 @@ ANN_vs_ORG <- list(
     Original_study = as.vector(unlist(Original_study))
 )
 ggvenn(ANN_vs_ORG)
+ggVennDiagram(ANN_vs_ORG)
+
+    #Comparing only the unique peptides
+ANN_vs_ORG_unique <- list(
+    ANN_SoLo = as.vector(unlist(ANN_SoLo_no_mod_unique)),
+    Original_study = as.vector(unlist(Original_study_unique))
+)
+ggvenn(ANN_vs_ORG_unique)
 ggVennDiagram(ANN_vs_ORG)
 
     #Comparing only the modified peptides to original study
