@@ -116,8 +116,10 @@ ANN_vs_ORG_unique <- list(
     ANN_SoLo = as.vector(unlist(ANN_SoLo_no_mod_unique)),
     Original_study = as.vector(unlist(Original_study_unique))
 )
-ggvenn(ANN_vs_ORG_unique)
-ggVennDiagram(ANN_vs_ORG)
+ggVennDiagram(ANN_vs_ORG_unique,
+    label_alpha = 0
+        )
+ggvenn(ANN_vs_ORG)
 
     #Comparing only the modified peptides to original study
 ANNMOD_vs_ORG <- list (
