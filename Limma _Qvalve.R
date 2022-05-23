@@ -35,7 +35,7 @@ list.files(wd)
     #Automate filename extraction
 (file_name_long <- list.files(wd))
 (file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/PSM_TMT_mass_diff/Mass_tolerance_10"))
-(file_names_short <- substring(file_name_long, 54, 62))
+(file_names_short <- substring(file_name_long, 55, 62))
 
 #Load in all PSMs
   #PSM files linked to TMTs
@@ -78,10 +78,7 @@ for (i in 1:264) {
   PTM_PSM_TMT_input[[i]] <- PSM_TMT_ALL[[i]] %>% 
   as_tibble() %>%
   select(index, sequence, sequence_no_mod, "126":"131", charge) %>%
-  mutate(file_name = file_names_short[[i]]) %>%
-  rename(sequence_mod = "sequence") %>%
-  rename(Sequence = "sequence_no_mod") 
-  
+  mutate(file_name = file_names_short[[i]]) 
 }
 view(PTM_PSM_TMT_input[[1]])
 view(PTM_PSM_TMT_input[[2]])
@@ -139,23 +136,416 @@ for (i in 1:264) {
 data[[i]] <- merge(PepSeq_ProAcc[[i]], Des[[i]], by = "Accessions") %>%
             as_tibble() %>%
             rename("Protein.Group.Accessions" = Accessions, "Protein.Descriptions" = Description) %>%
- ############           merge(#ALLLEEERTTTTTTT[[i]], by = "sequence_no_mod") %>%
+            merge(PTM_PSM_TMT_input[[i]], by = "sequence_no_mod") %>%
             distinct()
 }
 view(data[[1]])
-nrow(data[[1]])
+length(data)
 
 #Start creating input file
-mydat <- data %>%
-          as_tibble %>%
-          select("Protein.Group.Accessions", "Protein.Descriptions", "sequence_no_mod",
-          "126":"131") %>%
-          rename("Sequence" = sequence_no_mod) %>%
-          add_column("Quan.Usage" = "Used", .after = "Sequence") %>%
-          add_column("Quan.Info" = "Unique", .after = "Quan.Usage") %>%
-          add_column("Isolation.Interference" = 30 , .after = "Quan.Info") 
-view(mydat)
-nrow(mydat)
+mydat <- list()
+for (i in 1:264) {
+  mydat[[i]] <- data[[i]] %>%
+            as_tibble %>%
+            select("Protein.Group.Accessions", "Protein.Descriptions", "sequence_no_mod",
+            "126":"131", file_name) %>%
+            rename("Sequence" = sequence_no_mod) %>%
+            add_column("Quan.Usage" = "Used", .after = "Sequence") %>%
+            add_column("Quan.Info" = "Unique", .after = "Quan.Usage") %>%
+            add_column("Isolation.Interference" = 30 , .after = "Quan.Info") 
+}
+view(mydat[[1]])
+length(mydat)
+
+#Renaming TMTs based on sample type
+B1S1_f01_f12 <- mydat[1:12]
+B1S1_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B1S1_f01_f12_renamed[[i]] <- B1S1_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+B1S2_f01_f12 <- mydat[13:24]
+B1S2_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B1S2_f01_f12_renamed[[i]] <- B1S2_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B1S3_f01_f12 <- mydat[25:36]
+B1S3_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B1S3_f01_f12_renamed[[i]] <- B1S3_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B1S4_f01_f12 <- mydat[37:48]
+B1S4_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B1S4_f01_f12_renamed[[i]] <- B1S4_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B2S1_f01_f12 <- mydat[49:60]
+B2S1_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B2S1_f01_f12_renamed[[i]] <- B2S1_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B2S2_f01_f12 <- mydat[61:72]
+B2S2_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B2S2_f01_f12_renamed[[i]] <- B2S2_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B2S3_f01_f12 <- mydat[73:84]
+B2S3_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B2S3_f01_f12_renamed[[i]] <- B2S3_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B2S4_f01_f12 <- mydat[85:96]
+B2S4_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B2S4_f01_f12_renamed[[i]] <- B2S4_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B3S1_f01_f12 <- mydat[97:108]
+B3S1_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B3S1_f01_f12_renamed[[i]] <- B3S1_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B3S2_f01_f12 <- mydat[109:120]
+B3S2_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B3S2_f01_f12_renamed[[i]] <- B3S2_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B3S3_f01_f12 <- mydat[121:132]
+B3S3_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B3S3_f01_f12_renamed[[i]] <- B3S3_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B3S4_f01_f12 <- mydat[133:144]
+B3S4_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B3S4_f01_f12_renamed[[i]] <- B3S4_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B4S1_f01_f12 <- mydat[145:156]
+B4S1_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B4S1_f01_f12_renamed[[i]] <- B4S1_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B4S2_f01_f12 <- mydat[157:168]
+B4S2_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B4S2_f01_f12_renamed[[i]] <- B4S2_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B4S3_f01_f12 <- mydat[169:180]
+B4S3_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B4S3_f01_f12_renamed[[i]] <- B4S3_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B4S4_f01_f12 <- mydat[181:192]
+B4S4_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B4S4_f01_f12_renamed[[i]] <- B4S4_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B5S1_f01_f12 <- mydat[193:204]
+B5S1_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B5S1_f01_f12_renamed[[i]] <- B5S1_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B5S2_f01_f12 <- mydat[205:216]
+B5S2_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B5S2_f01_f12_renamed[[i]] <- B5S2_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B5S3_f01_f12 <- mydat[217:228]
+B5S3_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B5S3_f01_f12_renamed[[i]] <- B5S3_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B5S4_f01_f12 <- mydat[229:240]
+B5S4_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B5S4_f01_f12_renamed[[i]] <- B5S4_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B5S5_f01_f12 <- mydat[241:252]
+B5S5_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B5S5_f01_f12_renamed[[i]] <- B5S5_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+B5S6_f01_f12 <- mydat[253:264]
+B5S6_f01_f12_renamed <- list()
+for (i in 1:12) {
+  B5S6_f01_f12_renamed[[i]] <- B5S6_f01_f12[[i]] %>%
+  rename(= "126") %>%
+  rename(= "127N") %>%
+  rename(= "127C") %>%
+  rename(= "128N") %>%
+  rename(= "128C") %>%
+  rename(= "129N") %>%
+  rename(= "129C") %>%
+  rename(= "130N") %>%
+  rename(= "130C") %>%
+  rename(= "131")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 dat <- read.csv("http://www.biostat.jhsph.edu/~kkammers/software/eupa/example_iTRAQ.csv")
 view(dat)
