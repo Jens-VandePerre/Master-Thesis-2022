@@ -284,16 +284,16 @@ B2S4_f01_f12 <- mydat[85:96]
 B2S4_f01_f12_renamed <- list()
 for (i in 1:12) {
   B2S4_f01_f12_renamed[[i]] <- B2S4_f01_f12[[i]] %>%
-  rename(_126_B2S4_f01_f12 = "126") %>%
-  rename(_127N_B2S4_f01_f12 = "127N") %>%
-  rename(_127C_B2S4_f01_f12 = "127C") %>%
-  rename(_128N_B2S4_f01_f12 = "128N") %>%
-  rename(_128C_B2S4_f01_f12 = "128C") %>%
-  rename(_129N_B2S4_f01_f12 = "129N") %>%
-  rename(_129C_B2S4_f01_f12 = "129C") %>%
-  rename(_130N_B2S4_f01_f12 = "130N") %>%
-  rename(_130C_B2S4_f01_f12 = "130C") %>%
-  rename(_131_B2S4_f01_f12 = "131")
+  rename(TUMOR_126_B2S4_f01_f12 = "126") %>%
+  rename(TUMOR_127N_B2S4_f01_f12 = "127N") %>%
+  rename(NAT_127C_B2S4_f01_f12 = "127C") %>%
+  rename(NAT_128N_B2S4_f01_f12 = "128N") %>%
+  rename(TUMOR_128C_B2S4_f01_f12 = "128C") %>%
+  rename(TUMOR_129N_B2S4_f01_f12 = "129N") %>%
+  rename(NAT_129C_B2S4_f01_f12 = "129C") %>%
+  rename(TUMOR_130N_B2S4_f01_f12 = "130N") %>%
+  rename(NAT_130C_B2S4_f01_f12 = "130C") %>%
+  rename(REF_131_B2S4_f01_f12 = "131")
 }
 
 
@@ -301,16 +301,16 @@ B3S1_f01_f12 <- mydat[97:108]
 B3S1_f01_f12_renamed <- list()
 for (i in 1:12) {
   B3S1_f01_f12_renamed[[i]] <- B3S1_f01_f12[[i]] %>%
-  rename(_126_B3S1_f01_f12 = "126") %>%
-  rename(_127N_B3S1_f01_f12 = "127N") %>%
-  rename(_127C_B3S1_f01_f12 = "127C") %>%
-  rename(_128N_B3S1_f01_f12 = "128N") %>%
-  rename(_128C_B3S1_f01_f12 = "128C") %>%
-  rename(_129N_B3S1_f01_f12 = "129N") %>%
-  rename(_129C_B3S1_f01_f12 = "129C") %>%
-  rename(_130N_B3S1_f01_f12 = "130N") %>%
-  rename(_130C_B3S1_f01_f12 = "130C") %>%
-  rename(_131_B3S1_f01_f12 = "131")
+  rename(TUMOR_126_B3S1_f01_f12 = "126") %>%
+  rename(NAT_127N_B3S1_f01_f12 = "127N") %>%
+  rename(NAT_127C_B3S1_f01_f12 = "127C") %>%
+  rename(TUMOR_128N_B3S1_f01_f12 = "128N") %>%
+  rename(TUMOR_128C_B3S1_f01_f12 = "128C") %>%
+  rename(TUMOR_129N_B3S1_f01_f12 = "129N") %>%
+  rename(TUMOR_129C_B3S1_f01_f12 = "129C") %>%
+  rename(TUMOR_130N_B3S1_f01_f12 = "130N") %>%
+  rename(TUMOR_130C_B3S1_f01_f12 = "130C") %>%
+  rename(REF_131_B3S1_f01_f12 = "131")
 }
 
 
@@ -318,16 +318,16 @@ B3S2_f01_f12 <- mydat[109:120]
 B3S2_f01_f12_renamed <- list()
 for (i in 1:12) {
   B3S2_f01_f12_renamed[[i]] <- B3S2_f01_f12[[i]] %>%
-  rename(_126_B3S2_f01_f12 = "126") %>%
-  rename(_127N_B3S2_f01_f12 = "127N") %>%
-  rename(_127C_B3S2_f01_f12 = "127C") %>%
-  rename(_128N_B3S2_f01_f12 = "128N") %>%
-  rename(_128C_B3S2_f01_f12 = "128C") %>%
-  rename(_129N_B3S2_f01_f12 = "129N") %>%
-  rename(_129C_B3S2_f01_f12 = "129C") %>%
-  rename(_130N_B3S2_f01_f12 = "130N") %>%
-  rename(_130C_B3S2_f01_f12 = "130C") %>%
-  rename(_131_B3S2_f01_f12 = "131")
+  rename(NAT_126_B3S2_f01_f12 = "126") %>%
+  rename(NAT_127N_B3S2_f01_f12 = "127N") %>%
+  rename(NAT_127C_B3S2_f01_f12 = "127C") %>%
+  rename(NAT_128N_B3S2_f01_f12 = "128N") %>%
+  rename(TUMOR_128C_B3S2_f01_f12 = "128C") %>%
+  rename(NAT_129N_B3S2_f01_f12 = "129N") %>%
+  rename(NAT_129C_B3S2_f01_f12 = "129C") %>%
+  rename(TUMOR_130N_B3S2_f01_f12 = "130N") %>%
+  rename(TUMOR_130C_B3S2_f01_f12 = "130C") %>%
+  rename(REF_131_B3S2_f01_f12 = "131")
 }
 
 
@@ -335,16 +335,16 @@ B3S3_f01_f12 <- mydat[121:132]
 B3S3_f01_f12_renamed <- list()
 for (i in 1:12) {
   B3S3_f01_f12_renamed[[i]] <- B3S3_f01_f12[[i]] %>%
-  rename(_126_B3S3_f01_f12 = "126") %>%
-  rename(_127N_B3S3_f01_f12 = "127N") %>%
-  rename(_127C_B3S3_f01_f12 = "127C") %>%
-  rename(_128N_B3S3_f01_f12 = "128N") %>%
-  rename(_128C_B3S3_f01_f12 = "128C") %>%
-  rename(_129N_B3S3_f01_f12 = "129N") %>%
-  rename(_129C_B3S3_f01_f12 = "129C") %>%
-  rename(_130N_B3S3_f01_f12 = "130N") %>%
-  rename(_130C_B3S3_f01_f12 = "130C") %>%
-  rename(_131_B3S3_f01_f12 = "131")
+  rename(TUMOR_126_B3S3_f01_f12 = "126") %>%
+  rename(NAT_127N_B3S3_f01_f12 = "127N") %>%
+  rename(TUMOR_127C_B3S3_f01_f12 = "127C") %>%
+  rename(NAT_128N_B3S3_f01_f12 = "128N") %>%
+  rename(TUMOR_128C_B3S3_f01_f12 = "128C") %>%
+  rename(NAT_129N_B3S3_f01_f12 = "129N") %>%
+  rename(TUMOR_129C_B3S3_f01_f12 = "129C") %>%
+  rename(TUMOR_130N_B3S3_f01_f12 = "130N") %>%
+  rename(NAT_130C_B3S3_f01_f12 = "130C") %>%
+  rename(REF_131_B3S3_f01_f12 = "131")
 }
 
 
@@ -352,16 +352,16 @@ B3S4_f01_f12 <- mydat[133:144]
 B3S4_f01_f12_renamed <- list()
 for (i in 1:12) {
   B3S4_f01_f12_renamed[[i]] <- B3S4_f01_f12[[i]] %>%
-  rename(_126_B3S4_f01_f12 = "126") %>%
-  rename(_127N_B3S4_f01_f12 = "127N") %>%
-  rename(_127C_B3S4_f01_f12 = "127C") %>%
-  rename(_128N_B3S4_f01_f12 = "128N") %>%
-  rename(_128C_B3S4_f01_f12 = "128C") %>%
-  rename(_129N_B3S4_f01_f12 = "129N") %>%
-  rename(_129C_B3S4_f01_f12 = "129C") %>%
-  rename(_130N_B3S4_f01_f12 = "130N") %>%
-  rename(_130C_B3S4_f01_f12 = "130C") %>%
-  rename(_131_B3S4_f01_f12 = "131")
+  rename(NAT_126_B3S4_f01_f12 = "126") %>%
+  rename(NAT_127N_B3S4_f01_f12 = "127N") %>%
+  rename(TUMOR_127C_B3S4_f01_f12 = "127C") %>%
+  rename(NAT_128N_B3S4_f01_f12 = "128N") %>%
+  rename(NAT_128C_B3S4_f01_f12 = "128C") %>%
+  rename(TUMOR_129N_B3S4_f01_f12 = "129N") %>%
+  rename(TUMOR_129C_B3S4_f01_f12 = "129C") %>%
+  rename(NAT_130N_B3S4_f01_f12 = "130N") %>%
+  rename(NAT_130C_B3S4_f01_f12 = "130C") %>%
+  rename(REF_131_B3S4_f01_f12 = "131")
 }
 
 
@@ -369,16 +369,16 @@ B4S1_f01_f12 <- mydat[145:156]
 B4S1_f01_f12_renamed <- list()
 for (i in 1:12) {
   B4S1_f01_f12_renamed[[i]] <- B4S1_f01_f12[[i]] %>%
-  rename(_126_B4S1_f01_f12 = "126") %>%
-  rename(_127N_B4S1_f01_f12 = "127N") %>%
-  rename(_127C_B4S1_f01_f12 = "127C") %>%
-  rename(_128N_B4S1_f01_f12 = "128N") %>%
-  rename(_128C_B4S1_f01_f12 = "128C") %>%
-  rename(_129N_B4S1_f01_f12 = "129N") %>%
-  rename(_129C_B4S1_f01_f12 = "129C") %>%
-  rename(_130N_B4S1_f01_f12 = "130N") %>%
-  rename(_130C_B4S1_f01_f12 = "130C") %>%
-  rename(_131_B4S1_f01_f12 = "131")
+  rename(NAT_126_B4S1_f01_f12 = "126") %>%
+  rename(TUMOR_127N_B4S1_f01_f12 = "127N") %>%
+  rename(NAT_127C_B4S1_f01_f12 = "127C") %>%
+  rename(NAT_128N_B4S1_f01_f12 = "128N") %>%
+  rename(NAT_128C_B4S1_f01_f12 = "128C") %>%
+  rename(NAT_129N_B4S1_f01_f12 = "129N") %>%
+  rename(TUMOR_129C_B4S1_f01_f12 = "129C") %>%
+  rename(NAT_130N_B4S1_f01_f12 = "130N") %>%
+  rename(NAT_130C_B4S1_f01_f12 = "130C") %>%
+  rename(REF_131_B4S1_f01_f12 = "131")
 }
 
 
@@ -386,16 +386,16 @@ B4S2_f01_f12 <- mydat[157:168]
 B4S2_f01_f12_renamed <- list()
 for (i in 1:12) {
   B4S2_f01_f12_renamed[[i]] <- B4S2_f01_f12[[i]] %>%
-  rename(_126_B4S2_f01_f12 = "126") %>%
-  rename(_127N_B4S2_f01_f12 = "127N") %>%
-  rename(_127C_B4S2_f01_f12 = "127C") %>%
-  rename(_128N_B4S2_f01_f12 = "128N") %>%
-  rename(_128C_B4S2_f01_f12 = "128C") %>%
-  rename(_129N_B4S2_f01_f12 = "129N") %>%
-  rename(_129C_B4S2_f01_f12 = "129C") %>%
-  rename(_130N_B4S2_f01_f12 = "130N") %>%
-  rename(_130C_B4S2_f01_f12 = "130C") %>%
-  rename(_131_B4S2_f01_f12 = "131")
+  rename(NAT_126_B4S2_f01_f12 = "126") %>%
+  rename(TUMOR_127N_B4S2_f01_f12 = "127N") %>%
+  rename(TUMOR_127C_B4S2_f01_f12 = "127C") %>%
+  rename(NAT_128N_B4S2_f01_f12 = "128N") %>%
+  rename(NAT_128C_B4S2_f01_f12 = "128C") %>%
+  rename(TUMOR_129N_B4S2_f01_f12 = "129N") %>%
+  rename(NAT_129C_B4S2_f01_f12 = "129C") %>%
+  rename(TUMOR_130N_B4S2_f01_f12 = "130N") %>%
+  rename(NAT_130C_B4S2_f01_f12 = "130C") %>%
+  rename(REF_131_B4S2_f01_f12 = "131")
 }
 
 
@@ -403,16 +403,16 @@ B4S3_f01_f12 <- mydat[169:180]
 B4S3_f01_f12_renamed <- list()
 for (i in 1:12) {
   B4S3_f01_f12_renamed[[i]] <- B4S3_f01_f12[[i]] %>%
-  rename(_126_B4S3_f01_f12 = "126") %>%
-  rename(_127N_B4S3_f01_f12 = "127N") %>%
-  rename(_127C_B4S3_f01_f12 = "127C") %>%
-  rename(_128N_B4S3_f01_f12 = "128N") %>%
-  rename(_128C_B4S3_f01_f12 = "128C") %>%
-  rename(_129N_B4S3_f01_f12 = "129N") %>%
-  rename(_129C_B4S3_f01_f12 = "129C") %>%
-  rename(_130N_B4S3_f01_f12 = "130N") %>%
-  rename(_130C_B4S3_f01_f12 = "130C") %>%
-  rename(_131_B4S3_f01_f12 = "131")
+  rename(TUMOR_126_B4S3_f01_f12 = "126") %>%
+  rename(NAT_127N_B4S3_f01_f12 = "127N") %>%
+  rename(TUMOR_127C_B4S3_f01_f12 = "127C") %>%
+  rename(NAT_128N_B4S3_f01_f12 = "128N") %>%
+  rename(NAT_128C_B4S3_f01_f12 = "128C") %>%
+  rename(TUMOR_129N_B4S3_f01_f12 = "129N") %>%
+  rename(NAT_129C_B4S3_f01_f12 = "129C") %>%
+  rename(TUMOR_130N_B4S3_f01_f12 = "130N") %>%
+  rename(NAT_130C_B4S3_f01_f12 = "130C") %>%
+  rename(REF_131_B4S3_f01_f12 = "131")
 }
 
 
@@ -420,16 +420,16 @@ B4S4_f01_f12 <- mydat[181:192]
 B4S4_f01_f12_renamed <- list()
 for (i in 1:12) {
   B4S4_f01_f12_renamed[[i]] <- B4S4_f01_f12[[i]] %>%
-  rename(_126_B4S4_f01_f12 = "126") %>%
-  rename(_127N_B4S4_f01_f12 = "127N") %>%
-  rename(_127C_B4S4_f01_f12 = "127C") %>%
-  rename(_128N_B4S4_f01_f12 = "128N") %>%
-  rename(_128C_B4S4_f01_f12 = "128C") %>%
-  rename(_129N_B4S4_f01_f12 = "129N") %>%
-  rename(_129C_B4S4_f01_f12 = "129C") %>%
-  rename(_130N_B4S4_f01_f12 = "130N") %>%
-  rename(_130C_B4S4_f01_f12 = "130C") %>%
-  rename(_131_B4S4_f01_f12 = "131")
+  rename(TUMOR_126_B4S4_f01_f12 = "126") %>%
+  rename(TUMOR_127N_B4S4_f01_f12 = "127N") %>%
+  rename(NAT_127C_B4S4_f01_f12 = "127C") %>%
+  rename(NAT_128N_B4S4_f01_f12 = "128N") %>%
+  rename(TUMOR_128C_B4S4_f01_f12 = "128C") %>%
+  rename(NAT_129N_B4S4_f01_f12 = "129N") %>%
+  rename(TUMOR_129C_B4S4_f01_f12 = "129C") %>%
+  rename(NAT_130N_B4S4_f01_f12 = "130N") %>%
+  rename(NAT_130C_B4S4_f01_f12 = "130C") %>%
+  rename(REF_131_B4S4_f01_f12 = "131")
 }
 
 
@@ -437,16 +437,16 @@ B5S1_f01_f12 <- mydat[193:204]
 B5S1_f01_f12_renamed <- list()
 for (i in 1:12) {
   B5S1_f01_f12_renamed[[i]] <- B5S1_f01_f12[[i]] %>%
-  rename(_126_B5S1_f01_f12 = "126") %>%
-  rename(_127N_B5S1_f01_f12 = "127N") %>%
-  rename(_127C_B5S1_f01_f12 = "127C") %>%
-  rename(_128N_B5S1_f01_f12 = "128N") %>%
-  rename(_128C_B5S1_f01_f12 = "128C") %>%
-  rename(_129N_B5S1_f01_f12 = "129N") %>%
-  rename(_129C_B5S1_f01_f12 = "129C") %>%
-  rename(_130N_B5S1_f01_f12 = "130N") %>%
-  rename(_130C_B5S1_f01_f12 = "130C") %>%
-  rename(_131_B5S1_f01_f12 = "131")
+  rename(NAT_126_B5S1_f01_f12 = "126") %>%
+  rename(TUMOR_127N_B5S1_f01_f12 = "127N") %>%
+  rename(NAT_127C_B5S1_f01_f12 = "127C") %>%
+  rename(NAT_128N_B5S1_f01_f12 = "128N") %>%
+  rename(NAT_128C_B5S1_f01_f12 = "128C") %>%
+  rename(NAT_129N_B5S1_f01_f12 = "129N") %>%
+  rename(TUMOR_129C_B5S1_f01_f12 = "129C") %>%
+  rename(TUMOR_130N_B5S1_f01_f12 = "130N") %>%
+  rename(TUMOR_130C_B5S1_f01_f12 = "130C") %>%
+  rename(REF_131_B5S1_f01_f12 = "131")
 }
 
 
@@ -454,16 +454,16 @@ B5S2_f01_f12 <- mydat[205:216]
 B5S2_f01_f12_renamed <- list()
 for (i in 1:12) {
   B5S2_f01_f12_renamed[[i]] <- B5S2_f01_f12[[i]] %>%
-  rename(_126_B5S2_f01_f12 = "126") %>%
-  rename(_127N_B5S2_f01_f12 = "127N") %>%
-  rename(_127C_B5S2_f01_f12 = "127C") %>%
-  rename(_128N_B5S2_f01_f12 = "128N") %>%
-  rename(_128C_B5S2_f01_f12 = "128C") %>%
-  rename(_129N_B5S2_f01_f12 = "129N") %>%
-  rename(_129C_B5S2_f01_f12 = "129C") %>%
-  rename(_130N_B5S2_f01_f12 = "130N") %>%
-  rename(_130C_B5S2_f01_f12 = "130C") %>%
-  rename(_131_B5S2_f01_f12 = "131")
+  rename(NAT_126_B5S2_f01_f12 = "126") %>%
+  rename(NAT_127N_B5S2_f01_f12 = "127N") %>%
+  rename(NAT_127C_B5S2_f01_f12 = "127C") %>%
+  rename(TUMOR_128N_B5S2_f01_f12 = "128N") %>%
+  rename(TUMOR_128C_B5S2_f01_f12 = "128C") %>%
+  rename(NAT_129N_B5S2_f01_f12 = "129N") %>%
+  rename(TUMOR_129C_B5S2_f01_f12 = "129C") %>%
+  rename(TUMOR_130N_B5S2_f01_f12 = "130N") %>%
+  rename(NAT_130C_B5S2_f01_f12 = "130C") %>%
+  rename(REF_131_B5S2_f01_f12 = "131")
 }
 
 
@@ -471,16 +471,16 @@ B5S3_f01_f12 <- mydat[217:228]
 B5S3_f01_f12_renamed <- list()
 for (i in 1:12) {
   B5S3_f01_f12_renamed[[i]] <- B5S3_f01_f12[[i]] %>%
-  rename(_126_B5S3_f01_f12 = "126") %>%
-  rename(_127N_B5S3_f01_f12 = "127N") %>%
-  rename(_127C_B5S3_f01_f12 = "127C") %>%
-  rename(_128N_B5S3_f01_f12 = "128N") %>%
-  rename(_128C_B5S3_f01_f12 = "128C") %>%
-  rename(_129N_B5S3_f01_f12 = "129N") %>%
-  rename(_129C_B5S3_f01_f12 = "129C") %>%
-  rename(_130N_B5S3_f01_f12 = "130N") %>%
-  rename(_130C_B5S3_f01_f12 = "130C") %>%
-  rename(_131_B5S3_f01_f12 = "131")
+  rename(TUMOR_126_B5S3_f01_f12 = "126") %>%
+  rename(TUMOR_127N_B5S3_f01_f12 = "127N") %>%
+  rename(NAT_127C_B5S3_f01_f12 = "127C") %>%
+  rename(NAT_128N_B5S3_f01_f12 = "128N") %>%
+  rename(TUMOR_128C_B5S3_f01_f12 = "128C") %>%
+  rename(TUMOR_129N_B5S3_f01_f12 = "129N") %>%
+  rename(TUMOR_129C_B5S3_f01_f12 = "129C") %>%
+  rename(NAT_130N_B5S3_f01_f12 = "130N") %>%
+  rename(TUMOR_130C_B5S3_f01_f12 = "130C") %>%
+  rename(REF_131_B5S3_f01_f12 = "131")
 }
 
 
@@ -488,16 +488,16 @@ B5S4_f01_f12 <- mydat[229:240]
 B5S4_f01_f12_renamed <- list()
 for (i in 1:12) {
   B5S4_f01_f12_renamed[[i]] <- B5S4_f01_f12[[i]] %>%
-  rename(_126_B5S4_f01_f12 = "126") %>%
-  rename(_127N_B5S4_f01_f12 = "127N") %>%
-  rename(_127C_B5S4_f01_f12 = "127C") %>%
-  rename(_128N_B5S4_f01_f12 = "128N") %>%
-  rename(_128C_B5S4_f01_f12 = "128C") %>%
-  rename(_129N_B5S4_f01_f12 = "129N") %>%
-  rename(_129C_B5S4_f01_f12 = "129C") %>%
-  rename(_130N_B5S4_f01_f12 = "130N") %>%
-  rename(_130C_B5S4_f01_f12 = "130C") %>%
-  rename(_131_B5S4_f01_f12 = "131")
+  rename(TUMOR_126_B5S4_f01_f12 = "126") %>%
+  rename(TUMOR_127N_B5S4_f01_f12 = "127N") %>%
+  rename(TUMOR_127C_B5S4_f01_f12 = "127C") %>%
+  rename(NAT_128N_B5S4_f01_f12 = "128N") %>%
+  rename(TUMOR_128C_B5S4_f01_f12 = "128C") %>%
+  rename(NAT_129N_B5S4_f01_f12 = "129N") %>%
+  rename(NAT_129C_B5S4_f01_f12 = "129C") %>%
+  rename(NAT_130N_B5S4_f01_f12 = "130N") %>%
+  rename(NAT_130C_B5S4_f01_f12 = "130C") %>%
+  rename(REF_131_B5S4_f01_f12 = "131")
 }
 
 
@@ -505,16 +505,16 @@ B5S5_f01_f12 <- mydat[241:252]
 B5S5_f01_f12_renamed <- list()
 for (i in 1:12) {
   B5S5_f01_f12_renamed[[i]] <- B5S5_f01_f12[[i]] %>%
-  rename(_126_B5S5_f01_f12 = "126") %>%
-  rename(_127N_B5S5_f01_f12 = "127N") %>%
-  rename(_127C_B5S5_f01_f12 = "127C") %>%
-  rename(_128N_B5S5_f01_f12 = "128N") %>%
-  rename(_128C_B5S5_f01_f12 = "128C") %>%
-  rename(_129N_B5S5_f01_f12 = "129N") %>%
-  rename(_129C_B5S5_f01_f12 = "129C") %>%
-  rename(_130N_B5S5_f01_f12 = "130N") %>%
-  rename(_130C_B5S5_f01_f12 = "130C") %>%
-  rename(_131_B5S5_f01_f12 = "131")
+  rename(TUMOR_126_B5S5_f01_f12 = "126") %>%
+  rename(TUMOR_127N_B5S5_f01_f12 = "127N") %>%
+  rename(TUMOR_127C_B5S5_f01_f12 = "127C") %>%
+  rename(NAT_128N_B5S5_f01_f12 = "128N") %>%
+  rename(NAT_128C_B5S5_f01_f12 = "128C") %>%
+  rename(TUMOR_129N_B5S5_f01_f12 = "129N") %>%
+  rename(TUMOR_129C_B5S5_f01_f12 = "129C") %>%
+  rename(NAT_130N_B5S5_f01_f12 = "130N") %>%
+  rename(NAT_130C_B5S5_f01_f12 = "130C") %>%
+  rename(REF_131_B5S5_f01_f12 = "131")
 }
 
 
@@ -522,16 +522,16 @@ B5S6_f01_f12 <- mydat[253:264]
 B5S6_f01_f12_renamed <- list()
 for (i in 1:12) {
   B5S6_f01_f12_renamed[[i]] <- B5S6_f01_f12[[i]] %>%
-  rename(_126_B5S6_f01_f12 = "126") %>%
-  rename(_127N_B5S6_f01_f12 = "127N") %>%
-  rename(_127C_B5S6_f01_f12 = "127C") %>%
-  rename(_128N_B5S6_f01_f12 = "128N") %>%
-  rename(_128C_B5S6_f01_f12 = "128C") %>%
-  rename(_129N_B5S6_f01_f12 = "129N") %>%
-  rename(_129C_B5S6_f01_f12 = "129C") %>%
-  rename(_130N_B5S6_f01_f12 = "130N") %>%
-  rename(_130C_B5S6_f01_f12 = "130C") %>%
-  rename(_131_B5S6_f01_f12 = "131")
+  rename(TUMOR_126_B5S6_f01_f12 = "126") %>%
+  rename(NAT_127N_B5S6_f01_f12 = "127N") %>%
+  rename(NAT_127C_B5S6_f01_f12 = "127C") %>%
+  rename(NAT_128N_B5S6_f01_f12 = "128N") %>%
+  rename(NAT_128C_B5S6_f01_f12 = "128C") %>%
+  rename(NAT_129N_B5S6_f01_f12 = "129N") %>%
+  rename(NAT_129C_B5S6_f01_f12 = "129C") %>%
+  rename(NAT_130N_B5S6_f01_f12 = "130N") %>%
+  rename(REF_130C_B5S6_f01_f12 = "130C") %>%
+  rename(REF_131_B5S6_f01_f12 = "131")
 }
 
 
