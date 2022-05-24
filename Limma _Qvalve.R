@@ -152,7 +152,7 @@ for (i in 1:264) {
             rename("Sequence" = sequence_no_mod) %>%
             add_column("Quan.Usage" = "Used", .after = "Sequence") %>%
             add_column("Quan.Info" = "Unique", .after = "Quan.Usage") %>%
-            add_column("Isolation.Interference" = 30 , .after = "Quan.Info") %>%
+            add_column("Isolation.Interference" = 30, .after = "Quan.Info") %>%
             add_column("file_name" = file_names_short[[i]])
 }
 view(mydat[[2]])

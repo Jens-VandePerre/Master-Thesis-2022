@@ -81,28 +81,28 @@ ANN_SoLo_no_mod_unique <- ANN_SoLo_no_mod %>% distinct()
 nrow(ANN_SoLo_no_mod) #Over 4.5 million peptides identified
 nrow(ANN_SoLo_no_mod_unique) #Over 20000 unique peptides identified
 
-    #Load dataframes, only modified peptides
-file_paths_annsolo_mod <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10")
-PSM_only_mod <- list()
-for (i in seq_along(file_paths_annsolo_mod)) {
-    PSM_only_mod[[i]] <- read.csv(file_paths_annsolo_mod[[i]], header = FALSE, sep = ",") 
-}
-view(PSM_only_mod[[1]])
-str(PSM_only_mod[[1]])
-    #Select sequences
-annsolo_mod <- list()
-for (i in 1:264) {
-    annsolo_mod[[i]] <- PSM_only_mod[[i]] %>%
-    filter(PSM_only_mod[[i]]$V12 != "No direct match found in Unimod") %>%
-    row_to_names(row_number = 1) %>%
-    dplyr::select(sequence) %>%
-    mutate(sequence = trimws(str_remove_all(sequence, "n"))) %>% #remove n
-    mutate(sequence = trimws(str_remove_all(sequence, "[0123456789]"))) %>% # remove numbers
-    mutate(sequence = trimws(str_remove_all(sequence, "\\[|\\]"))) 
-}
-view(annsolo_mod[[1]])
-ANN_SoLo_only_mod <- bind_rows(annsolo_mod)
-nrow(ANN_SoLo_only_mod)
+                #Load dataframes, only modified peptides
+            file_paths_annsolo_mod <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10")
+            PSM_only_mod <- list()
+            for (i in seq_along(file_paths_annsolo_mod)) {
+                PSM_only_mod[[i]] <- read.csv(file_paths_annsolo_mod[[i]], header = FALSE, sep = ",") 
+            }
+            view(PSM_only_mod[[1]])
+            str(PSM_only_mod[[1]])
+                #Select sequences
+            annsolo_mod <- list()
+            for (i in 1:264) {
+                annsolo_mod[[i]] <- PSM_only_mod[[i]] %>%
+                filter(PSM_only_mod[[i]]$V12 != "No direct match found in Unimod") %>%
+                row_to_names(row_number = 1) %>%
+                dplyr::select(sequence) %>%
+                mutate(sequence = trimws(str_remove_all(sequence, "n"))) %>% #remove n
+                mutate(sequence = trimws(str_remove_all(sequence, "[0123456789]"))) %>% # remove numbers
+                mutate(sequence = trimws(str_remove_all(sequence, "\\[|\\]"))) 
+            }
+            view(annsolo_mod[[1]])
+            ANN_SoLo_only_mod <- bind_rows(annsolo_mod)
+            nrow(ANN_SoLo_only_mod)
 
 #Creating Venn Diagram 
     #Coparing all ANN-SoLo peptides to original study
@@ -111,13 +111,17 @@ ANN_vs_ORG_1_file <- list(
     ANN_SoLo = unlist(annsolo[[1]]),
     Original_study = unlist(orig[[1]])
 )
-venn1 <- ggvenn(ANN_vs_ORG_1_file)
-venn1 %>%
-ggvenn(
+venn1 <- ggvenn(ANN_vs_ORG_1_file,
+    aes(ANN_SoLo = (annsolo[[1]]), Original_study = (orig[[1]]))
+)
+venn1 +
+geom_venn(
+    text_size = 3,
     fill_color = c("#FFFF00", "#3399FF"),
     stroke_size = 0.5,
-    set_name_size = 4
+    set_name_size = 6
 )
+
 
 venn2 <- venn.diagram(ANN_vs_ORG_1_file)
 venn2 %>%
@@ -126,7 +130,7 @@ venn.diagram(
 
 )
 
-ggVennDiagram(ANN_vs_ORG_1_file)
+###ggVennDiagram(ANN_vs_ORG_1_file)
 
         #ALL files
 ANN_vs_ORG <- list(
