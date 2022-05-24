@@ -516,6 +516,16 @@ dat <- bind_rows(
   B5S5_f01_f12_renamed,
   B5S6_f01_f12_renamed
 )
+view(dat)
+
+  #Here something still need to happen
+    #introduce NAs
+    dat <- dat %>% mutate_all(na_if,"")
+    dat %>% mutate_each(funs(empty_as_na)) 
+    #OR only keep proteins present in all rows
+
+
+
 
 cha <- c(
     "NAT_126_B1S1_f01_f12", 
