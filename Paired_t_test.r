@@ -1,7 +1,11 @@
 #PSM
 PSM_TMT_ALL <- readRDS("/Users/jensvandeperre/Desktop/Outputs/PSM_TMT_linked/ALL_PSM_TMT_Linked")
     #Don't forget to devide by REF
-
+normalized <- list()
+for (i in 1:264) {
+    normalized[[i]] <- PSM_TMT_ALL[[i]] %>%
+        mutate("126" = "126"/"131")
+}
 
 #Proteins PIA
 (file_paths_PIA <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PIA_analysis"))

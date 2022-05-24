@@ -516,17 +516,20 @@ dat <- bind_rows(
   B5S5_f01_f12_renamed,
   B5S6_f01_f12_renamed
 )
-view(dat)
+view(head(dat))
 
   #Here something still need to happen
     #introduce NAs
     dat <- dat %>% mutate_all(na_if,"")
     dat %>% mutate_each(funs(empty_as_na)) 
     #OR only keep proteins present in all rows
+grouped <- dat %>% 
+    group_by(Sequence)%>%
+    summarise_all(across(everything(), ~toString(.)))
 
-
-
-
+view(head(grouped))
+nrow(grouped)
+nrow(dat)
 cha <- c(
     "NAT_126_B1S1_f01_f12", 
 "NAT_127N_B1S1_f01_f12", 

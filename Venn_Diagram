@@ -65,6 +65,9 @@ Original_study <- bind_rows(Ori_Stud)
 Original_study_unique <- Original_study %>% distinct()
 nrow(Original_study) #over 3 million peptides identified
 nrow(Original_study_unique) #Over 20000 unique peptides identified
+        #Save as input for online Venny tool
+write.table(Original_study, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Original_study.txt", sep="\t", row.names=FALSE)
+write.table(Original_study_unique, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Original_study_unique.txt", sep="\t", row.names=FALSE)
 
 #ANN-SoLo PSMs 
     #Load list of dataframes, all identifed peptides
@@ -80,6 +83,11 @@ ANN_SoLo_no_mod <- bind_rows(annsolo)
 ANN_SoLo_no_mod_unique <- ANN_SoLo_no_mod %>% distinct()
 nrow(ANN_SoLo_no_mod) #Over 4.5 million peptides identified
 nrow(ANN_SoLo_no_mod_unique) #Over 20000 unique peptides identified
+        #Save as input for online Venny tool
+write.table(ANN_SoLo_no_mod, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod.txt", sep="\t", row.names=FALSE)
+write.table(ANN_SoLo_no_mod_unique, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod_unique.txt", sep="\t", row.names=FALSE)
+
+
 
                 #Load dataframes, only modified peptides
             file_paths_annsolo_mod <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10")
