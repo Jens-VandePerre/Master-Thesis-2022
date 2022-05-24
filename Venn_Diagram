@@ -28,6 +28,8 @@ library("janitor")
 library("stringr")
 library("ggvenn")
 library("ggVennDiagram")
+library("VennDiagram")
+
 
 wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab")
 getwd() 
@@ -60,7 +62,7 @@ Ori_Stud <- set_names(orig, paste("Original_study_", file_names_short, sep = "")
 view(Ori_Stud[[1]])
     #Turn into 1 dataframe
 Original_study <- bind_rows(Ori_Stud)
-Original_study_unique <- bind_rows(Ori_Stud) %>% distinct()
+Original_study_unique <- Original_study %>% distinct()
 nrow(Original_study) #over 3 million peptides identified
 nrow(Original_study_unique) #Over 20000 unique peptides identified
 
@@ -75,7 +77,7 @@ for (i in 1:264) {
         select(sequence_no_mod)
 }
 ANN_SoLo_no_mod <- bind_rows(annsolo)
-ANN_SoLo_no_mod_unique <- bind_rows(annsolo) %>% distinct()
+ANN_SoLo_no_mod_unique <- ANN_SoLo_no_mod %>% distinct()
 nrow(ANN_SoLo_no_mod) #Over 4.5 million peptides identified
 nrow(ANN_SoLo_no_mod_unique) #Over 20000 unique peptides identified
 
@@ -104,6 +106,29 @@ nrow(ANN_SoLo_only_mod)
 
 #Creating Venn Diagram 
     #Coparing all ANN-SoLo peptides to original study
+        #1 file
+ANN_vs_ORG_1_file <- list(
+    ANN_SoLo = unlist(annsolo[[1]]),
+    Original_study = unlist(orig[[1]])
+)
+venn1 <- ggvenn(ANN_vs_ORG_1_file)
+venn1 %>%
+ggvenn(
+    fill_color = c("#FFFF00", "#3399FF"),
+    stroke_size = 0.5,
+    set_name_size = 4
+)
+
+venn2 <- venn.diagram(ANN_vs_ORG_1_file)
+venn2 %>%
+venn.diagram(
+    category.names = c("ANN-SoLo", "Original Study"),
+
+)
+
+ggVennDiagram(ANN_vs_ORG_1_file)
+
+        #ALL files
 ANN_vs_ORG <- list(
     ANN_SoLo = as.vector(unlist(ANN_SoLo_no_mod)),
     Original_study = as.vector(unlist(Original_study))
@@ -111,7 +136,26 @@ ANN_vs_ORG <- list(
 ggvenn(ANN_vs_ORG)
 ggVennDiagram(ANN_vs_ORG)
 
+    #Comparing only the modified peptides to original study
+        #1 file
+ANNMOD_vs_ORG_1_file <- list (
+    ANN_SoLo_modified_peptides = as.vector(unlist(ANN_SoLo_only_mod)),
+    Original_study = as.vector(unlist(orig[[1]]))
+)
+ggvenn(ANNMOD_vs_ORG)
+ggVennDiagram(ANNMOD_vs_ORG)
+        #ALL files
+ANNMOD_vs_ORG <- list (
+    ANN_SoLo_modified_peptides = as.vector(unlist(ANN_SoLo_only_mod)),
+    Original_study = as.vector(unlist(Original_study))
+)
+ggvenn(ANNMOD_vs_ORG)
+ggVennDiagram(ANNMOD_vs_ORG)
+
+
+
     #Comparing only the unique peptides
+        #ALL files
 ANN_vs_ORG_unique <- list(
     ANN_SoLo = as.vector(unlist(ANN_SoLo_no_mod_unique)),
     Original_study = as.vector(unlist(Original_study_unique))
@@ -121,12 +165,5 @@ ggVennDiagram(ANN_vs_ORG_unique,
         )
 ggvenn(ANN_vs_ORG)
 
-    #Comparing only the modified peptides to original study
-ANNMOD_vs_ORG <- list (
-    ANN_SoLo_modified_peptides = as.vector(unlist(ANN_SoLo_only_mod)),
-    Original_study = as.vector(unlist(Original_study))
-)
-ggvenn(ANNMOD_vs_ORG)
-ggVennDiagram(ANNMOD_vs_ORG)
 
 
