@@ -158,6 +158,10 @@ for (i in 1:264) {
 view(mydat[[2]])
 length(mydat)
 
+saveRDS(mydat, file = "/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/data_before_name_change")
+mydat <- readRDS("/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/data_before_name_change")
+
+
 #Renaming TMTs based on sample type
 B1S1_f01_f12 <- mydat[1:12]
 B1S1_f01_f12_renamed <- list()
@@ -173,7 +177,8 @@ for (i in 1:12) {
   rename(TUMOR_129C_B1S1_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B1S1_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B1S1_f01_f12 = "130C") %>%
-  rename(REF_131_B1S1_f01_f12 = "131")
+  rename(REF_131_B1S1_f01_f12 = "131") %>%
+  add_column(file_name = "B1S1_f01_f12")
 }
 B1S2_f01_f12 <- mydat[13:24]
 B1S2_f01_f12_renamed <- list()
@@ -188,7 +193,8 @@ for (i in 1:12) {
   rename(NAT_129C_B1S2_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B1S2_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B1S2_f01_f12 = "130C") %>%
-  rename(REF_131_B1S2_f01_f12 = "131")
+  rename(REF_131_B1S2_f01_f12 = "131") %>%
+  add_column(file_name = "B1S2_f01_f12")
 }
 B1S3_f01_f12 <- mydat[25:36]
 B1S3_f01_f12_renamed <- list()
@@ -203,7 +209,8 @@ for (i in 1:12) {
   rename(NAT_129C_B1S3_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B1S3_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B1S3_f01_f12 = "130C") %>%
-  rename(REF_131_B1S3_f01_f12 = "131")
+  rename(REF_131_B1S3_f01_f12 = "131") %>%
+  add_column(file_name = "B1S3_f01_f12")
 }
 B1S4_f01_f12 <- mydat[37:48]
 B1S4_f01_f12_renamed <- list()
@@ -218,7 +225,8 @@ for (i in 1:12) {
   rename(TUMOR_129C_B1S4_f01_f12 = "129C") %>%
   rename(NAT_130N_B1S4_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B1S4_f01_f12 = "130C") %>%
-  rename(REF_131__B1S4_f01_f12 = "131")
+  rename(REF_131__B1S4_f01_f12 = "131") %>%
+  add_column(file_name = "B1S4_f01_f12")
 }
 B2S1_f01_f12 <- mydat[49:60]
 B2S1_f01_f12_renamed <- list()
@@ -233,7 +241,8 @@ for (i in 1:12) {
   rename(NAT_129C_B2S1_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B2S1_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B2S1_f01_f12 = "130C") %>%
-  rename(REF_131_B2S1_f01_f12 = "131")
+  rename(REF_131_B2S1_f01_f12 = "131") %>%
+  add_column(file_name = "B2S1_f01_f12")
 }
 B2S2_f01_f12 <- mydat[61:72]
 B2S2_f01_f12_renamed <- list()
@@ -248,7 +257,8 @@ for (i in 1:12) {
   rename(NAT_129C_B2S2_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B2S2_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B2S2_f01_f12 = "130C") %>%
-  rename(REF_131_B2S2_f01_f12 = "131")
+  rename(REF_131_B2S2_f01_f12 = "131") %>%
+  add_column(file_name = "B2S2_f01_f12")
 }
 B2S3_f01_f12 <- mydat[73:84]
 B2S3_f01_f12_renamed <- list()
@@ -263,7 +273,8 @@ for (i in 1:12) {
   rename(NAT_129C_B2S3_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B2S3_f01_f12 = "130N") %>%
   rename(NAT_130C_B2S3_f01_f12 = "130C") %>%
-  rename(REF_131_B2S3_f01_f12 = "131")
+  rename(REF_131_B2S3_f01_f12 = "131") %>%
+  add_column(file_name = "B2S3_f01_f12")
 }
 B2S4_f01_f12 <- mydat[85:96]
 B2S4_f01_f12_renamed <- list()
@@ -278,7 +289,8 @@ for (i in 1:12) {
   rename(NAT_129C_B2S4_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B2S4_f01_f12 = "130N") %>%
   rename(NAT_130C_B2S4_f01_f12 = "130C") %>%
-  rename(REF_131_B2S4_f01_f12 = "131")
+  rename(REF_131_B2S4_f01_f12 = "131") %>%
+  add_column(file_name = "B2S4_f01_f12")
 }
 B3S1_f01_f12 <- mydat[97:108]
 B3S1_f01_f12_renamed <- list()
@@ -293,7 +305,8 @@ for (i in 1:12) {
   rename(TUMOR_129C_B3S1_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B3S1_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B3S1_f01_f12 = "130C") %>%
-  rename(REF_131_B3S1_f01_f12 = "131")
+  rename(REF_131_B3S1_f01_f12 = "131") %>%
+  add_column(file_name = "B3S1_f01_f12")
 }
 B3S2_f01_f12 <- mydat[109:120]
 B3S2_f01_f12_renamed <- list()
@@ -308,7 +321,8 @@ for (i in 1:12) {
   rename(NAT_129C_B3S2_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B3S2_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B3S2_f01_f12 = "130C") %>%
-  rename(REF_131_B3S2_f01_f12 = "131")
+  rename(REF_131_B3S2_f01_f12 = "131") %>%
+  add_column(file_name = "B3S2_f01_f12")
 }
 B3S3_f01_f12 <- mydat[121:132]
 B3S3_f01_f12_renamed <- list()
@@ -323,7 +337,8 @@ for (i in 1:12) {
   rename(TUMOR_129C_B3S3_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B3S3_f01_f12 = "130N") %>%
   rename(NAT_130C_B3S3_f01_f12 = "130C") %>%
-  rename(REF_131_B3S3_f01_f12 = "131")
+  rename(REF_131_B3S3_f01_f12 = "131") %>%
+  add_column(file_name = "B3S3_f01_f12")
 }
 B3S4_f01_f12 <- mydat[133:144]
 B3S4_f01_f12_renamed <- list()
@@ -338,7 +353,8 @@ for (i in 1:12) {
   rename(TUMOR_129C_B3S4_f01_f12 = "129C") %>%
   rename(NAT_130N_B3S4_f01_f12 = "130N") %>%
   rename(NAT_130C_B3S4_f01_f12 = "130C") %>%
-  rename(REF_131_B3S4_f01_f12 = "131")
+  rename(REF_131_B3S4_f01_f12 = "131") %>%
+  add_column(file_name = "B3S4_f01_f12")
 }
 B4S1_f01_f12 <- mydat[145:156]
 B4S1_f01_f12_renamed <- list()
@@ -353,7 +369,8 @@ for (i in 1:12) {
   rename(TUMOR_129C_B4S1_f01_f12 = "129C") %>%
   rename(NAT_130N_B4S1_f01_f12 = "130N") %>%
   rename(NAT_130C_B4S1_f01_f12 = "130C") %>%
-  rename(REF_131_B4S1_f01_f12 = "131")
+  rename(REF_131_B4S1_f01_f12 = "131") %>%
+  add_column(file_name = "B4S1_f01_f12")
 }
 B4S2_f01_f12 <- mydat[157:168]
 B4S2_f01_f12_renamed <- list()
@@ -368,7 +385,8 @@ for (i in 1:12) {
   rename(NAT_129C_B4S2_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B4S2_f01_f12 = "130N") %>%
   rename(NAT_130C_B4S2_f01_f12 = "130C") %>%
-  rename(REF_131_B4S2_f01_f12 = "131")
+  rename(REF_131_B4S2_f01_f12 = "131") %>%
+  add_column(file_name = "B4S2_f01_f12")
 }
 B4S3_f01_f12 <- mydat[169:180]
 B4S3_f01_f12_renamed <- list()
@@ -383,7 +401,8 @@ for (i in 1:12) {
   rename(NAT_129C_B4S3_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B4S3_f01_f12 = "130N") %>%
   rename(NAT_130C_B4S3_f01_f12 = "130C") %>%
-  rename(REF_131_B4S3_f01_f12 = "131")
+  rename(REF_131_B4S3_f01_f12 = "131") %>%
+  add_column(file_name = "B4S3_f01_f12")
 }
 B4S4_f01_f12 <- mydat[181:192]
 B4S4_f01_f12_renamed <- list()
@@ -398,7 +417,8 @@ for (i in 1:12) {
   rename(TUMOR_129C_B4S4_f01_f12 = "129C") %>%
   rename(NAT_130N_B4S4_f01_f12 = "130N") %>%
   rename(NAT_130C_B4S4_f01_f12 = "130C") %>%
-  rename(REF_131_B4S4_f01_f12 = "131")
+  rename(REF_131_B4S4_f01_f12 = "131") %>%
+  add_column(file_name = "B4S4_f01_f12")
 }
 B5S1_f01_f12 <- mydat[193:204]
 B5S1_f01_f12_renamed <- list()
@@ -413,7 +433,8 @@ for (i in 1:12) {
   rename(TUMOR_129C_B5S1_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B5S1_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B5S1_f01_f12 = "130C") %>%
-  rename(REF_131_B5S1_f01_f12 = "131")
+  rename(REF_131_B5S1_f01_f12 = "131") %>%
+  add_column(file_name = "B5S1_f01_f12")
 }
 B5S2_f01_f12 <- mydat[205:216]
 B5S2_f01_f12_renamed <- list()
@@ -428,7 +449,8 @@ for (i in 1:12) {
   rename(TUMOR_129C_B5S2_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B5S2_f01_f12 = "130N") %>%
   rename(NAT_130C_B5S2_f01_f12 = "130C") %>%
-  rename(REF_131_B5S2_f01_f12 = "131")
+  rename(REF_131_B5S2_f01_f12 = "131") %>%
+  add_column(file_name = "B5S2_f01_f12")
 }
 B5S3_f01_f12 <- mydat[217:228]
 B5S3_f01_f12_renamed <- list()
@@ -443,7 +465,8 @@ for (i in 1:12) {
   rename(TUMOR_129C_B5S3_f01_f12 = "129C") %>%
   rename(NAT_130N_B5S3_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B5S3_f01_f12 = "130C") %>%
-  rename(REF_131_B5S3_f01_f12 = "131")
+  rename(REF_131_B5S3_f01_f12 = "131") %>%
+  add_column(file_name = "B5S3_f01_f12")
 }
 B5S4_f01_f12 <- mydat[229:240]
 B5S4_f01_f12_renamed <- list()
@@ -458,7 +481,8 @@ for (i in 1:12) {
   rename(NAT_129C_B5S4_f01_f12 = "129C") %>%
   rename(NAT_130N_B5S4_f01_f12 = "130N") %>%
   rename(NAT_130C_B5S4_f01_f12 = "130C") %>%
-  rename(REF_131_B5S4_f01_f12 = "131")
+  rename(REF_131_B5S4_f01_f12 = "131") %>%
+  add_column(file_name = "B5S4_f01_f12")
 }
 B5S5_f01_f12 <- mydat[241:252]
 B5S5_f01_f12_renamed <- list()
@@ -473,7 +497,8 @@ for (i in 1:12) {
   rename(TUMOR_129C_B5S5_f01_f12 = "129C") %>%
   rename(NAT_130N_B5S5_f01_f12 = "130N") %>%
   rename(NAT_130C_B5S5_f01_f12 = "130C") %>%
-  rename(REF_131_B5S5_f01_f12 = "131")
+  rename(REF_131_B5S5_f01_f12 = "131") %>%
+  add_column(file_name = "B5S5_f01_f12")
 }
 B5S6_f01_f12 <- mydat[253:264]
 B5S6_f01_f12_renamed <- list()
@@ -488,7 +513,8 @@ for (i in 1:12) {
   rename(NAT_129C_B5S6_f01_f12 = "129C") %>%
   rename(NAT_130N_B5S6_f01_f12 = "130N") %>%
   rename(REF_130C_B5S6_f01_f12 = "130C") %>%
-  rename(REF_131_B5S6_f01_f12 = "131")
+  rename(REF_131_B5S6_f01_f12 = "131") %>%
+  add_column(file_name = "B5S6_f01_f12")
 }
 
 
@@ -516,18 +542,35 @@ dat <- bind_rows(
   B5S5_f01_f12_renamed,
   B5S6_f01_f12_renamed
 )
-view(head(dat))
+#Save this
+write.table(dat, file="/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/data_input.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = TRUE)
+dat <- read.csv(file="/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/data_input.txt", sep="\t")
+
+
+
+NA_zero <- dat %>%
+mutate_all(funs(ifelse(is.na(.), 0, .)))
+
+if(NA_zero$file_name) {
+  group_by(Sequence) %>%
+  summarise(sum("NAT_126_B1S1_f01_f12":"REF_131_B5S6_f01_f12"))
+}
+
+
+
+
 
   #Here something still need to happen
     #introduce NAs
     dat <- dat %>% mutate_all(na_if,"")
     dat %>% mutate_each(funs(empty_as_na)) 
     #OR only keep proteins present in all rows
-grouped <- dat %>% 
-    group_by(Sequence)%>%
-    summarise_all(across(everything(), ~toString(.)))
+grouped <- dat %>%
+    mutate_all(funs(ifelse(is.na(.), 0, .))) %>%
+    group_by(Sequence) %>%
+    summarise(sum("NAT_126_B1S1_f01_f12":"REF_131_B5S6_f01_f12"))
 
-view(head(grouped))
+view(head(dat))
 nrow(grouped)
 nrow(dat)
 cha <- c(
