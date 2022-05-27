@@ -27,6 +27,18 @@ library("remotes")
 library("janitor")
 library("stringr")
 
+wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab")
+getwd() 
+list.files(wd)
+    #Automate filename extraction
+(file_name_long <- list.files(wd))
+(file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab"))
+(file_names_short <- substring(file_name_long, 39, 46)) 
+length(file_names_short)
+
+
+
+
 
 #TMT spectra, count rows
 TMT <- readRDS("/Users/jensvandeperre/Desktop/Outputs/TMTs/ALL_TMTs_16.05.22")
@@ -37,19 +49,29 @@ for (i in 1:264) {
 }
 
 #PSMs from ANN-SoLo
-AS <- readRDS("/Users/jensvandeperre/Desktop/Outputs/PSMs/ALL_PSMs_4.5.22")
+AS <- readRDS("/Users/jensvandeperre/Desktop/Outputs/PSM_TMT_linked/ALL_PSM_TMT_Linked")
+view(AS[[1]])
 AS_count <- list()
 for (i in 1:264) {
-    AS_count[[i]] <- ANN_SoLo[[i]] %>% 
-    nrow()
+    AS_count[[i]] <- AS[[i]] %>% 
+    n_distinct()
 }
+AS_count[[1]]
+
 
 #PSMs original study
-(file_paths_Original <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/"))
+(file_paths_Original <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/Orig_study_PSMs"))
 ORIG <- list()
 for (i in 1:264) {
   ORIG[[i]] <- read.csv(file_paths_Original[[i]], header = FALSE, sep = ",")
 }
+
+
+for (i in 1:264) {
+write.csv2(ORIG[[i]], file= paste("Users/jensvandeperre/Desktop/Inputs/Original_study", file_name_long[[i]], ".csv"]), sep=",", row.names=FALSE, quote=FALSE, col.names = TRUE)
+}
+
+
 OS_count <- list()
 for (i in 1:264) {
     OS_count[[i]] <- ORIG[[i]] %>% 
