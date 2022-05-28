@@ -98,7 +98,7 @@ pep_IP <- ggplot(tbl_Identification_percentage, aes(x= Study , y= Identification
   theme_gray()
   #Print pep_IP
 pep_IP
-pdf(file = "~/Desktop/Outputs/Plots/Identification_Percentage.pdf")
+pdf(file = "~/Desktop/Outputs/Plots/Peptide_Identification_Percentage.pdf")
    pep_IP
 dev.off()
 
