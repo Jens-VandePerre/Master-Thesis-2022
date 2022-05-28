@@ -31,91 +31,138 @@ wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab")
 getwd() 
 list.files(wd)
     #Automate filename extraction
-(file_name_long <- list.files(wd))
+(file_name_long <- substring(list.files(wd), 1, 46))
 (file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab"))
 (file_names_short <- substring(file_name_long, 39, 46)) 
 length(file_names_short)
 
-
-
-
-
 #TMT spectra, count rows
 TMT <- readRDS("/Users/jensvandeperre/Desktop/Outputs/TMTs/ALL_TMTs_16.05.22")
-spec_count <- list()
+view(TMT[[1]])
+spec_list_count <- list()
 for (i in 1:264) {
-    spec_count[[i]] <- TMT[[i]] %>% 
+    spec_list_count[[i]] <- TMT[[i]] %>% 
     n_distinct()
 }
+TMT_count <- Reduce("+", spec_list_count)
 
 #PSMs from ANN-SoLo
 AS <- readRDS("/Users/jensvandeperre/Desktop/Outputs/PSM_TMT_linked/ALL_PSM_TMT_Linked")
 view(AS[[1]])
-AS_count <- list()
+AS_list_count <- list()
 for (i in 1:264) {
-    AS_count[[i]] <- AS[[i]] %>% 
+    AS_list_count[[i]] <- AS[[i]] %>% 
     n_distinct()
 }
-AS_count[[1]]
-
+AS_count <- Reduce("+", AS_list_count)
 
 #PSMs original study
+  #Loading in files
 (file_paths_Original <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/Orig_study_PSMs"))
 ORIG <- list()
 for (i in 1:264) {
-  ORIG[[i]] <- read.csv(file_paths_Original[[i]], header = FALSE, sep = ",")
+  ORIG[[i]] <- read.csv(file_paths_Original[[i]], sep="\t", row.names = NULL)
 }
-
-
+view(ORIG[[1]])
+saveRDS(ORIG, file = "/Users/jensvandeperre/Desktop/Inputs/Original_study_saved_list/Original_study_PSMs")
+ORIG_PSM <- readRDS(file = "/Users/jensvandeperre/Desktop/Inputs/Original_study_saved_list/Original_study_PSMs")
+view(ORIG_PSM[[1]])
+  #Counting rows
+OS_list_count <- list()
 for (i in 1:264) {
-write.csv2(ORIG[[i]], file= paste("Users/jensvandeperre/Desktop/Inputs/Original_study", file_name_long[[i]], ".csv"]), sep=",", row.names=FALSE, quote=FALSE, col.names = TRUE)
+    OS_list_count[[i]] <- ORIG_PSM[[i]] %>% 
+    nrow() 
 }
+OS_count <- Reduce("+", OS_list_count)
 
 
-OS_count <- list()
-for (i in 1:264) {
-    OS_count[[i]] <- ORIG[[i]] %>% 
-    nrow()
-}
-
-#ANN-Solo identification %
-AS_IP <- list()
-for(i in 1:264) {
-    AS_IP[[i]] <- paste((AS_count[[i]]/TMT[[i]])*100, "%")
-}
-mean(AS_IP)
-median(AS_IP)
-
-#ANN-Solo identification %
-OS_IP <- list()
-for(i in 1:264) {
-    OS_IP[[i]] <- (OS_count[[i]]/TMT[[i]])*100
-}
-mean(OS_IP)
-median(OS_IP)
 
 
-perc <- list() #empty list
-for (i in seq_along(Identified_peptides)) { #Only for the first 6 spectra, 
-  perc[[i]] <- (Identified_peptides[[i]]/Spectral_count[[i]])*100
-}
-Identification_percentage <- set_names(perc, file_names_short) #names each file by file_names_short
-Identification_percentage
-  #Making tibble of Identification_percentage, for plot
-df_perc <- matrix(unlist(Identification_percentage), nrow=length(Identification_percentage), byrow=TRUE)
-tbl_Identification_percentage <- tibble(File_Name=file_names_short , Identification_Percentage=df_perc)
+#Plot Peptide Identification Percentage
+  #ANN-Solo identification %
+  ANN_SoLo <- (AS_count/TMT_count)*100
+  #Original Study identification %
+  Original_study <- (OS_count/TMT_count)*100
+  #Making tibble 
+tbl_Identification_percentage <- tibble(Study=c("ANN-SoLo", "Original Study") , Identification_Percentage=c(ANN_SoLo, Original_study))
 tbl_Identification_percentage
   #Plot
-p_perc <- ggplot(tbl_Identification_percentage, aes(x= File_Name , y= Identification_Percentage)) +
-  geom_col() +
-  labs(x="File Name", y="Percentage Identified Spectra (%)", title="Identification Percentage" , 
-        subtitle="Percentage of identified peptides for each file with spectra") +
-  geom_text(aes(label=round(df_perc, digits = 1)), 
+pep_IP <- ggplot(tbl_Identification_percentage, aes(x= Study , y= Identification_Percentage)) +
+  geom_col(width = 0.5) +
+  labs(x="Study", y="Percentage Identified Spectra (%)", title="Peptide Identification Percentage" , 
+        subtitle="Comparing the peptide identification percentages of ANN-SoLo and the Original Study") +
+  geom_text(aes(label=round(Identification_Percentage, digits = 1)), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 2.5) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1, size = 10), axis.text.y = element_text(size = 10),
-            plot.title = element_text(size = 18))
-  #Print p_perc
-p_perc
+  theme(axis.text.x = element_text(size = 10), axis.text.y = element_text(size = 10),
+            plot.title = element_text(size = 18)) +
+  theme_gray()
+  #Print pep_IP
+pep_IP
 pdf(file = "~/Desktop/Outputs/Plots/Identification_Percentage.pdf")
-   p_perc
+   pep_IP
 dev.off()
+
+
+
+
+
+
+
+
+#Most common PTM
+
+#Most found protein
+
+#Identification percentage of proteins
+  #ANN-Solo identification %
+  ANN_SoLo <- (AS_count/TMT_count)*100
+  #Original Study identification %
+  Original_study <- (OS_count/TMT_count)*100
+  #Making tibble 
+tbl_Identification_percentage <- tibble(Study=c("ANN-SoLo", "Original Study") , Identification_Percentage=c(ANN_SoLo, Original_study))
+tbl_Identification_percentage
+  #Plot
+pro_IP <- ggplot(tbl_Identification_percentage, aes(x= Study , y= Identification_Percentage)) +
+  geom_col(width = 0.5) +
+  labs(x="Study", y="Percentage Identified Proteins (%)", title="Protein Identification Percentage" , 
+        subtitle="Comparing the protein identification percentages of ANN-SoLo and the Original Study") +
+  geom_text(aes(label=round(Identification_Percentage, digits = 1)), 
+               position=position_dodge(width=0.9), vjust=-0.25, size = 2.5) +
+  theme(axis.text.x = element_text(size = 10), axis.text.y = element_text(size = 10),
+            plot.title = element_text(size = 18)) +
+  theme_gray()
+  #Print pep_IP
+pro_IP
+pdf(file = "~/Desktop/Outputs/Plots/Identification_Percentage.pdf")
+   pro_IP
+dev.off()
+
+#Total amount of peptides identified
+  #Making tibble
+tbl_Identification_total <- tibble(Study=c("ANN-SoLo", "Original Study") , Identification_count=c(AS_count, OS_count)) %>%
+  mutate(Difference = AS_count - OS_count)
+tbl_Identification_total
+  #Plot
+pep_IT <- ggplot(tbl_Identification_total, aes(x= Study , y= Identification_count)) +
+  geom_col(width = 0.5) +
+  labs(x = "Study", y = "Identified Peptides", 
+        title = "Total Identified Peptides", 
+        subtitle = "Comparing total peptide identification of ANN-SoLo and the Original Study") +
+  geom_text(aes(label=round(tbl_Identification_total)), 
+        position = position_dodge(width = 0.9), vjust = -0.25, size = 2.5) +
+  theme(axis.text.x = element_text(size = 10),
+        axis.text.y = element_text(size = 10),
+        plot.title = element_text(size = 18)) +
+  theme_gray()
+  #Print pep_IP
+pep_IT
+pdf(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Total_Identified_Peptides.pdf")
+   pep_IT
+dev.off()
+
+#Total amount of proteins identified
+
+#Comparing amount of unique peptides found
+
+#Comparing amount of unique proteins found
+
