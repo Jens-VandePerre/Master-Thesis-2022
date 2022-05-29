@@ -33,7 +33,7 @@ list.files(wd)
     #Automate filename extraction
 (file_name_long <- substring(list.files(wd), 1, 46))
 (file_paths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab"))
-(file_names_short <- substring(file_name_long, 39, 46)) 
+(file_names_short <- substring(file_name_long, 39, 46))
 length(file_names_short)
 
 #TMT spectra, count rows
@@ -58,13 +58,6 @@ AS_count <- Reduce("+", AS_list_count)
 
 #PSMs original study
   #Loading in files
-(file_paths_Original <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/Orig_study_PSMs"))
-ORIG <- list()
-for (i in 1:264) {
-  ORIG[[i]] <- read.csv(file_paths_Original[[i]], sep="\t", row.names = NULL)
-}
-view(ORIG[[1]])
-saveRDS(ORIG, file = "/Users/jensvandeperre/Desktop/Inputs/Original_study_saved_list/Original_study_PSMs")
 ORIG_PSM <- readRDS(file = "/Users/jensvandeperre/Desktop/Inputs/Original_study_saved_list/Original_study_PSMs")
 view(ORIG_PSM[[1]])
   #Counting rows
@@ -88,14 +81,14 @@ tbl_Identification_percentage <- tibble(Study=c("ANN-SoLo", "Original Study") , 
 tbl_Identification_percentage
   #Plot
 pep_IP <- ggplot(tbl_Identification_percentage, aes(x= Study , y= Identification_Percentage)) +
-  geom_col(width = 0.5) +
+  geom_col(width = 0.40) +
   labs(x="Study", y="Percentage Identified Spectra (%)", title="Peptide Identification Percentage" , 
         subtitle="Comparing the peptide identification percentages of ANN-SoLo and the Original Study") +
-  geom_text(aes(label=round(Identification_Percentage, digits = 1)), 
-               position=position_dodge(width=0.9), vjust=-0.25, size = 2.5) +
-  theme(axis.text.x = element_text(size = 10), axis.text.y = element_text(size = 10),
-            plot.title = element_text(size = 18)) +
-  theme_gray()
+  geom_text(aes(label=round(Identification_Percentage, digits = 0.75)), 
+               position=position_dodge(width=0.9), vjust=-0.25, size = 3.5) +
+  theme(axis.text = element_text(size = 11),
+        axis.title = element_text(size = 15),
+        plot.title = element_text(size = 18)) 
   #Print pep_IP
 pep_IP
 pdf(file = "~/Desktop/Outputs/Plots/Peptide_Identification_Percentage.pdf")
@@ -127,13 +120,14 @@ pro_IP <- ggplot(tbl_Identification_percentage, aes(x= Study , y= Identification
   labs(x="Study", y="Percentage Identified Proteins (%)", title="Protein Identification Percentage" , 
         subtitle="Comparing the protein identification percentages of ANN-SoLo and the Original Study") +
   geom_text(aes(label=round(Identification_Percentage, digits = 1)), 
-               position=position_dodge(width=0.9), vjust=-0.25, size = 2.5) +
-  theme(axis.text.x = element_text(size = 10), axis.text.y = element_text(size = 10),
-            plot.title = element_text(size = 18)) +
-  theme_gray()
+               position=position_dodge(width=0.9), vjust=-0.25, size = 3.5) +
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 15),
+        plot.title = element_text(size = 18)) 
+  
   #Print pep_IP
 pro_IP
-pdf(file = "~/Desktop/Outputs/Plots/Identification_Percentage.pdf")
+pdf(file = )
    pro_IP
 dev.off()
 
@@ -144,16 +138,15 @@ tbl_Identification_total <- tibble(Study=c("ANN-SoLo", "Original Study") , Ident
 tbl_Identification_total
   #Plot
 pep_IT <- ggplot(tbl_Identification_total, aes(x= Study , y= Identification_count)) +
-  geom_col(width = 0.5) +
+  geom_col(width = 0.4) +
   labs(x = "Study", y = "Identified Peptides", 
         title = "Total Identified Peptides", 
         subtitle = "Comparing total peptide identification of ANN-SoLo and the Original Study") +
-  geom_text(aes(label=round(tbl_Identification_total)), 
-        position = position_dodge(width = 0.9), vjust = -0.25, size = 2.5) +
-  theme(axis.text.x = element_text(size = 10),
-        axis.text.y = element_text(size = 10),
-        plot.title = element_text(size = 18)) +
-  theme_gray()
+  geom_text(aes(label=c(AS_count, OS_count)), 
+        position = position_dodge(width = 0.9), vjust = -0.25, size = 3.5) +
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 15),
+        plot.title = element_text(size = 18))
   #Print pep_IP
 pep_IT
 pdf(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Total_Identified_Peptides.pdf")
@@ -161,6 +154,31 @@ pdf(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Total_Identified_Peptide
 dev.off()
 
 #Total amount of proteins identified
+#TMT global proteomic analysis of the 96 tumor and NAT pairs identified a total of 8,067 proteins
+OS_pro_count <- 8067
+AS_pro_count <- 
+
+tbl_pro_Identification_total <- tibble(Study=c("ANN-SoLo", "Original Study") , Identification_count=c(AS_pro_count, OS_pro_count)) %>%
+  mutate(Difference = AS_pro_count - OS_pro_count)
+tbl_pro_Identification_total
+  #Plot
+pep_IT <- ggplot(tbl_pro_Identification_total, aes(x= Study , y= Identification_count)) +
+  geom_col(width = 0.4) +
+  labs(x = "Study", y = "Identified Proteins", 
+        title = "Total Identified Proteins", 
+        subtitle = "Comparing total proteins identification of ANN-SoLo and the Original Study") +
+  geom_text(aes(label=c(AS_pro_count, OS_pro_count)), 
+        position = position_dodge(width = 0.9), vjust = -0.25, size = 3.5) +
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 15),
+        plot.title = element_text(size = 18))
+  #Print pep_IP
+pep_IT
+pdf(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Total_Identified_Proteins.pdf")
+   pep_IT
+dev.off()
+
+
 
 #Comparing amount of unique peptides found
 

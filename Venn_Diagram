@@ -89,7 +89,6 @@ write.table(ANN_SoLo_no_mod, file="/Users/jensvandeperre/Desktop/Inputs/Venn_dia
 write.table(ANN_SoLo_no_mod_unique, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod_unique.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
 
 
-
                 #Load dataframes, only modified peptides
             file_paths_annsolo_mod <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10")
             PSM_only_mod <- list()
