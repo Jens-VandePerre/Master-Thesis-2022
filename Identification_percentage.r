@@ -84,7 +84,7 @@ pep_IP <- ggplot(tbl_Identification_percentage, aes(x= Study , y= Identification
   geom_col(width = 0.45, fill = c("#56B4E9", "#E69F00")) +
   labs(x="Study", y="Percentage Identified Spectra (%)", title="Peptide Identification Percentage" , 
         subtitle="Comparing the peptide identification percentages of the Original Study and ANN-SoLo") +
-  geom_text(aes(label=round(c(Original_study, ANN_SoLo), digits = 0.1)), 
+  geom_text(aes(label=round(c(Original_study, ANN_SoLo), digits = 1)), 
                position=position_dodge(width=0.9), vjust=-0.25, size = 3.5) +
   theme(axis.text = element_text(size = 11),
         axis.title = element_text(size = 15),
@@ -134,7 +134,7 @@ tbl_pro_Identification_total <- tibble(Study=c("Original Study", "ANN-SoLo") , I
   mutate(Difference = AS_pro_count - OS_pro_count)
 tbl_pro_Identification_total
   #Plot
-pep_IT2 <- ggplot(tbl_pro_Identification_total, aes(x= Study , y= Identification_count)) +
+pro_IT <- ggplot(tbl_pro_Identification_total, aes(x= Study , y= Identification_count)) +
   geom_col(width = 0.45, fill = c("#56B4E9", "#E69F00")) +
   labs(x = "Study", y = "Identified Proteins",
         title = "Unique Identified Proteins",
@@ -145,9 +145,9 @@ pep_IT2 <- ggplot(tbl_pro_Identification_total, aes(x= Study , y= Identification
         axis.title = element_text(size = 15),
         plot.title = element_text(size = 18))
   #Print pep_IP
-pep_IT
+pro_IT
 png(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Unique_Identified_Proteins.png")
-   pep_IT
+   pro_IT
 dev.off()
 
 #Comparing amount of unique peptides found
