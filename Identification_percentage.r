@@ -45,6 +45,7 @@ for (i in 1:264) {
     n_distinct()
 }
 TMT_count <- Reduce("+", spec_list_count) #9547320
+TMT_count <- 9547320
 
 #PSMs from ANN-SoLo
 AS <- readRDS("/Users/jensvandeperre/Desktop/Outputs/PSM_TMT_linked/ALL_PSM_TMT_Linked")
@@ -55,6 +56,7 @@ for (i in 1:264) {
     n_distinct()
 }
 AS_count <- Reduce("+", AS_list_count) #4652819
+AS_count <- 4652819
 
 #PSMs original study
   #Loading in files
@@ -67,6 +69,7 @@ for (i in 1:264) {
     nrow() 
 }
 OS_count <- Reduce("+", OS_list_count) #3441708
+OS_count <- 3441708
 
 #Plot Peptide Identification Percentage
   #ANN-Solo identification %
