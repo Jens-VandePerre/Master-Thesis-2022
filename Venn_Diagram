@@ -88,6 +88,9 @@ nrow(ANN_SoLo_no_mod_unique) #Over 20000 unique peptides identified
 write.table(ANN_SoLo_no_mod, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
 write.table(ANN_SoLo_no_mod_unique, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod_unique.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
 
+OS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Original_study.txt", header=FALSE)
+AS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod.txt", header=FALSE)
+
 
                 #Load dataframes, only modified peptides
             file_paths_annsolo_mod <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10")
@@ -115,23 +118,22 @@ write.table(ANN_SoLo_no_mod_unique, file="/Users/jensvandeperre/Desktop/Inputs/V
 #Creating Venn Diagram 
     #Coparing all ANN-SoLo peptides to original study
         #1 file
-ANN_vs_ORG_1_file <- list(
-    ANN_SoLo = unlist(annsolo[[1]]),
-    Original_study = unlist(orig[[1]])
+ANN_vs_ORG <- list(
+    "ANN-SoLo" = AS, 
+    "Original Study" = OS
 )
-venn1 <- ggvenn(ANN_vs_ORG_1_file,
-    aes(ANN_SoLo = (annsolo[[1]]), Original_study = (orig[[1]]))
-)
-venn1 +
-geom_venn(
+ggvenn(ANN_vs_ORG, c("ANN-SoLo", "Original Study"))
+
+venn1 <- ggvenn(ANN_vs_ORG,
+    c("ANN-SoLo", "Original Study")) +
+    geom_venn(
     text_size = 3,
-    fill_color = c("#FFFF00", "#3399FF"),
+    fill_color = c("#E69F00", "#56B4E9"),
     stroke_size = 0.5,
-    set_name_size = 6
-)
+    set_name_size = 6)
 
 
-venn2 <- venn.diagram(ANN_vs_ORG_1_file)
+venn2 <- venn.diagram(ANN_vs_ORG)
 venn2 %>%
 venn.diagram(
     category.names = c("ANN-SoLo", "Original Study"),
