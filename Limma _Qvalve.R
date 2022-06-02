@@ -43,48 +43,6 @@ PSM_TMT_ALL <- readRDS("/Users/jensvandeperre/Desktop/Outputs/PSM_TMT_linked/ALL
 nrow(PSM_TMT_ALL[[1]])
 view(PSM_TMT_ALL[[1]])
 
-                      #Load identified PTMs
-                      (ptm_filepaths <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10"))
-                      PTM <- list()
-                      for (i in 1:264) {
-                        PTM[[i]] <- read.csv(ptm_filepaths[[i]], sep = ",", header = TRUE)
-                      }
-                      view(PTM[[1]])
-                      nrow(PTM[[1]])
-                      length(PTM)
-                        #Create index for matching to PSM_TMT
-                      ptm_index <- list()
-                      for (i in 1:264) {
-                        ptm_index[[i]] <- PTM[[i]] %>%
-                          as_tibble() %>%
-                          mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 "))) %>%
-                          mutate(index = trimws(str_remove_all(index, "controllerNumber=1 "))) %>%
-                          mutate(index = trimws(str_remove_all(index, "scan=")))
-                      }
-                      view(ptm_index[[1]])
-
-                        #merge to PSM_TMT
-                      PTM_PSM_TMT <- list()
-                      for (i in 1:264) {
-                        PTM_PSM_TMT[[i]] <- merge(PSM_TMT[[i]], ptm_index[[i]], by = "index")
-                      }
-                      view(PTM_PSM_TMT[[1]])
-                      length(PTM_PSM_TMT)
-
-                    #Make PTM_PSM_TMT ready for merge to PIA output
-                    #Select the needed columns
-                    PTM_PSM_TMT_input <- list()
-                    for (i in 1:264) {
-                      PTM_PSM_TMT_input[[i]] <- PSM_TMT_ALL[[i]] %>% 
-                      as_tibble() %>%
-                      select(index, sequence, sequence_no_mod, "126":"131", charge) %>%
-                      mutate(file_name = file_names_short[[i]]) 
-                    }
-                    view(PTM_PSM_TMT_input[[1]])
-                    view(PTM_PSM_TMT_input[[2]])
-                    view(PTM_PSM_TMT_input[[69]])
-                    length(PTM_PSM_TMT_input)
-
 #Load protein info from PIA output
 (file_paths_PIA <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PIA_analysis"))
 PIA <- list()
@@ -160,8 +118,6 @@ length(mydat)
 
 saveRDS(mydat, file = "/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/data_before_name_change")
 mydat <- readRDS("/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/data_before_name_change")
-
-
 #Renaming TMTs based on sample type
 B1S1_f01_f12 <- mydat[1:12]
 B1S1_f01_f12_renamed <- list()
@@ -177,8 +133,7 @@ for (i in 1:12) {
   rename(TUMOR_129C_B1S1_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B1S1_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B1S1_f01_f12 = "130C") %>%
-  rename(REF_131_B1S1_f01_f12 = "131") %>%
-  add_column(file_name = "B1S1_f01_f12")
+  rename(REF_131_B1S1_f01_f12 = "131") 
 }
 B1S2_f01_f12 <- mydat[13:24]
 B1S2_f01_f12_renamed <- list()
@@ -517,64 +472,8 @@ for (i in 1:12) {
   add_column(file_name = "B5S6_f01_f12")
 }
 
-
-dat <- bind_rows(
-  B1S1_f01_f12_renamed,
-  B1S2_f01_f12_renamed,
-  B1S3_f01_f12_renamed,
-  B1S4_f01_f12_renamed,
-  B2S1_f01_f12_renamed,
-  B2S2_f01_f12_renamed,
-  B2S3_f01_f12_renamed,
-  B2S4_f01_f12_renamed,
-  B3S1_f01_f12_renamed,
-  B3S2_f01_f12_renamed,
-  B3S3_f01_f12_renamed,
-  B3S4_f01_f12_renamed,
-  B4S1_f01_f12_renamed,
-  B4S2_f01_f12_renamed,
-  B4S3_f01_f12_renamed,
-  B4S4_f01_f12_renamed,
-  B5S1_f01_f12_renamed,
-  B5S2_f01_f12_renamed,
-  B5S3_f01_f12_renamed,
-  B5S4_f01_f12_renamed,
-  B5S5_f01_f12_renamed,
-  B5S6_f01_f12_renamed
-)
-#Save this
-write.table(dat, file="/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/data_input.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = TRUE)
-dat <- read.csv(file="/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/data_input.txt", sep="\t")
-
-
-
-NA_zero <- dat %>%
-mutate_all(funs(ifelse(is.na(.), 0, .)))
-
-if(NA_zero$file_name) {
-  group_by(Sequence) %>%
-  summarise(sum("NAT_126_B1S1_f01_f12":"REF_131_B5S6_f01_f12"))
-}
-
-
-
-
-
-  #Here something still need to happen
-    #introduce NAs
-    dat <- dat %>% mutate_all(na_if,"")
-    dat %>% mutate_each(funs(empty_as_na)) 
-    #OR only keep proteins present in all rows
-grouped <- dat %>%
-    mutate_all(funs(ifelse(is.na(.), 0, .))) %>%
-    group_by(Sequence) %>%
-    summarise(sum("NAT_126_B1S1_f01_f12":"REF_131_B5S6_f01_f12"))
-
-view(head(dat))
-nrow(grouped)
-nrow(dat)
-cha <- c(
-    "NAT_126_B1S1_f01_f12", 
+#Identify Character names for each batch
+cha_batch1 <- c("NAT_126_B1S1_f01_f12", 
 "NAT_127N_B1S1_f01_f12", 
 "TUMOR_127C_B1S1_f01_f12", 
 "TUMOR_128N_B1S1_f01_f12", 
@@ -583,8 +482,9 @@ cha <- c(
 "TUMOR_129C_B1S1_f01_f12", 
 "TUMOR_130N_B1S1_f01_f12", 
 "TUMOR_130C_B1S1_f01_f12", 
-"REF_131_B1S1_f01_f12", 
-"NAT_126_B1S2_f01_f12", 
+"REF_131_B1S1_f01_f12"
+)
+cha_batch2 <- c("NAT_126_B1S2_f01_f12", 
 "TUMOR_127N_B1S2_f01_f12", 
 "NAT_127C_B1S2_f01_f12", 
 "TUMOR_128N_B1S2_f01_f12", 
@@ -594,7 +494,8 @@ cha <- c(
 "TUMOR_130N_B1S2_f01_f12", 
 "TUMOR_130C_B1S2_f01_f12", 
 "REF_131_B1S2_f01_f12", 
-"TUMOR_126_B1S3_f01_f12", 
+)
+cha_batch3 <- c("TUMOR_126_B1S3_f01_f12", 
 "NAT_127N_B1S3_f01_f12", 
 "TUMOR_127C_B1S3_f01_f12", 
 "NAT_128N_B1S3_f01_f12", 
@@ -604,7 +505,8 @@ cha <- c(
 "TUMOR_130N_B1S3_f01_f12", 
 "TUMOR_130C_B1S3_f01_f12", 
 "REF_131_B1S3_f01_f12", 
-"NAT_161_B1S4_f01_f12", 
+)
+cha_batch4 <- c("NAT_161_B1S4_f01_f12", 
 "TUMOR_127N_B1S4_f01_f12", 
 "NAT_127C_B1S4_f01_f12", 
 "TUMOR_128N_B1S4_f01_f12", 
@@ -614,7 +516,8 @@ cha <- c(
 "NAT_130N_B1S4_f01_f12", 
 "TUMOR_130C_B1S4_f01_f12", 
 "REF_131__B1S4_f01_f12", 
-"TUMOR_126_B2S1_f01_f12", 
+)
+cha_batch5 <- c("TUMOR_126_B2S1_f01_f12", 
 "TUMOR_127N_B2S1_f01_f12", 
 "TUMOR_127C_B2S1_f01_f12", 
 "NAT_128N_B2S1_f01_f12", 
@@ -624,7 +527,8 @@ cha <- c(
 "TUMOR_130N_B2S1_f01_f12", 
 "TUMOR_130C_B2S1_f01_f12", 
 "REF_131_B2S1_f01_f12", 
-"TUMOR_126_B2S2_f01_f12", 
+)
+cha_batch6 <- c("TUMOR_126_B2S2_f01_f12", 
 "TUMOR_127N_B2S2_f01_f12", 
 "TUMOR_127C_B2S2_f01_f12", 
 "NAT_128N_B2S2_f01_f12", 
@@ -634,7 +538,8 @@ cha <- c(
 "TUMOR_130N_B2S2_f01_f12", 
 "TUMOR_130C_B2S2_f01_f12", 
 "REF_131_B2S2_f01_f12", 
-"TUMOR_126_B2S3_f01_f12", 
+)
+cha_batch7 <- c("TUMOR_126_B2S3_f01_f12", 
 "NAT_127N_B2S3_f01_f12", 
 "TUMOR_127C_B2S3_f01_f12", 
 "NAT_128N_B2S3_f01_f12", 
@@ -644,7 +549,8 @@ cha <- c(
 "TUMOR_130N_B2S3_f01_f12", 
 "NAT_130C_B2S3_f01_f12", 
 "REF_131_B2S3_f01_f12", 
-"TUMOR_126_B2S4_f01_f12", 
+)
+cha_batch8 <- c("TUMOR_126_B2S4_f01_f12", 
 "TUMOR_127N_B2S4_f01_f12", 
 "NAT_127C_B2S4_f01_f12", 
 "NAT_128N_B2S4_f01_f12", 
@@ -654,7 +560,8 @@ cha <- c(
 "TUMOR_130N_B2S4_f01_f12", 
 "NAT_130C_B2S4_f01_f12", 
 "REF_131_B2S4_f01_f12", 
-"TUMOR_126_B3S1_f01_f12", 
+)
+cha_batch9 <- c("TUMOR_126_B3S1_f01_f12", 
 "NAT_127N_B3S1_f01_f12", 
 "NAT_127C_B3S1_f01_f12", 
 "TUMOR_128N_B3S1_f01_f12", 
@@ -664,7 +571,8 @@ cha <- c(
 "TUMOR_130N_B3S1_f01_f12", 
 "TUMOR_130C_B3S1_f01_f12", 
 "REF_131_B3S1_f01_f12", 
-"NAT_126_B3S2_f01_f12", 
+)
+cha_batch10 <- c("NAT_126_B3S2_f01_f12", 
 "NAT_127N_B3S2_f01_f12", 
 "NAT_127C_B3S2_f01_f12", 
 "NAT_128N_B3S2_f01_f12", 
@@ -674,7 +582,8 @@ cha <- c(
 "TUMOR_130N_B3S2_f01_f12", 
 "TUMOR_130C_B3S2_f01_f12", 
 "REF_131_B3S2_f01_f12", 
-"TUMOR_126_B3S3_f01_f12", 
+)
+cha_batch11 <- c("TUMOR_126_B3S3_f01_f12", 
 "NAT_127N_B3S3_f01_f12", 
 "TUMOR_127C_B3S3_f01_f12", 
 "NAT_128N_B3S3_f01_f12", 
@@ -684,7 +593,8 @@ cha <- c(
 "TUMOR_130N_B3S3_f01_f12", 
 "NAT_130C_B3S3_f01_f12", 
 "REF_131_B3S3_f01_f12", 
-"NAT_126_B3S4_f01_f12", 
+)
+cha_batch12 <- c("NAT_126_B3S4_f01_f12", 
 "NAT_127N_B3S4_f01_f12", 
 "TUMOR_127C_B3S4_f01_f12", 
 "NAT_128N_B3S4_f01_f12", 
@@ -694,7 +604,8 @@ cha <- c(
 "NAT_130N_B3S4_f01_f12", 
 "NAT_130C_B3S4_f01_f12", 
 "REF_131_B3S4_f01_f12", 
-"NAT_126_B4S1_f01_f12", 
+)
+cha_batch13 <- c("NAT_126_B4S1_f01_f12", 
 "TUMOR_127N_B4S1_f01_f12", 
 "NAT_127C_B4S1_f01_f12", 
 "NAT_128N_B4S1_f01_f12", 
@@ -704,7 +615,8 @@ cha <- c(
 "NAT_130N_B4S1_f01_f12", 
 "NAT_130C_B4S1_f01_f12", 
 "REF_131_B4S1_f01_f12", 
-"NAT_126_B4S2_f01_f12", 
+)
+cha_batch14 <- c("NAT_126_B4S2_f01_f12", 
 "TUMOR_127N_B4S2_f01_f12", 
 "TUMOR_127C_B4S2_f01_f12", 
 "NAT_128N_B4S2_f01_f12", 
@@ -714,7 +626,8 @@ cha <- c(
 "TUMOR_130N_B4S2_f01_f12", 
 "NAT_130C_B4S2_f01_f12", 
 "REF_131_B4S2_f01_f12", 
-"TUMOR_126_B4S3_f01_f12", 
+)
+cha_batch15 <- c("TUMOR_126_B4S3_f01_f12", 
 "NAT_127N_B4S3_f01_f12", 
 "TUMOR_127C_B4S3_f01_f12", 
 "NAT_128N_B4S3_f01_f12", 
@@ -724,7 +637,8 @@ cha <- c(
 "TUMOR_130N_B4S3_f01_f12", 
 "NAT_130C_B4S3_f01_f12", 
 "REF_131_B4S3_f01_f12", 
-"TUMOR_126_B4S4_f01_f12", 
+)
+cha_batch16 <- c("TUMOR_126_B4S4_f01_f12", 
 "TUMOR_127N_B4S4_f01_f12", 
 "NAT_127C_B4S4_f01_f12", 
 "NAT_128N_B4S4_f01_f12", 
@@ -734,7 +648,8 @@ cha <- c(
 "NAT_130N_B4S4_f01_f12", 
 "NAT_130C_B4S4_f01_f12", 
 "REF_131_B4S4_f01_f12", 
-"NAT_126_B5S1_f01_f12", 
+)
+cha_batch17 <- c("NAT_126_B5S1_f01_f12", 
 "TUMOR_127N_B5S1_f01_f12", 
 "NAT_127C_B5S1_f01_f12", 
 "NAT_128N_B5S1_f01_f12", 
@@ -744,7 +659,8 @@ cha <- c(
 "TUMOR_130N_B5S1_f01_f12", 
 "TUMOR_130C_B5S1_f01_f12", 
 "REF_131_B5S1_f01_f12", 
-"NAT_126_B5S2_f01_f12", 
+)
+cha_batch18 <- c("NAT_126_B5S2_f01_f12", 
 "NAT_127N_B5S2_f01_f12", 
 "NAT_127C_B5S2_f01_f12", 
 "TUMOR_128N_B5S2_f01_f12", 
@@ -754,7 +670,8 @@ cha <- c(
 "TUMOR_130N_B5S2_f01_f12", 
 "NAT_130C_B5S2_f01_f12", 
 "REF_131_B5S2_f01_f12", 
-"TUMOR_126_B5S3_f01_f12", 
+)
+cha_batch19 <- c("TUMOR_126_B5S3_f01_f12", 
 "TUMOR_127N_B5S3_f01_f12", 
 "NAT_127C_B5S3_f01_f12", 
 "NAT_128N_B5S3_f01_f12", 
@@ -764,7 +681,8 @@ cha <- c(
 "NAT_130N_B5S3_f01_f12", 
 "TUMOR_130C_B5S3_f01_f12", 
 "REF_131_B5S3_f01_f12", 
-"TUMOR_126_B5S4_f01_f12", 
+)
+cha_batch20 <- c("TUMOR_126_B5S4_f01_f12", 
 "TUMOR_126_B5S4_f01_f12", 
 "TUMOR_127C_B5S4_f01_f12", 
 "NAT_128N_B5S4_f01_f12", 
@@ -774,7 +692,8 @@ cha <- c(
 "NAT_130N_B5S4_f01_f12", 
 "NAT_130C_B5S4_f01_f12", 
 "REF_131_B5S4_f01_f12", 
-"TUMOR_126_B5S5_f01_f12", 
+)
+cha_batch21 <- c("TUMOR_126_B5S5_f01_f12", 
 "TUMOR_127N_B5S5_f01_f12", 
 "TUMOR_127C_B5S5_f01_f12", 
 "NAT_128N_B5S5_f01_f12", 
@@ -784,7 +703,8 @@ cha <- c(
 "NAT_130N_B5S5_f01_f12", 
 "NAT_130C_B5S5_f01_f12", 
 "REF_131_B5S5_f01_f12", 
-"TUMOR_126_B5S6_f01_f12", 
+)
+cha_batch22 <- c("TUMOR_126_B5S6_f01_f12", 
 "NAT_127N_B5S6_f01_f12", 
 "NAT_127C_B5S6_f01_f12", 
 "NAT_128N_B5S6_f01_f12", 
@@ -795,6 +715,8 @@ cha <- c(
 "REF_130C_B5S6_f01_f12", 
 "REF_131_B5S6_f01_f12"
 )
+
+
 
 #Functions to load in
 read.peptides <- function(dat, cha){
@@ -894,10 +816,44 @@ eb.fit.mult <- function(dat, design){
 }
 
 #Start analysis
-(dat <- read.peptides(dat, cha))
-dim(dat)
+#read.peptides
+peptides1 <- list()
+cha1 <- c("NAT_126_B1S1_f01_f12", 
+"NAT_127N_B1S1_f01_f12", 
+"TUMOR_127C_B1S1_f01_f12", 
+"TUMOR_128N_B1S1_f01_f12", 
+"TUMOR_128C_B1S1_f01_f12", 
+"TUMOR_129N_B1S1_f01_f12", 
+"TUMOR_129C_B1S1_f01_f12", 
+"TUMOR_130N_B1S1_f01_f12", 
+"TUMOR_130C_B1S1_f01_f12", 
+"REF_131_B1S1_f01_f12")
+for (i in 1:10) {
+  peptides1[[i]] <- read.peptides(B1S1_f01_f12_renamed[[i]], cha1)
+}
+view(peptides1[[1]])
+view(B1S1_f01_f12_renamed[[1]])
+
+#(dat <- read.peptides(dat, cha)) #Loops
+dim(peptides1[[1]])
+dim(B1S1_f01_f12_renamed[[1]])
+
+
+#quantify.proteins
+proteins1 <- list()
+for (i in 1:10) {
+  proteins1[[i]] <- quantify.proteins(peptides1[[i]], cha1)
+}
+dim(proteins1[[1]])
+view(B1S1_f01_f12_renamed[[1]])
+view(peptides1[[1]])
+view(proteins1[[1]])
+
+
+sum(is.na(B1S1_f01_f12_renamed[[1]]))
+
 ####HIER DELEN??? door ref
-dat <- quantify.proteins(dat, cha)
+dat <- quantify.proteins(dat, cha) #Loops
 view(dat)
 dat.onehit <- subset(dat, dat$n.peptides == 1) 
 view(dat)
