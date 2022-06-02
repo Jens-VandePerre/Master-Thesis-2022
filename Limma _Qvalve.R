@@ -148,8 +148,7 @@ for (i in 1:12) {
   rename(NAT_129C_B1S2_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B1S2_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B1S2_f01_f12 = "130C") %>%
-  rename(REF_131_B1S2_f01_f12 = "131") %>%
-  add_column(file_name = "B1S2_f01_f12")
+  rename(REF_131_B1S2_f01_f12 = "131") 
 }
 B1S3_f01_f12 <- mydat[25:36]
 B1S3_f01_f12_renamed <- list()
@@ -164,8 +163,7 @@ for (i in 1:12) {
   rename(NAT_129C_B1S3_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B1S3_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B1S3_f01_f12 = "130C") %>%
-  rename(REF_131_B1S3_f01_f12 = "131") %>%
-  add_column(file_name = "B1S3_f01_f12")
+  rename(REF_131_B1S3_f01_f12 = "131") 
 }
 B1S4_f01_f12 <- mydat[37:48]
 B1S4_f01_f12_renamed <- list()
@@ -180,8 +178,7 @@ for (i in 1:12) {
   rename(TUMOR_129C_B1S4_f01_f12 = "129C") %>%
   rename(NAT_130N_B1S4_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B1S4_f01_f12 = "130C") %>%
-  rename(REF_131__B1S4_f01_f12 = "131") %>%
-  add_column(file_name = "B1S4_f01_f12")
+  rename(REF_131__B1S4_f01_f12 = "131") 
 }
 B2S1_f01_f12 <- mydat[49:60]
 B2S1_f01_f12_renamed <- list()
@@ -196,8 +193,7 @@ for (i in 1:12) {
   rename(NAT_129C_B2S1_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B2S1_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B2S1_f01_f12 = "130C") %>%
-  rename(REF_131_B2S1_f01_f12 = "131") %>%
-  add_column(file_name = "B2S1_f01_f12")
+  rename(REF_131_B2S1_f01_f12 = "131") 
 }
 B2S2_f01_f12 <- mydat[61:72]
 B2S2_f01_f12_renamed <- list()
@@ -212,8 +208,7 @@ for (i in 1:12) {
   rename(NAT_129C_B2S2_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B2S2_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B2S2_f01_f12 = "130C") %>%
-  rename(REF_131_B2S2_f01_f12 = "131") %>%
-  add_column(file_name = "B2S2_f01_f12")
+  rename(REF_131_B2S2_f01_f12 = "131") 
 }
 B2S3_f01_f12 <- mydat[73:84]
 B2S3_f01_f12_renamed <- list()
@@ -228,8 +223,7 @@ for (i in 1:12) {
   rename(NAT_129C_B2S3_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B2S3_f01_f12 = "130N") %>%
   rename(NAT_130C_B2S3_f01_f12 = "130C") %>%
-  rename(REF_131_B2S3_f01_f12 = "131") %>%
-  add_column(file_name = "B2S3_f01_f12")
+  rename(REF_131_B2S3_f01_f12 = "131") 
 }
 B2S4_f01_f12 <- mydat[85:96]
 B2S4_f01_f12_renamed <- list()
@@ -244,8 +238,7 @@ for (i in 1:12) {
   rename(NAT_129C_B2S4_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B2S4_f01_f12 = "130N") %>%
   rename(NAT_130C_B2S4_f01_f12 = "130C") %>%
-  rename(REF_131_B2S4_f01_f12 = "131") %>%
-  add_column(file_name = "B2S4_f01_f12")
+  rename(REF_131_B2S4_f01_f12 = "131") 
 }
 B3S1_f01_f12 <- mydat[97:108]
 B3S1_f01_f12_renamed <- list()
@@ -260,8 +253,7 @@ for (i in 1:12) {
   rename(TUMOR_129C_B3S1_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B3S1_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B3S1_f01_f12 = "130C") %>%
-  rename(REF_131_B3S1_f01_f12 = "131") %>%
-  add_column(file_name = "B3S1_f01_f12")
+  rename(REF_131_B3S1_f01_f12 = "131") 
 }
 B3S2_f01_f12 <- mydat[109:120]
 B3S2_f01_f12_renamed <- list()
@@ -276,8 +268,7 @@ for (i in 1:12) {
   rename(NAT_129C_B3S2_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B3S2_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B3S2_f01_f12 = "130C") %>%
-  rename(REF_131_B3S2_f01_f12 = "131") %>%
-  add_column(file_name = "B3S2_f01_f12")
+  rename(REF_131_B3S2_f01_f12 = "131") 
 }
 B3S3_f01_f12 <- mydat[121:132]
 B3S3_f01_f12_renamed <- list()
@@ -292,8 +283,7 @@ for (i in 1:12) {
   rename(TUMOR_129C_B3S3_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B3S3_f01_f12 = "130N") %>%
   rename(NAT_130C_B3S3_f01_f12 = "130C") %>%
-  rename(REF_131_B3S3_f01_f12 = "131") %>%
-  add_column(file_name = "B3S3_f01_f12")
+  rename(REF_131_B3S3_f01_f12 = "131") 
 }
 B3S4_f01_f12 <- mydat[133:144]
 B3S4_f01_f12_renamed <- list()
@@ -308,8 +298,7 @@ for (i in 1:12) {
   rename(TUMOR_129C_B3S4_f01_f12 = "129C") %>%
   rename(NAT_130N_B3S4_f01_f12 = "130N") %>%
   rename(NAT_130C_B3S4_f01_f12 = "130C") %>%
-  rename(REF_131_B3S4_f01_f12 = "131") %>%
-  add_column(file_name = "B3S4_f01_f12")
+  rename(REF_131_B3S4_f01_f12 = "131") 
 }
 B4S1_f01_f12 <- mydat[145:156]
 B4S1_f01_f12_renamed <- list()
@@ -324,8 +313,7 @@ for (i in 1:12) {
   rename(TUMOR_129C_B4S1_f01_f12 = "129C") %>%
   rename(NAT_130N_B4S1_f01_f12 = "130N") %>%
   rename(NAT_130C_B4S1_f01_f12 = "130C") %>%
-  rename(REF_131_B4S1_f01_f12 = "131") %>%
-  add_column(file_name = "B4S1_f01_f12")
+  rename(REF_131_B4S1_f01_f12 = "131") 
 }
 B4S2_f01_f12 <- mydat[157:168]
 B4S2_f01_f12_renamed <- list()
@@ -340,8 +328,7 @@ for (i in 1:12) {
   rename(NAT_129C_B4S2_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B4S2_f01_f12 = "130N") %>%
   rename(NAT_130C_B4S2_f01_f12 = "130C") %>%
-  rename(REF_131_B4S2_f01_f12 = "131") %>%
-  add_column(file_name = "B4S2_f01_f12")
+  rename(REF_131_B4S2_f01_f12 = "131") 
 }
 B4S3_f01_f12 <- mydat[169:180]
 B4S3_f01_f12_renamed <- list()
@@ -356,8 +343,7 @@ for (i in 1:12) {
   rename(NAT_129C_B4S3_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B4S3_f01_f12 = "130N") %>%
   rename(NAT_130C_B4S3_f01_f12 = "130C") %>%
-  rename(REF_131_B4S3_f01_f12 = "131") %>%
-  add_column(file_name = "B4S3_f01_f12")
+  rename(REF_131_B4S3_f01_f12 = "131") 
 }
 B4S4_f01_f12 <- mydat[181:192]
 B4S4_f01_f12_renamed <- list()
@@ -372,8 +358,7 @@ for (i in 1:12) {
   rename(TUMOR_129C_B4S4_f01_f12 = "129C") %>%
   rename(NAT_130N_B4S4_f01_f12 = "130N") %>%
   rename(NAT_130C_B4S4_f01_f12 = "130C") %>%
-  rename(REF_131_B4S4_f01_f12 = "131") %>%
-  add_column(file_name = "B4S4_f01_f12")
+  rename(REF_131_B4S4_f01_f12 = "131") 
 }
 B5S1_f01_f12 <- mydat[193:204]
 B5S1_f01_f12_renamed <- list()
@@ -388,8 +373,7 @@ for (i in 1:12) {
   rename(TUMOR_129C_B5S1_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B5S1_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B5S1_f01_f12 = "130C") %>%
-  rename(REF_131_B5S1_f01_f12 = "131") %>%
-  add_column(file_name = "B5S1_f01_f12")
+  rename(REF_131_B5S1_f01_f12 = "131") 
 }
 B5S2_f01_f12 <- mydat[205:216]
 B5S2_f01_f12_renamed <- list()
@@ -404,8 +388,7 @@ for (i in 1:12) {
   rename(TUMOR_129C_B5S2_f01_f12 = "129C") %>%
   rename(TUMOR_130N_B5S2_f01_f12 = "130N") %>%
   rename(NAT_130C_B5S2_f01_f12 = "130C") %>%
-  rename(REF_131_B5S2_f01_f12 = "131") %>%
-  add_column(file_name = "B5S2_f01_f12")
+  rename(REF_131_B5S2_f01_f12 = "131") 
 }
 B5S3_f01_f12 <- mydat[217:228]
 B5S3_f01_f12_renamed <- list()
@@ -420,8 +403,7 @@ for (i in 1:12) {
   rename(TUMOR_129C_B5S3_f01_f12 = "129C") %>%
   rename(NAT_130N_B5S3_f01_f12 = "130N") %>%
   rename(TUMOR_130C_B5S3_f01_f12 = "130C") %>%
-  rename(REF_131_B5S3_f01_f12 = "131") %>%
-  add_column(file_name = "B5S3_f01_f12")
+  rename(REF_131_B5S3_f01_f12 = "131") 
 }
 B5S4_f01_f12 <- mydat[229:240]
 B5S4_f01_f12_renamed <- list()
@@ -436,8 +418,7 @@ for (i in 1:12) {
   rename(NAT_129C_B5S4_f01_f12 = "129C") %>%
   rename(NAT_130N_B5S4_f01_f12 = "130N") %>%
   rename(NAT_130C_B5S4_f01_f12 = "130C") %>%
-  rename(REF_131_B5S4_f01_f12 = "131") %>%
-  add_column(file_name = "B5S4_f01_f12")
+  rename(REF_131_B5S4_f01_f12 = "131") 
 }
 B5S5_f01_f12 <- mydat[241:252]
 B5S5_f01_f12_renamed <- list()
@@ -452,8 +433,7 @@ for (i in 1:12) {
   rename(TUMOR_129C_B5S5_f01_f12 = "129C") %>%
   rename(NAT_130N_B5S5_f01_f12 = "130N") %>%
   rename(NAT_130C_B5S5_f01_f12 = "130C") %>%
-  rename(REF_131_B5S5_f01_f12 = "131") %>%
-  add_column(file_name = "B5S5_f01_f12")
+  rename(REF_131_B5S5_f01_f12 = "131") 
 }
 B5S6_f01_f12 <- mydat[253:264]
 B5S6_f01_f12_renamed <- list()
@@ -468,12 +448,11 @@ for (i in 1:12) {
   rename(NAT_129C_B5S6_f01_f12 = "129C") %>%
   rename(NAT_130N_B5S6_f01_f12 = "130N") %>%
   rename(REF_130C_B5S6_f01_f12 = "130C") %>%
-  rename(REF_131_B5S6_f01_f12 = "131") %>%
-  add_column(file_name = "B5S6_f01_f12")
+  rename(REF_131_B5S6_f01_f12 = "131") 
 }
 
 #Identify Character names for each batch
-cha_batch1 <- c("NAT_126_B1S1_f01_f12", 
+cha_B1S1_f01_f12 <- c("NAT_126_B1S1_f01_f12", 
 "NAT_127N_B1S1_f01_f12", 
 "TUMOR_127C_B1S1_f01_f12", 
 "TUMOR_128N_B1S1_f01_f12", 
@@ -484,7 +463,7 @@ cha_batch1 <- c("NAT_126_B1S1_f01_f12",
 "TUMOR_130C_B1S1_f01_f12", 
 "REF_131_B1S1_f01_f12"
 )
-cha_batch2 <- c("NAT_126_B1S2_f01_f12", 
+cha_B1S2_f01_f12 <- c("NAT_126_B1S2_f01_f12", 
 "TUMOR_127N_B1S2_f01_f12", 
 "NAT_127C_B1S2_f01_f12", 
 "TUMOR_128N_B1S2_f01_f12", 
@@ -493,9 +472,9 @@ cha_batch2 <- c("NAT_126_B1S2_f01_f12",
 "NAT_129C_B1S2_f01_f12", 
 "TUMOR_130N_B1S2_f01_f12", 
 "TUMOR_130C_B1S2_f01_f12", 
-"REF_131_B1S2_f01_f12", 
+"REF_131_B1S2_f01_f12"
 )
-cha_batch3 <- c("TUMOR_126_B1S3_f01_f12", 
+cha_B1S3_f01_f12 <- c("TUMOR_126_B1S3_f01_f12", 
 "NAT_127N_B1S3_f01_f12", 
 "TUMOR_127C_B1S3_f01_f12", 
 "NAT_128N_B1S3_f01_f12", 
@@ -504,9 +483,9 @@ cha_batch3 <- c("TUMOR_126_B1S3_f01_f12",
 "NAT_129C_B1S3_f01_f12", 
 "TUMOR_130N_B1S3_f01_f12", 
 "TUMOR_130C_B1S3_f01_f12", 
-"REF_131_B1S3_f01_f12", 
+"REF_131_B1S3_f01_f12"
 )
-cha_batch4 <- c("NAT_161_B1S4_f01_f12", 
+cha_B1S4_f01_f12 <- c("NAT_161_B1S4_f01_f12", 
 "TUMOR_127N_B1S4_f01_f12", 
 "NAT_127C_B1S4_f01_f12", 
 "TUMOR_128N_B1S4_f01_f12", 
@@ -515,9 +494,9 @@ cha_batch4 <- c("NAT_161_B1S4_f01_f12",
 "TUMOR_129C_B1S4_f01_f12", 
 "NAT_130N_B1S4_f01_f12", 
 "TUMOR_130C_B1S4_f01_f12", 
-"REF_131__B1S4_f01_f12", 
+"REF_131__B1S4_f01_f12"
 )
-cha_batch5 <- c("TUMOR_126_B2S1_f01_f12", 
+cha_B2S1_f01_f12 <- c("TUMOR_126_B2S1_f01_f12", 
 "TUMOR_127N_B2S1_f01_f12", 
 "TUMOR_127C_B2S1_f01_f12", 
 "NAT_128N_B2S1_f01_f12", 
@@ -526,9 +505,9 @@ cha_batch5 <- c("TUMOR_126_B2S1_f01_f12",
 "NAT_129C_B2S1_f01_f12", 
 "TUMOR_130N_B2S1_f01_f12", 
 "TUMOR_130C_B2S1_f01_f12", 
-"REF_131_B2S1_f01_f12", 
+"REF_131_B2S1_f01_f12"
 )
-cha_batch6 <- c("TUMOR_126_B2S2_f01_f12", 
+cha_B2S2_f01_f12 <- c("TUMOR_126_B2S2_f01_f12", 
 "TUMOR_127N_B2S2_f01_f12", 
 "TUMOR_127C_B2S2_f01_f12", 
 "NAT_128N_B2S2_f01_f12", 
@@ -537,9 +516,9 @@ cha_batch6 <- c("TUMOR_126_B2S2_f01_f12",
 "NAT_129C_B2S2_f01_f12", 
 "TUMOR_130N_B2S2_f01_f12", 
 "TUMOR_130C_B2S2_f01_f12", 
-"REF_131_B2S2_f01_f12", 
+"REF_131_B2S2_f01_f12"
 )
-cha_batch7 <- c("TUMOR_126_B2S3_f01_f12", 
+cha_B2S3_f01_f12 <- c("TUMOR_126_B2S3_f01_f12", 
 "NAT_127N_B2S3_f01_f12", 
 "TUMOR_127C_B2S3_f01_f12", 
 "NAT_128N_B2S3_f01_f12", 
@@ -548,9 +527,9 @@ cha_batch7 <- c("TUMOR_126_B2S3_f01_f12",
 "NAT_129C_B2S3_f01_f12", 
 "TUMOR_130N_B2S3_f01_f12", 
 "NAT_130C_B2S3_f01_f12", 
-"REF_131_B2S3_f01_f12", 
+"REF_131_B2S3_f01_f12"
 )
-cha_batch8 <- c("TUMOR_126_B2S4_f01_f12", 
+cha_B2S4_f01_f12 <- c("TUMOR_126_B2S4_f01_f12", 
 "TUMOR_127N_B2S4_f01_f12", 
 "NAT_127C_B2S4_f01_f12", 
 "NAT_128N_B2S4_f01_f12", 
@@ -559,9 +538,9 @@ cha_batch8 <- c("TUMOR_126_B2S4_f01_f12",
 "NAT_129C_B2S4_f01_f12", 
 "TUMOR_130N_B2S4_f01_f12", 
 "NAT_130C_B2S4_f01_f12", 
-"REF_131_B2S4_f01_f12", 
+"REF_131_B2S4_f01_f12"
 )
-cha_batch9 <- c("TUMOR_126_B3S1_f01_f12", 
+cha_B3S1_f01_f12 <- c("TUMOR_126_B3S1_f01_f12", 
 "NAT_127N_B3S1_f01_f12", 
 "NAT_127C_B3S1_f01_f12", 
 "TUMOR_128N_B3S1_f01_f12", 
@@ -570,9 +549,9 @@ cha_batch9 <- c("TUMOR_126_B3S1_f01_f12",
 "TUMOR_129C_B3S1_f01_f12", 
 "TUMOR_130N_B3S1_f01_f12", 
 "TUMOR_130C_B3S1_f01_f12", 
-"REF_131_B3S1_f01_f12", 
+"REF_131_B3S1_f01_f12"
 )
-cha_batch10 <- c("NAT_126_B3S2_f01_f12", 
+cha_B3S2_f01_f12 <- c("NAT_126_B3S2_f01_f12", 
 "NAT_127N_B3S2_f01_f12", 
 "NAT_127C_B3S2_f01_f12", 
 "NAT_128N_B3S2_f01_f12", 
@@ -581,9 +560,9 @@ cha_batch10 <- c("NAT_126_B3S2_f01_f12",
 "NAT_129C_B3S2_f01_f12", 
 "TUMOR_130N_B3S2_f01_f12", 
 "TUMOR_130C_B3S2_f01_f12", 
-"REF_131_B3S2_f01_f12", 
+"REF_131_B3S2_f01_f12"
 )
-cha_batch11 <- c("TUMOR_126_B3S3_f01_f12", 
+cha_B3S3_f01_f12 <- c("TUMOR_126_B3S3_f01_f12", 
 "NAT_127N_B3S3_f01_f12", 
 "TUMOR_127C_B3S3_f01_f12", 
 "NAT_128N_B3S3_f01_f12", 
@@ -592,9 +571,9 @@ cha_batch11 <- c("TUMOR_126_B3S3_f01_f12",
 "TUMOR_129C_B3S3_f01_f12", 
 "TUMOR_130N_B3S3_f01_f12", 
 "NAT_130C_B3S3_f01_f12", 
-"REF_131_B3S3_f01_f12", 
+"REF_131_B3S3_f01_f12"
 )
-cha_batch12 <- c("NAT_126_B3S4_f01_f12", 
+cha_B3S4_f01_f12 <- c("NAT_126_B3S4_f01_f12", 
 "NAT_127N_B3S4_f01_f12", 
 "TUMOR_127C_B3S4_f01_f12", 
 "NAT_128N_B3S4_f01_f12", 
@@ -603,9 +582,9 @@ cha_batch12 <- c("NAT_126_B3S4_f01_f12",
 "TUMOR_129C_B3S4_f01_f12", 
 "NAT_130N_B3S4_f01_f12", 
 "NAT_130C_B3S4_f01_f12", 
-"REF_131_B3S4_f01_f12", 
+"REF_131_B3S4_f01_f12"
 )
-cha_batch13 <- c("NAT_126_B4S1_f01_f12", 
+cha_B4S1_f01_f12 <- c("NAT_126_B4S1_f01_f12", 
 "TUMOR_127N_B4S1_f01_f12", 
 "NAT_127C_B4S1_f01_f12", 
 "NAT_128N_B4S1_f01_f12", 
@@ -614,9 +593,9 @@ cha_batch13 <- c("NAT_126_B4S1_f01_f12",
 "TUMOR_129C_B4S1_f01_f12", 
 "NAT_130N_B4S1_f01_f12", 
 "NAT_130C_B4S1_f01_f12", 
-"REF_131_B4S1_f01_f12", 
+"REF_131_B4S1_f01_f12"
 )
-cha_batch14 <- c("NAT_126_B4S2_f01_f12", 
+cha_B4S2_f01_f12 <- c("NAT_126_B4S2_f01_f12", 
 "TUMOR_127N_B4S2_f01_f12", 
 "TUMOR_127C_B4S2_f01_f12", 
 "NAT_128N_B4S2_f01_f12", 
@@ -625,9 +604,9 @@ cha_batch14 <- c("NAT_126_B4S2_f01_f12",
 "NAT_129C_B4S2_f01_f12", 
 "TUMOR_130N_B4S2_f01_f12", 
 "NAT_130C_B4S2_f01_f12", 
-"REF_131_B4S2_f01_f12", 
+"REF_131_B4S2_f01_f12"
 )
-cha_batch15 <- c("TUMOR_126_B4S3_f01_f12", 
+cha_B4S3_f01_f12 <- c("TUMOR_126_B4S3_f01_f12", 
 "NAT_127N_B4S3_f01_f12", 
 "TUMOR_127C_B4S3_f01_f12", 
 "NAT_128N_B4S3_f01_f12", 
@@ -636,9 +615,9 @@ cha_batch15 <- c("TUMOR_126_B4S3_f01_f12",
 "NAT_129C_B4S3_f01_f12", 
 "TUMOR_130N_B4S3_f01_f12", 
 "NAT_130C_B4S3_f01_f12", 
-"REF_131_B4S3_f01_f12", 
+"REF_131_B4S3_f01_f12"
 )
-cha_batch16 <- c("TUMOR_126_B4S4_f01_f12", 
+cha_B4S4_f01_f12 <- c("TUMOR_126_B4S4_f01_f12", 
 "TUMOR_127N_B4S4_f01_f12", 
 "NAT_127C_B4S4_f01_f12", 
 "NAT_128N_B4S4_f01_f12", 
@@ -647,9 +626,9 @@ cha_batch16 <- c("TUMOR_126_B4S4_f01_f12",
 "TUMOR_129C_B4S4_f01_f12", 
 "NAT_130N_B4S4_f01_f12", 
 "NAT_130C_B4S4_f01_f12", 
-"REF_131_B4S4_f01_f12", 
+"REF_131_B4S4_f01_f12"
 )
-cha_batch17 <- c("NAT_126_B5S1_f01_f12", 
+cha_B5S1_f01_f12 <- c("NAT_126_B5S1_f01_f12", 
 "TUMOR_127N_B5S1_f01_f12", 
 "NAT_127C_B5S1_f01_f12", 
 "NAT_128N_B5S1_f01_f12", 
@@ -658,9 +637,9 @@ cha_batch17 <- c("NAT_126_B5S1_f01_f12",
 "TUMOR_129C_B5S1_f01_f12", 
 "TUMOR_130N_B5S1_f01_f12", 
 "TUMOR_130C_B5S1_f01_f12", 
-"REF_131_B5S1_f01_f12", 
+"REF_131_B5S1_f01_f12"
 )
-cha_batch18 <- c("NAT_126_B5S2_f01_f12", 
+cha_B5S2_f01_f12 <- c("NAT_126_B5S2_f01_f12", 
 "NAT_127N_B5S2_f01_f12", 
 "NAT_127C_B5S2_f01_f12", 
 "TUMOR_128N_B5S2_f01_f12", 
@@ -669,9 +648,9 @@ cha_batch18 <- c("NAT_126_B5S2_f01_f12",
 "TUMOR_129C_B5S2_f01_f12", 
 "TUMOR_130N_B5S2_f01_f12", 
 "NAT_130C_B5S2_f01_f12", 
-"REF_131_B5S2_f01_f12", 
+"REF_131_B5S2_f01_f12"
 )
-cha_batch19 <- c("TUMOR_126_B5S3_f01_f12", 
+cha_B5S3_f01_f12 <- c("TUMOR_126_B5S3_f01_f12", 
 "TUMOR_127N_B5S3_f01_f12", 
 "NAT_127C_B5S3_f01_f12", 
 "NAT_128N_B5S3_f01_f12", 
@@ -680,10 +659,10 @@ cha_batch19 <- c("TUMOR_126_B5S3_f01_f12",
 "TUMOR_129C_B5S3_f01_f12", 
 "NAT_130N_B5S3_f01_f12", 
 "TUMOR_130C_B5S3_f01_f12", 
-"REF_131_B5S3_f01_f12", 
+"REF_131_B5S3_f01_f12"
 )
-cha_batch20 <- c("TUMOR_126_B5S4_f01_f12", 
-"TUMOR_126_B5S4_f01_f12", 
+cha_B5S4_f01_f12 <- c("TUMOR_126_B5S4_f01_f12", 
+"TUMOR_127N_B5S4_f01_f12", 
 "TUMOR_127C_B5S4_f01_f12", 
 "NAT_128N_B5S4_f01_f12", 
 "TUMOR_128C_B5S4_f01_f12", 
@@ -691,9 +670,9 @@ cha_batch20 <- c("TUMOR_126_B5S4_f01_f12",
 "NAT_129C_B5S4_f01_f12", 
 "NAT_130N_B5S4_f01_f12", 
 "NAT_130C_B5S4_f01_f12", 
-"REF_131_B5S4_f01_f12", 
+"REF_131_B5S4_f01_f12"
 )
-cha_batch21 <- c("TUMOR_126_B5S5_f01_f12", 
+cha_B5S5_f01_f12 <- c("TUMOR_126_B5S5_f01_f12", 
 "TUMOR_127N_B5S5_f01_f12", 
 "TUMOR_127C_B5S5_f01_f12", 
 "NAT_128N_B5S5_f01_f12", 
@@ -702,9 +681,9 @@ cha_batch21 <- c("TUMOR_126_B5S5_f01_f12",
 "TUMOR_129C_B5S5_f01_f12", 
 "NAT_130N_B5S5_f01_f12", 
 "NAT_130C_B5S5_f01_f12", 
-"REF_131_B5S5_f01_f12", 
+"REF_131_B5S5_f01_f12"
 )
-cha_batch22 <- c("TUMOR_126_B5S6_f01_f12", 
+cha_B5S6_f01_f12 <- c("TUMOR_126_B5S6_f01_f12", 
 "NAT_127N_B5S6_f01_f12", 
 "NAT_127C_B5S6_f01_f12", 
 "NAT_128N_B5S6_f01_f12", 
@@ -716,9 +695,7 @@ cha_batch22 <- c("TUMOR_126_B5S6_f01_f12",
 "REF_131_B5S6_f01_f12"
 )
 
-
-
-#Functions to load in
+#Functions of the Limma+Qvalve package
 read.peptides <- function(dat, cha){
   output <- NULL
   
@@ -733,7 +710,6 @@ read.peptides <- function(dat, cha){
   dat <- subset(dat, Protein.Group.Accessions!="")
   dat <- subset(dat, !apply(dat[cha], 1, f <- function(x) any(is.na(x))))  
 }
-
 quantify.proteins <- function(dat, cha){
   e.function <- function(x, seq) tapply(x, seq, median)
   output <- NULL
@@ -764,7 +740,6 @@ quantify.proteins <- function(dat, cha){
   output <- as.data.frame(output)
   return(output)
 }
-
 eb.fit <- function(dat, design){
   n <- dim(dat)[1]
   fit <- lmFit(dat, design)
@@ -785,7 +760,6 @@ eb.fit <- function(dat, design){
   results.eb <- results.eb[order(results.eb$p.mod), ]
   return(results.eb)
 }
-
 eb.fit.mult <- function(dat, design){
   n <- dim(dat)[1]
   fit <- lmFit(dat, design)
@@ -816,45 +790,122 @@ eb.fit.mult <- function(dat, design){
 }
 
 #Start analysis
-#read.peptides
-peptides1 <- list()
-cha1 <- c("NAT_126_B1S1_f01_f12", 
-"NAT_127N_B1S1_f01_f12", 
-"TUMOR_127C_B1S1_f01_f12", 
-"TUMOR_128N_B1S1_f01_f12", 
-"TUMOR_128C_B1S1_f01_f12", 
-"TUMOR_129N_B1S1_f01_f12", 
-"TUMOR_129C_B1S1_f01_f12", 
-"TUMOR_130N_B1S1_f01_f12", 
-"TUMOR_130C_B1S1_f01_f12", 
-"REF_131_B1S1_f01_f12")
+  #read.peptides
+  #Run on each batch
+    #Create list to store each batch in
+      peptides_B1S1_f01_f12 <- list() #
+      peptides_B1S2_f01_f12 <- list() #
+      peptides_B1S3_f01_f12 <- list() #
+      peptides_B1S4_f01_f12 <- list() #
+      peptides_B2S1_f01_f12 <- list() #
+      peptides_B2S2_f01_f12 <- list() #
+      peptides_B2S3_f01_f12 <- list() #
+      peptides_B2S4_f01_f12 <- list() #
+      peptides_B3S1_f01_f12 <- list() #
+      peptides_B3S2_f01_f12 <- list() #
+      peptides_B3S3_f01_f12 <- list() #
+      peptides_B3S4_f01_f12 <- list() #
+      peptides_B4S1_f01_f12 <- list() #
+      peptides_B4S2_f01_f12 <- list() #
+      peptides_B4S3_f01_f12 <- list() #
+      peptides_B4S4_f01_f12 <- list() #
+      peptides_B5S1_f01_f12 <- list() #
+      peptides_B5S2_f01_f12 <- list() #
+      peptides_B5S3_f01_f12 <- list() #
+      peptides_B5S4_f01_f12 <- list() #
+      peptides_B5S5_f01_f12 <- list() #
+      peptides_B5S6_f01_f12 <- list() #
+    #For each batch run the loop (22 times)
+    #DON'T FORGET TO CHANGE BATCH AND CHARACTER NAMES!!!
+    #The batch name has to be changed in all 3 locations
 for (i in 1:10) {
-  peptides1[[i]] <- read.peptides(B1S1_f01_f12_renamed[[i]], cha1)
+  peptides_B5S4_f01_f12[[i]] <- read.peptides(B5S4_f01_f12_renamed[[i]], cha_B5S4_f01_f12)
 }
-view(peptides1[[1]])
-view(B1S1_f01_f12_renamed[[1]])
 
-#(dat <- read.peptides(dat, cha)) #Loops
-dim(peptides1[[1]])
-dim(B1S1_f01_f12_renamed[[1]])
-
-
-#quantify.proteins
-proteins1 <- list()
+  #quantify.proteins
+  #Run on each batch
+    #Create list to store each batch in
+      proteins_B1S1_f01_f12 <- list() #
+      proteins_B1S2_f01_f12 <- list() #
+      proteins_B1S3_f01_f12 <- list() #
+      proteins_B1S4_f01_f12 <- list() #
+      proteins_B2S1_f01_f12 <- list() #
+      proteins_B2S2_f01_f12 <- list() #
+      proteins_B2S3_f01_f12 <- list() #
+      proteins_B2S4_f01_f12 <- list() #
+      proteins_B3S1_f01_f12 <- list() #
+      proteins_B3S2_f01_f12 <- list() #
+      proteins_B3S3_f01_f12 <- list() #
+      proteins_B3S4_f01_f12 <- list() #
+      proteins_B4S1_f01_f12 <- list() #
+      proteins_B4S2_f01_f12 <- list() #
+      proteins_B4S3_f01_f12 <- list() #
+      proteins_B4S4_f01_f12 <- list() #
+      proteins_B5S1_f01_f12 <- list() #
+      proteins_B5S2_f01_f12 <- list() #
+      proteins_B5S3_f01_f12 <- list() #
+      proteins_B5S4_f01_f12 <- list() #
+      proteins_B5S5_f01_f12 <- list() #
+      proteins_B5S6_f01_f12 <- list() #
+    #For each batch run the loop (22 times)
+    #DON'T FORGET TO CHANGE BATCH AND CHARACTER NAMES!!!
+    #The batch name has to be changed in all 3 locations
 for (i in 1:10) {
-  proteins1[[i]] <- quantify.proteins(peptides1[[i]], cha1)
+  proteins_B5S4_f01_f12[[i]] <- quantify.proteins(peptides_B5S4_f01_f12[[i]], cha_B5S4_f01_f12)
 }
-dim(proteins1[[1]])
-view(B1S1_f01_f12_renamed[[1]])
-view(peptides1[[1]])
-view(proteins1[[1]])
+
+  #Devide by REF sample
+    #Run on each batch
+    #Create list to store each batch in
+      dat_B1S1_f01_f12 <- list() #
+      dat_B1S2_f01_f12 <- list() #
+      dat_B1S3_f01_f12 <- list() #
+      dat_B1S4_f01_f12 <- list() #
+      dat_B2S1_f01_f12 <- list() #
+      dat_B2S2_f01_f12 <- list() #
+      dat_B2S3_f01_f12 <- list() #
+      dat_B2S4_f01_f12 <- list() #
+      dat_B3S1_f01_f12 <- list() #
+      dat_B3S2_f01_f12 <- list() #
+      dat_B3S3_f01_f12 <- list() #
+      dat_B3S4_f01_f12 <- list() #
+      dat_B4S1_f01_f12 <- list() #
+      dat_B4S2_f01_f12 <- list() #
+      dat_B4S3_f01_f12 <- list() #
+      dat_B4S4_f01_f12 <- list() #
+      dat_B5S1_f01_f12 <- list() #
+      dat_B5S2_f01_f12 <- list() #
+      dat_B5S3_f01_f12 <- list() #
+      dat_B5S4_f01_f12 <- list() #
+      dat_B5S5_f01_f12 <- list() #
+      dat_B5S6_f01_f12 <- list() #
+
+    #For each batch run the loop (22 times)
+    #DON'T FORGET TO CHANGE BATCH AND CHARACTER NAMES!!!
+    #The batch name has to be changed in ALL locations
+for (i in 1:10) {
+DEV_AFTER[[i]] <- proteins_B1S1_f01_f12[[i]] %>%
+  mutate (NAT_126_B1S1_f01_f12 = NAT_126_B1S1_f01_f12/REF_131_B1S1_f01_f12) %>%
+  mutate (NAT_127N_B1S1_f01_f12 = NAT_127N_B1S1_f01_f12/REF_131_B1S1_f01_f12) %>%
+  mutate (TUMOR_127C_B1S1_f01_f12= TUMOR_127C_B1S1_f01_f12/REF_131_B1S1_f01_f12) %>%
+  mutate (TUMOR_128N_B1S1_f01_f12 = TUMOR_128N_B1S1_f01_f12/REF_131_B1S1_f01_f12) %>%
+  mutate (TUMOR_128C_B1S1_f01_f12 = TUMOR_128C_B1S1_f01_f12/REF_131_B1S1_f01_f12) %>%
+  mutate (TUMOR_129N_B1S1_f01_f12 = TUMOR_129N_B1S1_f01_f12/REF_131_B1S1_f01_f12) %>%
+  mutate (TUMOR_129C_B1S1_f01_f12 = TUMOR_129C_B1S1_f01_f12/REF_131_B1S1_f01_f12) %>%
+  mutate (TUMOR_130N_B1S1_f01_f12 = TUMOR_130N_B1S1_f01_f12/REF_131_B1S1_f01_f12) %>%
+  mutate (TUMOR_130C_B1S1_f01_f12 = TUMOR_130C_B1S1_f01_f12/REF_131_B1S1_f01_f12) %>%
+  select(-REF_131_B1S1_f01_f12)
+}
 
 
-sum(is.na(B1S1_f01_f12_renamed[[1]]))
 
-####HIER DELEN??? door ref
-dat <- quantify.proteins(dat, cha) #Loops
-view(dat)
+
+  #Combine into one data frame
+
+
+
+
+
 dat.onehit <- subset(dat, dat$n.peptides == 1) 
 view(dat)
 ######OF HIER DELEN??? door ref
