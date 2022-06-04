@@ -1746,47 +1746,22 @@ merged.data.frame <- Reduce(function(...) merge(..., by="Accessions", all=TRUE),
 
 dat <- all_batches %>% 
   reduce(full_join, by='Accessions') 
+
   
+  rowSums(dat[,c("n.peptides.x","n.peptides.y","n.peptides.x.x","n.peptides.y.y","n.peptides.x.x.x","n.peptides.y.y.y","n.peptides.x.x.x.x","n.peptides.y.y.y.y","n.peptides.x.x.x.x.x","n.peptides.y.y.y.y.y","n.peptides.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y.y.y.y.y")],na.rm=TRUE) %>%
+  rowSums(dat[,c("n.spectra.x","n.spectra.y","n.spectra.x.x","n.spectra.y.y","n.spectra.x.x.x","n.spectra.y.y.y","n.spectra.x.x.x.x","n.spectra.y.y.y.y","n.spectra.x.x.x.x.x","n.spectra.y.y.y.y.y","n.spectra.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y.y.y.y.y")],na.rm=TRUE)
+
   
-  
-  %>%
-  select(starts_with("n.pep")) %>%
-  summarise_all(sum)
-  mutate(n.peptides =sum(startsWith("n.pep"))) %>%
-  mutate(n.spectra =sum(startsWith("n.spe")))
+
+allez <- dat %>%
+select(starts_with("n.peptides"))
+str(allez)
 
 
 
 dat <- bind_rows(all_batches)
-view((dat))
+view(head(allez))
 dim(dat)
-
-dat <- bind_rows(
-      dat_B1S1_f01_f12,
-    dat_B1S2_f01_f12, 
-    dat_B1S3_f01_f12, 
-    dat_B1S4_f01_f12, 
-    dat_B2S1_f01_f12, 
-    dat_B2S2_f01_f12, 
-    dat_B2S3_f01_f12, 
-    dat_B2S4_f01_f12,
-    dat_B3S1_f01_f12, 
-    dat_B3S2_f01_f12, 
-    dat_B3S3_f01_f12,
-    dat_B3S4_f01_f12, 
-    dat_B4S1_f01_f12,
-    dat_B4S2_f01_f12, 
-    dat_B4S3_f01_f12, 
-    dat_B4S4_f01_f12, 
-    dat_B5S1_f01_f12, 
-    dat_B5S2_f01_f12, 
-    dat_B5S3_f01_f12, 
-    dat_B5S4_f01_f12, 
-    dat_B5S5_f01_f12, 
-    dat_B5S6_f01_f12
-) 
-
-
 
 view(dat)
 dim(dat)
