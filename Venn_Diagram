@@ -97,14 +97,11 @@ AS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo
         as_tibble %>% 
 	pull(V1) %>% 
 	unique()
-
 OS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Original_study.txt", header=FALSE) %>%
         as_tibble() %>% 
 	filter(V1 %in% AS) %>%
 	pull(V1) %>% 
 	unique()
-
-
                 #Load dataframes, only modified peptides
             file_paths_annsolo_mod <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10")
             PSM_only_mod <- list()
@@ -164,7 +161,7 @@ ht = UpSet(matrix_ppi_combination,
 			baseline = 0,
 			axis_param = list(
 				at = c(0, -100, -200, -300),
-				labels = c(0, 100, 200, 300),
+				labels = c(0, 100, 200, 300, 400, 500, 600, 700),
 				labels_rot = 0),
 			border = FALSE, 
 			gp = gpar(fill = "black"), 
@@ -244,15 +241,57 @@ ggVennDiagram(ANNMOD_vs_ORG)
 
 
     #Comparing only the unique peptides
-        #ALL files
+        #ALL ANN-SoLo + PIA identifiec proteins
+    AS_prot <- fread(file="/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/data_input.txt", sep="\t")
+    view(head(AS_prot))
+    str(AS_prot)
+    AS_prot_distinct <- AS_prot %>% 
+    select(Protein.Descriptions) %>%
+    mutate(Protein.Descriptions = trimws(str_remove_all(Protein.Descriptions, "_HUMAN"))) %>% 
+    unique() %>%
+    remove_rownames()
+rownames(AS_prot_distinct) <- NULL
+
+str(OS_prot_distinct)
+
+
+view(AS_prot_distinct)
+nrow(AS_prot_distinct)    
+        #All identifiec proteins from original study
+    OS_prot_NAT <- fread(file="/Users/jensvandeperre/Desktop/Inputs/Original_Proteins/Human__CPTAC_COAD__PNNL__Proteome__TMT__03_01_2017__BCM__Gene__PNNL_Normal_TMT_UnsharedLogRatio.cct.txt") %>%
+            select(attrib_name)
+    OS_prot_TUM <- fread(file="/Users/jensvandeperre/Desktop/Inputs/Original_Proteins/Human__CPTAC_COAD__PNNL__Proteome__TMT__03_01_2017__BCM__Gene__PNNL_Tumor_TMT_UnsharedLogRatio.cct.txt") %>%
+            select(attrib_name)
+view(head(OS_prot_NAT))
+OS_prot_distinct <- rbind(OS_prot_NAT, OS_prot_TUM) %>%
+    unique() 
+view(OS_prot_distinct)
+
+
+
+write.table(AS_prot_distinct$Protein.Descriptions, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Reanalysis_proteins.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
+write.table(OS_prot_distinct$attrib_name, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_Study_proteins.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
+
+
+
+
+
+
 ANN_vs_ORG_unique <- list(
-    ANN_SoLo = as.vector(unlist(ANN_SoLo_no_mod_unique)),
-    Original_study = as.vector(unlist(Original_study_unique))
+    `Reanalysis` = AS_prot_distinct$Protein.Descriptions,
+    `Original Study` = OS_prot_distinct$attrib_name
 )
-ggVennDiagram(ANN_vs_ORG_unique,
-    label_alpha = 0
-        )
-ggvenn(ANN_vs_ORG)
+Pro_Venn <- ggvenn(ANN_vs_ORG_unique, c("Reanalysis", "Original Study"),
+        fill_color = c("blue", "yellow"),
+        stroke_color = FALSE) +
+    labs(title="Comparison Unique Identified Protein Genes") +
+  theme_void() +
+  theme(plot.title = element_text(size = 20, face = "bold"))
+Pro_Venn
+png(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Protein_Gene_Venn.png")
+   Pro_Venn
+dev.off()
+
 
 
 

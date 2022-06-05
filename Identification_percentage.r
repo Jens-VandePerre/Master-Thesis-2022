@@ -92,23 +92,34 @@ OS_count <- 3441708
 DIFF <- AS_count - OS_count
 
 #Plot Peptide Identification Percentage
-  #ANN-Solo identification %
-  ANN_SoLo <- (AS_count/TMT_count)*100
-  #Original Study identification %
-  Original_study <- (OS_count/TMT_count)*100
-  #Making tibble 
-tbl_Identification_percentage <- tibble(Study=c("Original Study", "ANN-SoLo") , Identification_Percentage=c(Original_study, ANN_SoLo))
-tbl_Identification_percentage
+  #input tibble
+AS_count_no_PTM <- AS_count-PTM_count
+Study_IP <- c("Original Study", "ANN-SoLo")
+Non_modified_IP <- c(OS_count, AS_count_no_PTM)
+Modified_IP <- c(NA, PTM_count)
+Total_spectra <- TMT_count
+df_IP <- data.frame(Study_IP, Non_modified_IP, Modified_IP, Total_spectra) %>%
+  mutate(Modified = Modified_IP/Total_spectra*100) %>%
+  mutate(Non_modified = Non_modified_IP/Total_spectra*100)
+tbl_Identification_IP <- pivot_longer(df_IP, Modified:Non_modified, names_to = "Spectra_Type", 
+    values_to = "Identification_percentage") %>%
+      mutate(Label = c(NA, "36.05%", "17.44%", "31.29%")) 
+view(tbl_Identification_IP)
+str(tbl_Identification_IP)
   #Plot
-pep_IP <- ggplot(tbl_Identification_percentage, aes(x= Study , y= Identification_Percentage)) +
-  geom_col(width = 0.45, fill = c("#56B4E9", "#E69F00")) +
-  labs(x="Study", y="Percentage Identified Spectra (%)", title="Peptide Identification Percentage" , 
+pep_IP <- ggplot(tbl_Identification_IP, 
+    aes(fill=Spectra_Type, y=Identification_percentage, x=Study_IP, label=Label)) +
+  geom_bar(position="stack", stat="identity", width = 0.65) +
+  geom_text(size = 3.5, position = position_stack(vjust = 0.5)) +
+  scale_color_manual(labels=c("Non-modified","Modified")) +
+  labs(x="Study", y="Percentage Identified Spectra", title="Peptide Identification Percentage" , 
         subtitle="Comparing ANN-SoLo and the Original Study") +
-  geom_text(aes(label=round(c(Original_study, ANN_SoLo), digits = 1)), 
-               position=position_dodge(width=0.9), vjust=-0.25, size = 3.5) +
-  theme(axis.text = element_text(size = 11),
+  labs(fill="Spectra Type") +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 12),
         axis.title = element_text(size = 15),
-        plot.title = element_text(size = 18)) 
+        plot.title = element_text(size = 20, face = "bold"),
+        plot.subtitle = element_text(size = 12))
   #Print pep_IP
 pep_IP
 png(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Peptide_Identification_Percentage.png")
@@ -122,7 +133,6 @@ AS_count
 DIFF
 PTM_count
 AS_count_no_PTM <- AS_count-PTM_count
-Study=c("Original Study", "ANN-SoLo")
 
 Study <- c("Original Study", "ANN-SoLo")
 Non_modified <- c(OS_count, AS_count_no_PTM)
@@ -130,8 +140,6 @@ Modified <- c(NA,PTM_count)
 df_IT <- data.frame(Study, Non_modified, Modified)
 tbl_Identification_total <- pivot_longer(df_IT, Non_modified:Modified, names_to = "Spectra_Type", values_to = "Identification_count")
 tbl_Identification_total
-
-
   #Plot
 pep_IT <- ggplot(tbl_Identification_total, 
   aes(fill=Spectra_Type, y=Identification_count, x=Study, label=Identification_count)) + 
@@ -143,9 +151,10 @@ pep_IT <- ggplot(tbl_Identification_total,
         subtitle = "Comparing ANN-SoLo and the Original Study") +
     labs(fill='Spectra Type') +
     theme_minimal() +
-    theme(axis.text = element_text(size = 12),
+  theme(axis.text = element_text(size = 12),
         axis.title = element_text(size = 15),
-        plot.title = element_text(size = 18))
+        plot.title = element_text(size = 20, face = "bold"),
+        plot.subtitle = element_text(size = 12))
   #Print pep_IP
 pep_IT
 png(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Total_Identified_Peptides.png")
@@ -154,14 +163,23 @@ dev.off()
 
 #Total amount of proteins identified
   #Counts unique proteins
-  #TMT global proteomic analysis of the 96 tumor and NAT pairs identified a total of 8,067 proteins
-    AS_prot <- read.csv(file="/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/data_input.txt", sep="\t")
+          #ALL ANN-SoLo + PIA identifiec proteins
+    AS_prot <- fread(file="/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/data_input.txt", sep="\t")
     view(head(AS_prot))
     AS_prot_distinct <- AS_prot %>% 
     select(Protein.Group.Accessions) %>%
-    distinct() %>%
+    unique() %>%
     nrow()
-
+        #ALL original study identifiec proteins
+    OS_prot_NAT <- fread(file="/Users/jensvandeperre/Desktop/Inputs/Original_Proteins/Human__CPTAC_COAD__PNNL__Proteome__TMT__03_01_2017__BCM__Gene__PNNL_Normal_TMT_UnsharedLogRatio.cct.txt") %>%
+            select(attrib_name)
+    OS_prot_TUM <- fread(file="/Users/jensvandeperre/Desktop/Inputs/Original_Proteins/Human__CPTAC_COAD__PNNL__Proteome__TMT__03_01_2017__BCM__Gene__PNNL_Tumor_TMT_UnsharedLogRatio.cct.txt") %>%
+            select(attrib_name)
+view(head(OS_prot_NAT))
+OS_prot_distinct <- rbind(OS_prot_NAT, OS_prot_TUM) %>%
+    unique() %>%
+    nrow()
+        #Unique protein counts
 OS_pro_count <- 8067
 AS_pro_count <- 8688
 
@@ -170,16 +188,17 @@ tbl_pro_Identification_total <- tibble(Study=c("Original Study", "ANN-SoLo") , I
 tbl_pro_Identification_total
   #Plot
 pro_IT <- ggplot(tbl_pro_Identification_total, aes(x= Study , y= Identification_count)) +
-  geom_col(width = 0.45, fill = c("#56B4E9", "#E69F00")) +
+  geom_col(width = 0.45, fill = "#0071b2d2") +
   labs(x = "Study", y = "Identified Proteins",
         title = "Unique Identified Proteins",
         subtitle = "Comparing ANN-SoLo and Original Study ") +
   geom_text(aes(label=c(OS_pro_count, AS_pro_count)),
         position = position_dodge(width = 0.9), vjust = -0.25, size = 3.5) +
+  theme_minimal() +
   theme(axis.text = element_text(size = 12),
         axis.title = element_text(size = 15),
-        plot.title = element_text(size = 18))
-  #Print pep_IP
+        plot.title = element_text(size = 20, face = "bold"),
+        plot.subtitle = element_text(size = 12))
 pro_IT
 png(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Unique_Identified_Proteins.png")
    pro_IT
@@ -191,7 +210,7 @@ dev.off()
 
 #Most found protein
 
-    #Identification percentage of proteins
+#Identification percentage of proteins
       #ANN-Solo identification %
       ANN_SoLo <- (AS_count/TMT_count)*100
       #Original Study identification %
@@ -215,3 +234,11 @@ dev.off()
     pdf(file = )
       pro_IP
     dev.off()
+
+#Metrics
+  #PSMs
+    #mod
+    #non-mod
+  #Proteins
+    #mod
+    #non-mod
