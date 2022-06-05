@@ -125,10 +125,10 @@ AS_count_no_PTM <- AS_count-PTM_count
 Study=c("Original Study", "ANN-SoLo")
 
 Study <- c("Original Study", "ANN-SoLo")
-Non_mod <- c(OS_count, AS_count_no_PTM)
-Mod <- c(NULL,PTM_count)
-df_IT <- data.frame(Study, Non_mod, Mod)
-tbl_Identification_total <- pivot_longer(df, Non_mod:Mod, names_to = "Spectra_Type", values_to = "Identification_count", is.na(NA))
+Non_modified <- c(OS_count, AS_count_no_PTM)
+Modified <- c(NA,PTM_count)
+df_IT <- data.frame(Study, Non_modified, Modified)
+tbl_Identification_total <- pivot_longer(df_IT, Non_modified:Modified, names_to = "Spectra_Type", values_to = "Identification_count")
 tbl_Identification_total
 
 
@@ -137,10 +137,11 @@ pep_IT <- ggplot(tbl_Identification_total,
   aes(fill=Spectra_Type, y=Identification_count, x=Study, label=Identification_count)) + 
     geom_bar(position="stack", stat="identity", width = 0.65) +
     geom_text(size = 3.5, position = position_stack(vjust = 0.5)) +
+    scale_color_manual(labels=c("Non-modified","Modified")) +
     labs(x = "Study", y = "Identified Peptides", 
         title = "Total Identified Peptides", 
         subtitle = "Comparing ANN-SoLo and the Original Study") +
-    labs(fill='NEW LEGEND TITLE') +
+    labs(fill='Spectra Type') +
     theme_minimal() +
     theme(axis.text = element_text(size = 12),
         axis.title = element_text(size = 15),

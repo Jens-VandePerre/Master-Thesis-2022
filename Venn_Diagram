@@ -29,6 +29,9 @@ library("stringr")
 library("ggvenn")
 library("ggVennDiagram")
 library("VennDiagram")
+library("ComplexHeatmap") #If you use it in published research, please cite:
+#Gu, Z. Complex heatmaps reveal patterns and correlations in multidimensional 
+  #genomic data. Bioinformatics 2016.
 
 
 wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab")
@@ -88,8 +91,18 @@ nrow(ANN_SoLo_no_mod_unique) #Over 20000 unique peptides identified
 write.table(ANN_SoLo_no_mod, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
 write.table(ANN_SoLo_no_mod_unique, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod_unique.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
 
-OS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Original_study.txt", header=FALSE)
-AS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod.txt", header=FALSE)
+
+
+AS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod.txt", header=FALSE) %>%
+        as_tibble %>% 
+	pull(V1) %>% 
+	unique()
+
+OS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Original_study.txt", header=FALSE) %>%
+        as_tibble() %>% 
+	filter(V1 %in% AS) %>%
+	pull(V1) %>% 
+	unique()
 
 
                 #Load dataframes, only modified peptides
@@ -114,6 +127,68 @@ AS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo
             view(annsolo_mod[[1]])
             ANN_SoLo_only_mod <- bind_rows(annsolo_mod)
             nrow(ANN_SoLo_only_mod)
+
+
+
+#	Create a binary matrix -----------------------------------------------------------------------------------------------------------
+list_ppi <- list(
+	"Original analysis" = OS,
+	"Reanalysis" = AS
+)
+matrix_ppi <- list_to_matrix(list_ppi)
+
+#	Create a combinarion matrix ------------------------------------------------------------------------------------------------------
+matrix_ppi_combination <- make_comb_mat(matrix_ppi, top_n_sets = 3) # mode = "intersect")
+set_size(matrix_ppi_combination)
+set_name(matrix_ppi_combination)
+matrix_ppi_combination <- matrix_ppi_combination[comb_degree(matrix_ppi_combination) > 0]
+
+pdf(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/upset_plot.pdf", height = 3.4, width = 10)
+ss = set_size(matrix_ppi_combination)
+cs = comb_size(matrix_ppi_combination)
+ht = UpSet(matrix_ppi_combination, 
+	set_order = order(ss),
+	comb_order = order(comb_degree(matrix_ppi_combination), -cs),
+	top_annotation = HeatmapAnnotation(
+		"PPI intersection size" = anno_barplot(cs, 
+			ylim = c(0, max(cs)*1.1),
+			border = FALSE, 
+			gp = gpar(fill = "black"), 
+			height = unit(4, "cm")
+		), 
+		annotation_name_gp= gpar(fontsize = 9),
+		annotation_name_side = "left", 
+		annotation_name_rot = 90),
+	left_annotation = rowAnnotation(
+		"Set size" = anno_barplot(-ss, 
+			baseline = 0,
+			axis_param = list(
+				at = c(0, -100, -200, -300),
+				labels = c(0, 100, 200, 300),
+				labels_rot = 0),
+			border = FALSE, 
+			gp = gpar(fill = "black"), 
+			width = unit(3, "cm")),
+		set_name = anno_text(set_name(matrix_ppi_combination), 
+			location = 0.5, 
+			just = "center",
+			width = max_text_width(set_name(matrix_ppi_combination)) + unit(-11, "mm"),
+			gp= gpar(fontsize = 8)
+			),
+			annotation_name_gp= gpar(fontsize = 9)
+			),
+	right_annotation = NULL,
+	show_row_names = FALSE)
+
+ht = draw(ht)
+od = column_order(ht)
+decorate_annotation("PPI intersection size", {
+	grid.text(cs[od], x = seq_along(cs), y = unit(cs[od], "native") + unit(2, "pt"), 
+		default.units = "native", just = c("center", "bottom"), 
+		gp = gpar(fontsize = 6, col = "#404040"))
+})
+dev.off()
+
 
 #Creating Venn Diagram 
     #Coparing all ANN-SoLo peptides to original study

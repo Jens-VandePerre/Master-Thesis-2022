@@ -1747,17 +1747,20 @@ merged.data.frame <- Reduce(function(...) merge(..., by="Accessions", all=TRUE),
 dat <- all_batches %>% 
   reduce(full_join, by='Accessions') 
 
-  
+
   rowSums(dat[,c("n.peptides.x","n.peptides.y","n.peptides.x.x","n.peptides.y.y","n.peptides.x.x.x","n.peptides.y.y.y","n.peptides.x.x.x.x","n.peptides.y.y.y.y","n.peptides.x.x.x.x.x","n.peptides.y.y.y.y.y","n.peptides.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y.y.y.y.y")],na.rm=TRUE) %>%
   rowSums(dat[,c("n.spectra.x","n.spectra.y","n.spectra.x.x","n.spectra.y.y","n.spectra.x.x.x","n.spectra.y.y.y","n.spectra.x.x.x.x","n.spectra.y.y.y.y","n.spectra.x.x.x.x.x","n.spectra.y.y.y.y.y","n.spectra.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y.y.y.y.y")],na.rm=TRUE)
 
-  
+tr <- as.factor(rep(c(2,2,2,2,2,1,1,1,1,1), 3))
+ex <- as.factor(c(rep(1,10), rep(2,10), rep(3,10)))
 
 allez <- dat %>%
-select(starts_with("n.peptides"))
+select(-starts_with("n."))
+nrow(is.na(allez))
 str(allez)
+view(allez)
 
-
+dat <- dat_B1S1_f01_f12
 
 dat <- bind_rows(all_batches)
 view(head(allez))
@@ -1775,6 +1778,17 @@ dim(dat)
 par(mfrow=c(1,1), font.lab=2, cex.lab=1.2, font.axis=2, cex.axis=1.2)
 boxplot(dat[, 1:197],  ylim = c(-3, 3), main="Boxplot normalized Intensities")
 
+par(mfrow=c(1,1), font.lab=2, cex.lab=1.2, font.axis=2, cex.axis=1.2)
+boxplot(dat[, 1:length(cha)],  ylim = c(-3, 3), main="Boxplot normalized Intensities")
+
+tum <- c(
+"TUMOR_127C_B1S1_f01_f12", 
+"TUMOR_128N_B1S1_f01_f12", 
+"TUMOR_128C_B1S1_f01_f12", 
+"TUMOR_129N_B1S1_f01_f12", 
+"TUMOR_129C_B1S1_f01_f12", 
+"TUMOR_130N_B1S1_f01_f12", 
+"TUMOR_130C_B1S1_f01_f12")
 
 tum <- c(
 "TUMOR_127C_B1S1_f01_f12", 
@@ -1879,6 +1893,11 @@ tum <- c(
 
 nat <- c(
 "NAT_126_B1S1_f01_f12", 
+"NAT_127N_B1S1_f01_f12")
+
+
+nat <- c(
+"NAT_126_B1S1_f01_f12", 
 "NAT_127N_B1S1_f01_f12", 
 "NAT_126_B1S2_f01_f12", 
 "NAT_127C_B1S2_f01_f12", 
@@ -1980,7 +1999,8 @@ nat <- c(
 )
 
 
-
+design <- model.matrix(~factor(c(2,2,2,2,2,2,2,1,1)))
+design
 
 
 
@@ -2016,6 +2036,8 @@ abline(v=seq(-2,2,1), col="lightgray", lty="dotted")
 abline(h=seq(0,ry[2],1), col="lightgray", lty="dotted")
 axis(1, seq(-2,2,1), paste(c("1/4","1/2","1/1","2/1","4/1")))
 title("volcano plot of moderated p-values")
+
+
 
 
 
