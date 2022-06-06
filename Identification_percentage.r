@@ -111,6 +111,7 @@ pep_IP <- ggplot(tbl_Identification_IP,
     aes(fill=Spectra_Type, y=Identification_percentage, x=Study_IP, label=Label)) +
   geom_bar(position="stack", stat="identity", width = 0.65) +
   geom_text(size = 3.5, position = position_stack(vjust = 0.5)) +
+  scale_y_continuous(labels = function(x) paste0(x, "%")) +
   scale_color_manual(labels=c("Non-modified","Modified")) +
   labs(x="Study", y="Percentage Identified Spectra", title="Peptide Identification Percentage" , 
         subtitle="Comparing ANN-SoLo and the Original Study") +
@@ -138,7 +139,8 @@ Study <- c("Original Study", "ANN-SoLo")
 Non_modified <- c(OS_count, AS_count_no_PTM)
 Modified <- c(NA,PTM_count)
 df_IT <- data.frame(Study, Non_modified, Modified)
-tbl_Identification_total <- pivot_longer(df_IT, Non_modified:Modified, names_to = "Spectra_Type", values_to = "Identification_count")
+tbl_Identification_total <- pivot_longer(df_IT, Non_modified:Modified, names_to = "Spectra_Type", 
+    values_to = "Identification_count")
 tbl_Identification_total
   #Plot
 pep_IT <- ggplot(tbl_Identification_total, 

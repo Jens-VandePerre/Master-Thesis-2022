@@ -95,13 +95,11 @@ write.table(ANN_SoLo_no_mod_unique, file="/Users/jensvandeperre/Desktop/Inputs/V
 
 AS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod.txt", header=FALSE) %>%
         as_tibble %>% 
-	pull(V1) %>% 
-	unique()
+	pull(V1) 
 OS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Original_study.txt", header=FALSE) %>%
         as_tibble() %>% 
 	filter(V1 %in% AS) %>%
-	pull(V1) %>% 
-	unique()
+	pull(V1) 
                 #Load dataframes, only modified peptides
             file_paths_annsolo_mod <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10")
             PSM_only_mod <- list()
