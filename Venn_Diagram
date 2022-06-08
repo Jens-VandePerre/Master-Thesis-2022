@@ -34,6 +34,7 @@ library("ComplexHeatmap") #If you use it in published research, please cite:
   #genomic data. Bioinformatics 2016.
 
 
+
 wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab")
 getwd() 
 list.files(wd)
@@ -94,12 +95,16 @@ write.table(ANN_SoLo_no_mod_unique, file="/Users/jensvandeperre/Desktop/Inputs/V
 
 
 AS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod.txt", header=FALSE) %>%
-        as_tibble %>% 
+    as_tibble %>% 
 	pull(V1) 
+AS <- list(AS)
 OS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Original_study.txt", header=FALSE) %>%
-        as_tibble() %>% 
-	filter(V1 %in% AS) %>%
+    as_tibble %>% 
 	pull(V1) 
+OS <- list(OS)
+view(AS)
+
+
                 #Load dataframes, only modified peptides
             file_paths_annsolo_mod <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10")
             PSM_only_mod <- list()
@@ -122,6 +127,30 @@ OS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Or
             view(annsolo_mod[[1]])
             ANN_SoLo_only_mod <- bind_rows(annsolo_mod)
             nrow(ANN_SoLo_only_mod)
+
+
+
+set1 <- paste(rep("word_" , 200) , sample(c(1:1000) , 200 , replace=F) , sep="")
+set2 <- paste(rep("word_" , 200) , sample(c(1:1000) , 200 , replace=F) , sep="")
+
+rownames(AS)<-NULL
+rownames(OS)<-NULL
+
+
+venn.diagram(
+  x = list(AS, OS),
+  category.names = c("ANN-SoLo", "Original Study"),
+  filename = '/Users/jensvandeperre/Desktop/Outputs/Plots/venn_diagramm.png',
+  output=TRUE
+)
+
+
+
+
+
+
+
+
 
 
 

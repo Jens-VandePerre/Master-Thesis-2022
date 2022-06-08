@@ -135,6 +135,7 @@ for (i in 1:12) {
   rename(TUMOR_130C_B1S1_f01_f12 = "130C") %>%
   rename(REF_131_B1S1_f01_f12 = "131") 
 }
+nrow(B1S1_f01_f12_renamed[[1]])
 B1S2_f01_f12 <- mydat[13:24]
 B1S2_f01_f12_renamed <- list()
 for (i in 1:12) {
@@ -819,6 +820,8 @@ eb.fit.mult <- function(dat, design){
 for (i in 1:12) {
   peptides_B1S1_f01_f12[[i]] <- read.peptides(B1S1_f01_f12_renamed[[i]], cha_B1S1_f01_f12)
 }
+nrow(peptides_B1S1_f01_f12[[1]])
+view(peptides_B1S1_f01_f12[[1]])
 for (i in 1:12) {
   peptides_B1S2_f01_f12[[i]] <- read.peptides(B1S2_f01_f12_renamed[[i]], cha_B1S2_f01_f12)
 }
@@ -882,10 +885,30 @@ for (i in 1:12) {
 for (i in 1:12) {
   peptides_B5S6_f01_f12[[i]] <- read.peptides(B5S6_f01_f12_renamed[[i]], cha_B5S6_f01_f12)
 }
+#Combine batches into One table
+      peptides_B1S1_f01_f12 <- bind_rows(peptides_B1S1_f01_f12)
+      peptides_B1S2_f01_f12 <- bind_rows(peptides_B1S2_f01_f12) 
+      peptides_B1S3_f01_f12 <- bind_rows(peptides_B1S3_f01_f12) 
+      peptides_B1S4_f01_f12 <- bind_rows(peptides_B1S4_f01_f12) 
+      peptides_B2S1_f01_f12 <- bind_rows(peptides_B2S1_f01_f12) 
+      peptides_B2S2_f01_f12 <- bind_rows(peptides_B2S2_f01_f12) 
+      peptides_B2S3_f01_f12 <- bind_rows(peptides_B2S3_f01_f12) 
+      peptides_B2S4_f01_f12 <- bind_rows(peptides_B2S4_f01_f12) 
+      peptides_B3S1_f01_f12 <- bind_rows(peptides_B3S1_f01_f12) 
+      peptides_B3S2_f01_f12 <- bind_rows(peptides_B3S2_f01_f12) 
+      peptides_B3S3_f01_f12 <- bind_rows(peptides_B3S3_f01_f12) 
+      peptides_B3S4_f01_f12 <- bind_rows(peptides_B3S4_f01_f12) 
+      peptides_B4S1_f01_f12 <- bind_rows(peptides_B4S1_f01_f12) 
+      peptides_B4S2_f01_f12 <- bind_rows(peptides_B4S2_f01_f12) 
+      peptides_B4S3_f01_f12 <- bind_rows(peptides_B4S3_f01_f12) 
+      peptides_B4S4_f01_f12 <- bind_rows(peptides_B4S4_f01_f12) 
+      peptides_B5S1_f01_f12 <- bind_rows(peptides_B5S1_f01_f12) 
+      peptides_B5S2_f01_f12 <- bind_rows(peptides_B5S2_f01_f12) 
+      peptides_B5S3_f01_f12 <- bind_rows(peptides_B5S3_f01_f12) 
+      peptides_B5S4_f01_f12 <- bind_rows(peptides_B5S4_f01_f12) 
+      peptides_B5S5_f01_f12 <- bind_rows(peptides_B5S5_f01_f12) 
+      peptides_B5S6_f01_f12 <- bind_rows(peptides_B5S6_f01_f12) 
 
-  #quantify.proteins
-  #Run on each batch
-    #Create list to store each batch in
       proteins_B1S1_f01_f12 <- list() #
       proteins_B1S2_f01_f12 <- list() #
       proteins_B1S3_f01_f12 <- list() #
@@ -908,10 +931,42 @@ for (i in 1:12) {
       proteins_B5S4_f01_f12 <- list() #
       proteins_B5S5_f01_f12 <- list() #
       proteins_B5S6_f01_f12 <- list() #
+
+
+
+
+  #quantify.proteins
+  #Run on each batch
+    #Create list to store each batch in
+      proteins_B1S1_f01_f12 <- quantify.proteins(peptides_B1S1_f01_f12, cha_B1S1_f01_f12) #
+      proteins_B1S2_f01_f12 <- quantify.proteins(peptides_B1S2_f01_f12, cha_B1S2_f01_f12)#
+      proteins_B1S3_f01_f12 <- quantify.proteins(peptides_B1S3_f01_f12, cha_B1S3_f01_f12)#
+      proteins_B1S4_f01_f12 <- quantify.proteins(peptides_B1S4_f01_f12, cha_B1S4_f01_f12)#
+      proteins_B2S1_f01_f12 <- quantify.proteins(peptides_B2S1_f01_f12, cha_B2S1_f01_f12)#
+      proteins_B2S2_f01_f12 <- quantify.proteins(peptides_B2S2_f01_f12, cha_B2S2_f01_f12)#
+      proteins_B2S3_f01_f12 <- quantify.proteins(peptides_B2S3_f01_f12, cha_B2S3_f01_f12)#
+      proteins_B2S4_f01_f12 <- quantify.proteins(peptides_B2S4_f01_f12, cha_B2S4_f01_f12)#
+      proteins_B3S1_f01_f12 <- quantify.proteins(peptides_B3S1_f01_f12, cha_B3S1_f01_f12)#
+      proteins_B3S2_f01_f12 <- quantify.proteins(peptides_B3S2_f01_f12, cha_B3S2_f01_f12)#
+      proteins_B3S3_f01_f12 <- quantify.proteins(peptides_B3S3_f01_f12, cha_B3S3_f01_f12)#
+      proteins_B3S4_f01_f12 <- quantify.proteins(peptides_B3S4_f01_f12, cha_B3S4_f01_f12)#
+      proteins_B4S1_f01_f12 <- quantify.proteins(peptides_B4S1_f01_f12, cha_B4S1_f01_f12)#
+      proteins_B4S2_f01_f12 <- quantify.proteins(peptides_B4S2_f01_f12, cha_B4S2_f01_f12)#
+      proteins_B4S3_f01_f12 <- quantify.proteins(peptides_B4S3_f01_f12, cha_B4S3_f01_f12)#
+      proteins_B4S4_f01_f12 <- quantify.proteins(peptides_B4S4_f01_f12, cha_B4S4_f01_f12)#
+      proteins_B5S1_f01_f12 <- quantify.proteins(peptides_B5S1_f01_f12, cha_B5S1_f01_f12)#
+      proteins_B5S2_f01_f12 <- quantify.proteins(peptides_B5S2_f01_f12, cha_B5S2_f01_f12)#
+      proteins_B5S3_f01_f12 <- quantify.proteins(peptides_B5S3_f01_f12, cha_B5S3_f01_f12)#
+      proteins_B5S4_f01_f12 <- quantify.proteins(peptides_B5S4_f01_f12, cha_B5S4_f01_f12)#
+      proteins_B5S5_f01_f12 <- quantify.proteins(peptides_B5S5_f01_f12, cha_B5S5_f01_f12)
+      proteins_B5S6_f01_f12 <- quantify.proteins(peptides_B5S6_f01_f12, cha_B5S6_f01_f12)
+
+
     #For each batch run the loop (22 times)
 for (i in 1:12) {
   proteins_B1S1_f01_f12[[i]] <- quantify.proteins(peptides_B1S1_f01_f12[[i]], cha_B1S1_f01_f12)
 }
+nrow(proteins_B1S1_f01_f12[[1]])
 for (i in 1:12) {
   proteins_B1S2_f01_f12[[i]] <- quantify.proteins(peptides_B1S2_f01_f12[[i]], cha_B1S2_f01_f12)
 }
@@ -999,94 +1054,72 @@ for (i in 1:12) {
       batch_B5S4_f01_f12 <- list() #
       batch_B5S5_f01_f12 <- list() #
       batch_B5S6_f01_f12 <- list() #
-for (i in 1:12) {
-    batch_B1S1_f01_f12[[i]] <- proteins_B1S1_f01_f12[[i]] %>% 
+
+    batch_B1S1_f01_f12 <- proteins_B1S1_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B1S2_f01_f12[[i]] <- proteins_B1S2_f01_f12[[i]] %>% 
+view(batch_B1S1_f01_f12)
+    batch_B1S2_f01_f12 <- proteins_B1S2_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B1S3_f01_f12[[i]] <- proteins_B1S3_f01_f12[[i]] %>% 
+
+    batch_B1S3_f01_f12 <- proteins_B1S3_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B1S4_f01_f12[[i]] <- proteins_B1S4_f01_f12[[i]] %>% 
+
+    batch_B1S4_f01_f12 <- proteins_B1S4_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B2S1_f01_f12[[i]] <- proteins_B2S1_f01_f12[[i]] %>% 
+
+    batch_B2S1_f01_f12 <- proteins_B2S1_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B2S2_f01_f12[[i]] <- proteins_B2S2_f01_f12[[i]] %>% 
+
+    batch_B2S2_f01_f12 <- proteins_B2S2_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B2S3_f01_f12[[i]] <- proteins_B2S3_f01_f12[[i]] %>% 
+
+    batch_B2S3_f01_f12 <- proteins_B2S3_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B2S4_f01_f12[[i]] <- proteins_B2S4_f01_f12[[i]] %>% 
+
+    batch_B2S4_f01_f12 <- proteins_B2S4_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B3S1_f01_f12[[i]] <- proteins_B3S1_f01_f12[[i]] %>% 
+
+    batch_B3S1_f01_f12 <- proteins_B3S1_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B3S2_f01_f12[[i]] <- proteins_B3S2_f01_f12[[i]] %>% 
+
+    batch_B3S2_f01_f12 <- proteins_B3S2_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B3S3_f01_f12[[i]] <- proteins_B3S3_f01_f12[[i]] %>% 
+
+    batch_B3S3_f01_f12 <- proteins_B3S3_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B3S4_f01_f12[[i]] <- proteins_B3S4_f01_f12[[i]] %>% 
+
+    batch_B3S4_f01_f12 <- proteins_B3S4_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B4S1_f01_f12[[i]] <- proteins_B4S1_f01_f12[[i]] %>% 
+
+    batch_B4S1_f01_f12 <- proteins_B4S1_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B4S2_f01_f12[[i]] <- proteins_B4S2_f01_f12[[i]] %>% 
+
+    batch_B4S2_f01_f12 <- proteins_B4S2_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B4S3_f01_f12[[i]] <- proteins_B4S3_f01_f12[[i]] %>% 
+
+    batch_B4S3_f01_f12 <- proteins_B4S3_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B4S4_f01_f12[[i]] <- proteins_B4S4_f01_f12[[i]] %>% 
+
+    batch_B4S4_f01_f12 <- proteins_B4S4_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B5S1_f01_f12[[i]] <- proteins_B5S1_f01_f12[[i]] %>% 
+
+    batch_B5S1_f01_f12 <- proteins_B5S1_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B5S2_f01_f12[[i]] <- proteins_B5S2_f01_f12[[i]] %>% 
+
+    batch_B5S2_f01_f12 <- proteins_B5S2_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B5S3_f01_f12[[i]] <- proteins_B5S3_f01_f12[[i]] %>% 
+
+    batch_B5S3_f01_f12 <- proteins_B5S3_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B5S4_f01_f12[[i]] <- proteins_B5S4_f01_f12[[i]] %>% 
+
+    batch_B5S4_f01_f12 <- proteins_B5S4_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B5S5_f01_f12[[i]] <- proteins_B5S5_f01_f12[[i]] %>% 
+
+    batch_B5S5_f01_f12 <- proteins_B5S5_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
-for (i in 1:12) {
-    batch_B5S6_f01_f12[[i]] <- proteins_B5S6_f01_f12[[i]] %>% 
+
+    batch_B5S6_f01_f12 <- proteins_B5S6_f01_f12 %>% 
     rownames_to_column(var = "Accessions")
-}
 
   #Summarize values for identical channels
   #Devide all channels by reference signal
@@ -1116,21 +1149,7 @@ for (i in 1:12) {
       dat_B5S6_f01_f12 <- list() 
 
     #For each batch run the loop (22 times)
-dat_B1S1_f01_f12 <- bind_rows(batch_B1S1_f01_f12) %>%
-  group_by(Accessions) %>% 
-  summarise(NAT_126_B1S1_f01_f12 = sum(NAT_126_B1S1_f01_f12), 
-  NAT_127N_B1S1_f01_f12 = sum(NAT_127N_B1S1_f01_f12), 
-  TUMOR_127C_B1S1_f01_f12 = sum(TUMOR_127C_B1S1_f01_f12),
-  TUMOR_128N_B1S1_f01_f12 =sum(TUMOR_128N_B1S1_f01_f12),
-  TUMOR_128C_B1S1_f01_f12 =sum(TUMOR_128C_B1S1_f01_f12),
-  TUMOR_129N_B1S1_f01_f12 =sum(TUMOR_129N_B1S1_f01_f12),
-  TUMOR_129C_B1S1_f01_f12 =sum(TUMOR_129C_B1S1_f01_f12),
-  TUMOR_130N_B1S1_f01_f12 =sum(TUMOR_130N_B1S1_f01_f12),
-  TUMOR_130C_B1S1_f01_f12 =sum(TUMOR_130C_B1S1_f01_f12),
-  REF_131_B1S1_f01_f12 =sum(REF_131_B1S1_f01_f12),
-  n.peptides =sum(n.peptides),
-  n.spectra =sum(n.spectra)
-  ) %>%
+dat_B1S1_f01_f12 <- batch_B1S1_f01_f12 %>%
   mutate (NAT_126_B1S1_f01_f12 = NAT_126_B1S1_f01_f12/REF_131_B1S1_f01_f12) %>%
   mutate (NAT_127N_B1S1_f01_f12 = NAT_127N_B1S1_f01_f12/REF_131_B1S1_f01_f12) %>%
   mutate (TUMOR_127C_B1S1_f01_f12= TUMOR_127C_B1S1_f01_f12/REF_131_B1S1_f01_f12) %>%
@@ -1141,23 +1160,10 @@ dat_B1S1_f01_f12 <- bind_rows(batch_B1S1_f01_f12) %>%
   mutate (TUMOR_130N_B1S1_f01_f12 = TUMOR_130N_B1S1_f01_f12/REF_131_B1S1_f01_f12) %>%
   mutate (TUMOR_130C_B1S1_f01_f12 = TUMOR_130C_B1S1_f01_f12/REF_131_B1S1_f01_f12) %>%
   select(-REF_131_B1S1_f01_f12)
+nrow(dat_B1S1_f01_f12) 
+view(dat_B1S1_f01_f12) 
 
-dat_B1S2_f01_f12 <- bind_rows(batch_B1S2_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        NAT_126_B1S2_f01_f12 = sum(NAT_126_B1S2_f01_f12),
-        TUMOR_127N_B1S2_f01_f12 = sum(TUMOR_127N_B1S2_f01_f12),
-        NAT_127C_B1S2_f01_f12 = sum(NAT_127C_B1S2_f01_f12),
-        TUMOR_128N_B1S2_f01_f12 = sum(TUMOR_128N_B1S2_f01_f12),
-        NAT_128C_B1S2_f01_f12 = sum(NAT_128C_B1S2_f01_f12),
-        TUMOR_129N_B1S2_f01_f12 = sum(TUMOR_129N_B1S2_f01_f12),
-        NAT_129C_B1S2_f01_f12 = sum(NAT_129C_B1S2_f01_f12),
-        TUMOR_130N_B1S2_f01_f12 = sum(TUMOR_130N_B1S2_f01_f12),
-        TUMOR_130C_B1S2_f01_f12 = sum(TUMOR_130C_B1S2_f01_f12),
-        REF_131_B1S2_f01_f12 = sum(REF_131_B1S2_f01_f12),
-        n.peptides =sum(n.peptides),
-        n.spectra =sum(n.spectra)
-    ) %>%
+dat_B1S2_f01_f12 <- batch_B1S2_f01_f12 %>%
   mutate(NAT_126_B1S2_f01_f12 = NAT_126_B1S2_f01_f12/REF_131_B1S2_f01_f12) %>%
   mutate(TUMOR_127N_B1S2_f01_f12 = TUMOR_127N_B1S2_f01_f12/REF_131_B1S2_f01_f12) %>%
   mutate(NAT_127C_B1S2_f01_f12 = NAT_127C_B1S2_f01_f12/REF_131_B1S2_f01_f12) %>%
@@ -1169,23 +1175,8 @@ dat_B1S2_f01_f12 <- bind_rows(batch_B1S2_f01_f12) %>%
   mutate(TUMOR_130C_B1S2_f01_f12 = TUMOR_130C_B1S2_f01_f12/REF_131_B1S2_f01_f12) %>%
   select(-REF_131_B1S2_f01_f12) 
 
-dat_B1S3_f01_f12 <- bind_rows(batch_B1S3_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        TUMOR_126_B1S3_f01_f12 = sum(TUMOR_126_B1S3_f01_f12),
-        NAT_127N_B1S3_f01_f12 = sum(NAT_127N_B1S3_f01_f12),
-        TUMOR_127C_B1S3_f01_f12 = sum(TUMOR_127C_B1S3_f01_f12),
-        NAT_128N_B1S3_f01_f12 = sum(NAT_128N_B1S3_f01_f12),
-        NAT_128C_B1S3_f01_f12 = sum(NAT_128C_B1S3_f01_f12),
-        NAT_129N_B1S3_f01_f12 = sum(NAT_129N_B1S3_f01_f12),
-        NAT_129C_B1S3_f01_f12 = sum(NAT_129C_B1S3_f01_f12),
-        TUMOR_130N_B1S3_f01_f12 = sum(TUMOR_130N_B1S3_f01_f12),
-        TUMOR_130C_B1S3_f01_f12 = sum(TUMOR_130C_B1S3_f01_f12),
-        REF_131_B1S3_f01_f12 = sum(REF_131_B1S3_f01_f12),
-        n.peptides =sum(n.peptides),
-        n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(TUMOR_126_B1S3_f01_f12 = TUMOR_126_B1S3_f01_f12/REF_131_B1S3_f01_f12) %>%
+dat_B1S3_f01_f12 <- batch_B1S3_f01_f12 %>%
+    mutate(TUMOR_126_B1S3_f01_f12 = TUMOR_126_B1S3_f01_f12/REF_131_B1S3_f01_f12) %>%
   mutate(NAT_127N_B1S3_f01_f12 = NAT_127N_B1S3_f01_f12/REF_131_B1S3_f01_f12) %>%
   mutate(TUMOR_127C_B1S3_f01_f12 = TUMOR_127C_B1S3_f01_f12/REF_131_B1S3_f01_f12) %>%
   mutate(NAT_128N_B1S3_f01_f12 = NAT_128N_B1S3_f01_f12/REF_131_B1S3_f01_f12) %>%
@@ -1196,23 +1187,8 @@ dat_B1S3_f01_f12 <- bind_rows(batch_B1S3_f01_f12) %>%
   mutate(TUMOR_130C_B1S3_f01_f12 = TUMOR_130C_B1S3_f01_f12/REF_131_B1S3_f01_f12) %>%
   select(-REF_131_B1S3_f01_f12) 
 
-dat_B1S4_f01_f12 <- bind_rows(batch_B1S4_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        NAT_161_B1S4_f01_f12 = sum(NAT_161_B1S4_f01_f12),
-        TUMOR_127N_B1S4_f01_f12 = sum(TUMOR_127N_B1S4_f01_f12),
-        NAT_127C_B1S4_f01_f12 = sum(NAT_127C_B1S4_f01_f12),
-        TUMOR_128N_B1S4_f01_f12 = sum(TUMOR_128N_B1S4_f01_f12),
-        TUMOR_128C_B1S4_f01_f12 = sum(TUMOR_128C_B1S4_f01_f12),
-        TUMOR_129N_B1S4_f01_f12 = sum(TUMOR_129N_B1S4_f01_f12),
-        TUMOR_129C_B1S4_f01_f12 = sum(TUMOR_129C_B1S4_f01_f12),
-        NAT_130N_B1S4_f01_f12 = sum(NAT_130N_B1S4_f01_f12),
-        TUMOR_130C_B1S4_f01_f12 = sum(TUMOR_130C_B1S4_f01_f12),
-        REF_131__B1S4_f01_f12 =sum(REF_131__B1S4_f01_f12),
-        n.peptides =sum(n.peptides),
-        n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(NAT_161_B1S4_f01_f12 = NAT_161_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
+dat_B1S4_f01_f12 <- batch_B1S4_f01_f12 %>%
+    mutate(NAT_161_B1S4_f01_f12 = NAT_161_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
   mutate(TUMOR_127N_B1S4_f01_f12 = TUMOR_127N_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
   mutate(NAT_127C_B1S4_f01_f12 = NAT_127C_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
   mutate(TUMOR_128N_B1S4_f01_f12 = TUMOR_128N_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
@@ -1223,23 +1199,8 @@ dat_B1S4_f01_f12 <- bind_rows(batch_B1S4_f01_f12) %>%
   mutate(TUMOR_130C_B1S4_f01_f12 = TUMOR_130C_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
   select(-REF_131__B1S4_f01_f12) 
 
-dat_B2S1_f01_f12 <- bind_rows(batch_B2S1_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        TUMOR_126_B2S1_f01_f12 = sum(TUMOR_126_B2S1_f01_f12),
-        TUMOR_127N_B2S1_f01_f12 = sum(TUMOR_127N_B2S1_f01_f12),
-        TUMOR_127C_B2S1_f01_f12 = sum(TUMOR_127C_B2S1_f01_f12),
-        NAT_128N_B2S1_f01_f12 = sum(NAT_128N_B2S1_f01_f12),
-        NAT_128C_B2S1_f01_f12 = sum(NAT_128C_B2S1_f01_f12),
-        TUMOR_129N_B2S1_f01_f12 = sum(TUMOR_129N_B2S1_f01_f12),
-        NAT_129C_B2S1_f01_f12 = sum(NAT_129C_B2S1_f01_f12),
-        TUMOR_130N_B2S1_f01_f12 = sum(TUMOR_130N_B2S1_f01_f12),
-        TUMOR_130C_B2S1_f01_f12 = sum(TUMOR_130C_B2S1_f01_f12),
-        REF_131_B2S1_f01_f12 = sum(REF_131_B2S1_f01_f12),
-        n.peptides =sum(n.peptides),
-                n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(TUMOR_126_B2S1_f01_f12 = TUMOR_126_B2S1_f01_f12/REF_131_B2S1_f01_f12) %>%
+dat_B2S1_f01_f12 <- batch_B2S1_f01_f12 %>%
+    mutate(TUMOR_126_B2S1_f01_f12 = TUMOR_126_B2S1_f01_f12/REF_131_B2S1_f01_f12) %>%
   mutate(TUMOR_127N_B2S1_f01_f12 = TUMOR_127N_B2S1_f01_f12/REF_131_B2S1_f01_f12) %>%
   mutate(TUMOR_127C_B2S1_f01_f12 = TUMOR_127C_B2S1_f01_f12/REF_131_B2S1_f01_f12) %>%
   mutate(NAT_128N_B2S1_f01_f12 = NAT_128N_B2S1_f01_f12/REF_131_B2S1_f01_f12) %>%
@@ -1250,23 +1211,8 @@ dat_B2S1_f01_f12 <- bind_rows(batch_B2S1_f01_f12) %>%
   mutate(TUMOR_130C_B2S1_f01_f12 = TUMOR_130C_B2S1_f01_f12/REF_131_B2S1_f01_f12) %>%
   select(-REF_131_B2S1_f01_f12) 
 
-dat_B2S2_f01_f12 <- bind_rows(batch_B2S2_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        TUMOR_126_B2S2_f01_f12 = sum(TUMOR_126_B2S2_f01_f12),
-        TUMOR_127N_B2S2_f01_f12 = sum(TUMOR_127N_B2S2_f01_f12),
-        TUMOR_127C_B2S2_f01_f12 = sum(TUMOR_127C_B2S2_f01_f12),
-        NAT_128N_B2S2_f01_f12 = sum(NAT_128N_B2S2_f01_f12),
-        NAT_128C_B2S2_f01_f12 = sum(NAT_128C_B2S2_f01_f12),
-        TUMOR_129N_B2S2_f01_f12 = sum(TUMOR_129N_B2S2_f01_f12),
-        NAT_129C_B2S2_f01_f12 = sum(NAT_129C_B2S2_f01_f12),
-        TUMOR_130N_B2S2_f01_f12 = sum(TUMOR_130N_B2S2_f01_f12),
-        TUMOR_130C_B2S2_f01_f12 = sum(TUMOR_130C_B2S2_f01_f12),
-        REF_131_B2S2_f01_f12 =sum(REF_131_B2S2_f01_f12),
-            n.peptides =sum(n.peptides),
-            n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(TUMOR_126_B2S2_f01_f12 = TUMOR_126_B2S2_f01_f12/REF_131_B2S2_f01_f12) %>%
+dat_B2S2_f01_f12 <- batch_B2S2_f01_f12 %>%
+    mutate(TUMOR_126_B2S2_f01_f12 = TUMOR_126_B2S2_f01_f12/REF_131_B2S2_f01_f12) %>%
   mutate(TUMOR_127N_B2S2_f01_f12 = TUMOR_127N_B2S2_f01_f12/REF_131_B2S2_f01_f12) %>%
   mutate(TUMOR_127C_B2S2_f01_f12 = TUMOR_127C_B2S2_f01_f12/REF_131_B2S2_f01_f12) %>%
   mutate(NAT_128N_B2S2_f01_f12 = NAT_128N_B2S2_f01_f12/REF_131_B2S2_f01_f12) %>%
@@ -1277,23 +1223,8 @@ dat_B2S2_f01_f12 <- bind_rows(batch_B2S2_f01_f12) %>%
   mutate(TUMOR_130C_B2S2_f01_f12 = TUMOR_130C_B2S2_f01_f12/REF_131_B2S2_f01_f12) %>%
   select(-REF_131_B2S2_f01_f12) 
 
-dat_B2S3_f01_f12 <- bind_rows(batch_B2S3_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        TUMOR_126_B2S3_f01_f12 = sum(TUMOR_126_B2S3_f01_f12),
-        NAT_127N_B2S3_f01_f12 = sum(NAT_127N_B2S3_f01_f12),
-        TUMOR_127C_B2S3_f01_f12 = sum(TUMOR_127C_B2S3_f01_f12),
-        NAT_128N_B2S3_f01_f12 = sum(NAT_128N_B2S3_f01_f12),
-        NAT_128C_B2S3_f01_f12 = sum(NAT_128C_B2S3_f01_f12),
-        NAT_129N_B2S3_f01_f12 = sum(NAT_129N_B2S3_f01_f12),
-        NAT_129C_B2S3_f01_f12 = sum(NAT_129C_B2S3_f01_f12),
-        TUMOR_130N_B2S3_f01_f12 = sum(TUMOR_130N_B2S3_f01_f12),
-        NAT_130C_B2S3_f01_f12 = sum(NAT_130C_B2S3_f01_f12),
-        REF_131_B2S3_f01_f12 = sum(REF_131_B2S3_f01_f12),
-                    n.peptides =sum(n.peptides),
-                    n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(TUMOR_126_B2S3_f01_f12 = TUMOR_126_B2S3_f01_f12/REF_131_B2S3_f01_f12) %>%
+dat_B2S3_f01_f12 <- batch_B2S3_f01_f12 %>%
+    mutate(TUMOR_126_B2S3_f01_f12 = TUMOR_126_B2S3_f01_f12/REF_131_B2S3_f01_f12) %>%
   mutate(NAT_127N_B2S3_f01_f12 = NAT_127N_B2S3_f01_f12/REF_131_B2S3_f01_f12) %>%
   mutate(TUMOR_127C_B2S3_f01_f12 = TUMOR_127C_B2S3_f01_f12/REF_131_B2S3_f01_f12) %>%
   mutate(NAT_128N_B2S3_f01_f12 = NAT_128N_B2S3_f01_f12/REF_131_B2S3_f01_f12) %>%
@@ -1304,23 +1235,8 @@ dat_B2S3_f01_f12 <- bind_rows(batch_B2S3_f01_f12) %>%
   mutate(NAT_130C_B2S3_f01_f12 = NAT_130C_B2S3_f01_f12/REF_131_B2S3_f01_f12) %>%
   select(-REF_131_B2S3_f01_f12) 
 
-dat_B2S4_f01_f12 <- bind_rows(batch_B2S4_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        TUMOR_126_B2S4_f01_f12 = sum(TUMOR_126_B2S4_f01_f12),
-        TUMOR_127N_B2S4_f01_f12 = sum(TUMOR_127N_B2S4_f01_f12),
-        NAT_127C_B2S4_f01_f12 = sum(NAT_127C_B2S4_f01_f12),
-        NAT_128N_B2S4_f01_f12 = sum(NAT_128N_B2S4_f01_f12),
-        TUMOR_128C_B2S4_f01_f12 = sum(TUMOR_128C_B2S4_f01_f12),
-        TUMOR_129N_B2S4_f01_f12 = sum(TUMOR_129N_B2S4_f01_f12),
-        NAT_129C_B2S4_f01_f12 = sum(NAT_129C_B2S4_f01_f12),
-        TUMOR_130N_B2S4_f01_f12 = sum(TUMOR_130N_B2S4_f01_f12),
-        NAT_130C_B2S4_f01_f12 = sum(NAT_130C_B2S4_f01_f12),
-        REF_131_B2S4_f01_f12 = sum(REF_131_B2S4_f01_f12),
-            n.peptides =sum(n.peptides),
-            n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(TUMOR_126_B2S4_f01_f12 = TUMOR_126_B2S4_f01_f12/REF_131_B2S4_f01_f12) %>%
+dat_B2S4_f01_f12 <- batch_B2S4_f01_f12 %>%
+    mutate(TUMOR_126_B2S4_f01_f12 = TUMOR_126_B2S4_f01_f12/REF_131_B2S4_f01_f12) %>%
   mutate(TUMOR_127N_B2S4_f01_f12 = TUMOR_127N_B2S4_f01_f12/REF_131_B2S4_f01_f12) %>%
   mutate(NAT_127C_B2S4_f01_f12 = NAT_127C_B2S4_f01_f12/REF_131_B2S4_f01_f12) %>%
   mutate(NAT_128N_B2S4_f01_f12 = NAT_128N_B2S4_f01_f12/REF_131_B2S4_f01_f12) %>%
@@ -1331,23 +1247,8 @@ dat_B2S4_f01_f12 <- bind_rows(batch_B2S4_f01_f12) %>%
   mutate(NAT_130C_B2S4_f01_f12 = NAT_130C_B2S4_f01_f12/REF_131_B2S4_f01_f12) %>%
   select(-REF_131_B2S4_f01_f12) 
 
-dat_B3S1_f01_f12 <- bind_rows(batch_B3S1_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        TUMOR_126_B3S1_f01_f12 = sum(TUMOR_126_B3S1_f01_f12),
-        NAT_127N_B3S1_f01_f12 = sum(NAT_127N_B3S1_f01_f12),
-        NAT_127C_B3S1_f01_f12 = sum(NAT_127C_B3S1_f01_f12),
-        TUMOR_128N_B3S1_f01_f12 = sum(TUMOR_128N_B3S1_f01_f12),
-        TUMOR_128C_B3S1_f01_f12 = sum(TUMOR_128C_B3S1_f01_f12),
-        TUMOR_129N_B3S1_f01_f12 = sum(TUMOR_129N_B3S1_f01_f12),
-        TUMOR_129C_B3S1_f01_f12 = sum(TUMOR_129C_B3S1_f01_f12),
-        TUMOR_130N_B3S1_f01_f12 = sum(TUMOR_130N_B3S1_f01_f12),
-        TUMOR_130C_B3S1_f01_f12 = sum(TUMOR_130C_B3S1_f01_f12),
-        REF_131_B3S1_f01_f12 = sum(REF_131_B3S1_f01_f12),
-           n.peptides =sum(n.peptides),
-            n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(TUMOR_126_B3S1_f01_f12 = TUMOR_126_B3S1_f01_f12/REF_131_B3S1_f01_f12) %>%
+dat_B3S1_f01_f12 <- batch_B3S1_f01_f12 %>%
+    mutate(TUMOR_126_B3S1_f01_f12 = TUMOR_126_B3S1_f01_f12/REF_131_B3S1_f01_f12) %>%
   mutate(NAT_127N_B3S1_f01_f12 = NAT_127N_B3S1_f01_f12/REF_131_B3S1_f01_f12) %>%
   mutate(NAT_127C_B3S1_f01_f12 = NAT_127C_B3S1_f01_f12/REF_131_B3S1_f01_f12) %>%
   mutate(TUMOR_128N_B3S1_f01_f12 = TUMOR_128N_B3S1_f01_f12/REF_131_B3S1_f01_f12) %>%
@@ -1358,23 +1259,8 @@ dat_B3S1_f01_f12 <- bind_rows(batch_B3S1_f01_f12) %>%
   mutate(TUMOR_130C_B3S1_f01_f12 = TUMOR_130C_B3S1_f01_f12/REF_131_B3S1_f01_f12) %>%
   select(-REF_131_B3S1_f01_f12) 
 
-dat_B3S2_f01_f12 <- bind_rows(batch_B3S2_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        NAT_126_B3S2_f01_f12 = sum(NAT_126_B3S2_f01_f12),
-        NAT_127N_B3S2_f01_f12 = sum(NAT_127N_B3S2_f01_f12),
-        NAT_127C_B3S2_f01_f12 = sum(NAT_127C_B3S2_f01_f12),
-        NAT_128N_B3S2_f01_f12 = sum(NAT_128N_B3S2_f01_f12),
-        TUMOR_128C_B3S2_f01_f12 = sum(TUMOR_128C_B3S2_f01_f12),
-        NAT_129N_B3S2_f01_f12 = sum(NAT_129N_B3S2_f01_f12),
-        NAT_129C_B3S2_f01_f12 = sum(NAT_129C_B3S2_f01_f12),
-        TUMOR_130N_B3S2_f01_f12 = sum(TUMOR_130N_B3S2_f01_f12),
-        TUMOR_130C_B3S2_f01_f12 = sum(TUMOR_130C_B3S2_f01_f12),
-        REF_131_B3S2_f01_f12 = sum(REF_131_B3S2_f01_f12),
-                n.peptides =sum(n.peptides),
-                    n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(NAT_126_B3S2_f01_f12 = NAT_126_B3S2_f01_f12/REF_131_B3S2_f01_f12) %>%
+dat_B3S2_f01_f12 <- batch_B3S2_f01_f12 %>%
+    mutate(NAT_126_B3S2_f01_f12 = NAT_126_B3S2_f01_f12/REF_131_B3S2_f01_f12) %>%
   mutate(NAT_127N_B3S2_f01_f12 = NAT_127N_B3S2_f01_f12/REF_131_B3S2_f01_f12) %>%
   mutate(NAT_127C_B3S2_f01_f12 = NAT_127C_B3S2_f01_f12/REF_131_B3S2_f01_f12) %>%
   mutate(NAT_128N_B3S2_f01_f12 = NAT_128N_B3S2_f01_f12/REF_131_B3S2_f01_f12) %>%
@@ -1385,23 +1271,8 @@ dat_B3S2_f01_f12 <- bind_rows(batch_B3S2_f01_f12) %>%
   mutate(TUMOR_130C_B3S2_f01_f12 = TUMOR_130C_B3S2_f01_f12/REF_131_B3S2_f01_f12) %>%
   select(-REF_131_B3S2_f01_f12) 
 
-dat_B3S3_f01_f12 <- bind_rows(batch_B3S3_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        TUMOR_126_B3S3_f01_f12 = sum(TUMOR_126_B3S3_f01_f12),
-        NAT_127N_B3S3_f01_f12 = sum(NAT_127N_B3S3_f01_f12),
-        TUMOR_127C_B3S3_f01_f12 = sum(TUMOR_127C_B3S3_f01_f12),
-        NAT_128N_B3S3_f01_f12 = sum(NAT_128N_B3S3_f01_f12),
-        TUMOR_128C_B3S3_f01_f12 = sum(TUMOR_128C_B3S3_f01_f12),
-        NAT_129N_B3S3_f01_f12 = sum(NAT_129N_B3S3_f01_f12),
-        TUMOR_129C_B3S3_f01_f12 = sum(TUMOR_129C_B3S3_f01_f12),
-        TUMOR_130N_B3S3_f01_f12 = sum(TUMOR_130N_B3S3_f01_f12),
-        NAT_130C_B3S3_f01_f12 = sum(NAT_130C_B3S3_f01_f12),
-        REF_131_B3S3_f01_f12 = sum(REF_131_B3S3_f01_f12),
-                n.peptides =sum(n.peptides),
-                    n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(TUMOR_126_B3S3_f01_f12 = TUMOR_126_B3S3_f01_f12/REF_131_B3S3_f01_f12) %>%
+dat_B3S3_f01_f12 <- batch_B3S3_f01_f12 %>%
+    mutate(TUMOR_126_B3S3_f01_f12 = TUMOR_126_B3S3_f01_f12/REF_131_B3S3_f01_f12) %>%
   mutate(NAT_127N_B3S3_f01_f12 = NAT_127N_B3S3_f01_f12/REF_131_B3S3_f01_f12) %>%
   mutate(TUMOR_127C_B3S3_f01_f12 = TUMOR_127C_B3S3_f01_f12/REF_131_B3S3_f01_f12) %>%
   mutate(NAT_128N_B3S3_f01_f12 = NAT_128N_B3S3_f01_f12/REF_131_B3S3_f01_f12) %>%
@@ -1412,23 +1283,8 @@ dat_B3S3_f01_f12 <- bind_rows(batch_B3S3_f01_f12) %>%
   mutate(NAT_130C_B3S3_f01_f12 = NAT_130C_B3S3_f01_f12/REF_131_B3S3_f01_f12) %>%
   select(-REF_131_B3S3_f01_f12) 
 
-dat_B3S4_f01_f12 <- bind_rows(batch_B3S4_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        NAT_126_B3S4_f01_f12 = sum(NAT_126_B3S4_f01_f12),
-        NAT_127N_B3S4_f01_f12 = sum(NAT_127N_B3S4_f01_f12),
-        TUMOR_127C_B3S4_f01_f12 = sum(TUMOR_127C_B3S4_f01_f12),
-        NAT_128N_B3S4_f01_f12 = sum(NAT_128N_B3S4_f01_f12),
-        NAT_128C_B3S4_f01_f12 = sum(NAT_128C_B3S4_f01_f12),
-        TUMOR_129N_B3S4_f01_f12 = sum(TUMOR_129N_B3S4_f01_f12),
-        TUMOR_129C_B3S4_f01_f12 = sum(TUMOR_129C_B3S4_f01_f12),
-        NAT_130N_B3S4_f01_f12 = sum(NAT_130N_B3S4_f01_f12),
-        NAT_130C_B3S4_f01_f12 = sum(NAT_130C_B3S4_f01_f12),
-        REF_131_B3S4_f01_f12 = sum(REF_131_B3S4_f01_f12),
-                n.peptides =sum(n.peptides),
-                    n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(NAT_126_B3S4_f01_f12 = NAT_126_B3S4_f01_f12/REF_131_B3S4_f01_f12) %>%
+dat_B3S4_f01_f12 <- batch_B3S4_f01_f12 %>%
+    mutate(NAT_126_B3S4_f01_f12 = NAT_126_B3S4_f01_f12/REF_131_B3S4_f01_f12) %>%
   mutate(NAT_127N_B3S4_f01_f12 = NAT_127N_B3S4_f01_f12/REF_131_B3S4_f01_f12) %>%
   mutate(TUMOR_127C_B3S4_f01_f12 = TUMOR_127C_B3S4_f01_f12/REF_131_B3S4_f01_f12) %>%
   mutate(NAT_128N_B3S4_f01_f12 = NAT_128N_B3S4_f01_f12/REF_131_B3S4_f01_f12) %>%
@@ -1439,23 +1295,8 @@ dat_B3S4_f01_f12 <- bind_rows(batch_B3S4_f01_f12) %>%
   mutate(NAT_130C_B3S4_f01_f12 = NAT_130C_B3S4_f01_f12/REF_131_B3S4_f01_f12) %>%
   select(-REF_131_B3S4_f01_f12) 
 
-dat_B4S1_f01_f12 <- bind_rows(batch_B4S1_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        NAT_126_B4S1_f01_f12 = sum(NAT_126_B4S1_f01_f12),
-        TUMOR_127N_B4S1_f01_f12 = sum(TUMOR_127N_B4S1_f01_f12),
-        NAT_127C_B4S1_f01_f12 = sum(NAT_127C_B4S1_f01_f12),
-        NAT_128N_B4S1_f01_f12 = sum(NAT_128N_B4S1_f01_f12),
-        NAT_128C_B4S1_f01_f12 = sum(NAT_128C_B4S1_f01_f12),
-        NAT_129N_B4S1_f01_f12 = sum(NAT_129N_B4S1_f01_f12),
-        TUMOR_129C_B4S1_f01_f12 = sum(TUMOR_129C_B4S1_f01_f12),
-        NAT_130N_B4S1_f01_f12 = sum(NAT_130N_B4S1_f01_f12),
-        NAT_130C_B4S1_f01_f12 = sum(NAT_130C_B4S1_f01_f12),
-        REF_131_B4S1_f01_f12 = sum(REF_131_B4S1_f01_f12),
-                n.peptides =sum(n.peptides),
-                    n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(NAT_126_B4S1_f01_f12 = NAT_126_B4S1_f01_f12/REF_131_B4S1_f01_f12) %>%
+dat_B4S1_f01_f12 <- batch_B4S1_f01_f12 %>%
+    mutate(NAT_126_B4S1_f01_f12 = NAT_126_B4S1_f01_f12/REF_131_B4S1_f01_f12) %>%
   mutate(TUMOR_127N_B4S1_f01_f12 = TUMOR_127N_B4S1_f01_f12/REF_131_B4S1_f01_f12) %>%
   mutate(NAT_127C_B4S1_f01_f12 = NAT_127C_B4S1_f01_f12/REF_131_B4S1_f01_f12) %>%
   mutate(NAT_128N_B4S1_f01_f12 = NAT_128N_B4S1_f01_f12/REF_131_B4S1_f01_f12) %>%
@@ -1466,23 +1307,8 @@ dat_B4S1_f01_f12 <- bind_rows(batch_B4S1_f01_f12) %>%
   mutate(NAT_130C_B4S1_f01_f12 = NAT_130C_B4S1_f01_f12/REF_131_B4S1_f01_f12) %>%
   select(-REF_131_B4S1_f01_f12) 
 
-dat_B4S2_f01_f12 <- bind_rows(batch_B4S2_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        NAT_126_B4S2_f01_f12 = sum(NAT_126_B4S2_f01_f12),
-        TUMOR_127N_B4S2_f01_f12 = sum(TUMOR_127N_B4S2_f01_f12),
-        TUMOR_127C_B4S2_f01_f12 = sum(TUMOR_127C_B4S2_f01_f12),
-        NAT_128N_B4S2_f01_f12 = sum(NAT_128N_B4S2_f01_f12),
-        NAT_128C_B4S2_f01_f12 = sum(NAT_128C_B4S2_f01_f12),
-        TUMOR_129N_B4S2_f01_f12 = sum(TUMOR_129N_B4S2_f01_f12),
-        NAT_129C_B4S2_f01_f12 = sum(NAT_129C_B4S2_f01_f12),
-        TUMOR_130N_B4S2_f01_f12 = sum(TUMOR_130N_B4S2_f01_f12),
-        NAT_130C_B4S2_f01_f12 = sum(NAT_130C_B4S2_f01_f12),
-        REF_131_B4S2_f01_f12 = sum(REF_131_B4S2_f01_f12),
-                        n.peptides =sum(n.peptides),
-                            n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(NAT_126_B4S2_f01_f12 = NAT_126_B4S2_f01_f12/REF_131_B4S2_f01_f12) %>%
+dat_B4S2_f01_f12 <- batch_B4S2_f01_f12 %>%
+    mutate(NAT_126_B4S2_f01_f12 = NAT_126_B4S2_f01_f12/REF_131_B4S2_f01_f12) %>%
   mutate(TUMOR_127N_B4S2_f01_f12 = TUMOR_127N_B4S2_f01_f12/REF_131_B4S2_f01_f12) %>%
   mutate(TUMOR_127C_B4S2_f01_f12 = TUMOR_127C_B4S2_f01_f12/REF_131_B4S2_f01_f12) %>%
   mutate(NAT_128N_B4S2_f01_f12 = NAT_128N_B4S2_f01_f12/REF_131_B4S2_f01_f12) %>%
@@ -1493,23 +1319,8 @@ dat_B4S2_f01_f12 <- bind_rows(batch_B4S2_f01_f12) %>%
   mutate(NAT_130C_B4S2_f01_f12 = NAT_130C_B4S2_f01_f12/REF_131_B4S2_f01_f12) %>%
   select(-REF_131_B4S2_f01_f12) 
 
-dat_B4S3_f01_f12 <- bind_rows(batch_B4S3_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        TUMOR_126_B4S3_f01_f12 = sum(TUMOR_126_B4S3_f01_f12),
-        NAT_127N_B4S3_f01_f12 = sum(NAT_127N_B4S3_f01_f12),
-        TUMOR_127C_B4S3_f01_f12 = sum(TUMOR_127C_B4S3_f01_f12),
-        NAT_128N_B4S3_f01_f12 = sum(NAT_128N_B4S3_f01_f12),
-        NAT_128C_B4S3_f01_f12 = sum(NAT_128C_B4S3_f01_f12),
-        TUMOR_129N_B4S3_f01_f12 = sum(TUMOR_129N_B4S3_f01_f12),
-        NAT_129C_B4S3_f01_f12 = sum(NAT_129C_B4S3_f01_f12),
-        TUMOR_130N_B4S3_f01_f12 = sum(TUMOR_130N_B4S3_f01_f12),
-        NAT_130C_B4S3_f01_f12 = sum(NAT_130C_B4S3_f01_f12),
-        REF_131_B4S3_f01_f12 = sum(REF_131_B4S3_f01_f12),
-                                n.peptides =sum(n.peptides),
-                                    n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(TUMOR_126_B4S3_f01_f12 = TUMOR_126_B4S3_f01_f12/REF_131_B4S3_f01_f12) %>%
+dat_B4S3_f01_f12 <- batch_B4S3_f01_f12 %>%
+    mutate(TUMOR_126_B4S3_f01_f12 = TUMOR_126_B4S3_f01_f12/REF_131_B4S3_f01_f12) %>%
   mutate(NAT_127N_B4S3_f01_f12 = NAT_127N_B4S3_f01_f12/REF_131_B4S3_f01_f12) %>%
   mutate(TUMOR_127C_B4S3_f01_f12 = TUMOR_127C_B4S3_f01_f12/REF_131_B4S3_f01_f12) %>%
   mutate(NAT_128N_B4S3_f01_f12 = NAT_128N_B4S3_f01_f12/REF_131_B4S3_f01_f12) %>%
@@ -1520,23 +1331,8 @@ dat_B4S3_f01_f12 <- bind_rows(batch_B4S3_f01_f12) %>%
   mutate(NAT_130C_B4S3_f01_f12 = NAT_130C_B4S3_f01_f12/REF_131_B4S3_f01_f12) %>%
   select(-REF_131_B4S3_f01_f12) 
 
-dat_B4S4_f01_f12 <- bind_rows(batch_B4S4_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-TUMOR_126_B4S4_f01_f12 = sum(TUMOR_126_B4S4_f01_f12),
-TUMOR_127N_B4S4_f01_f12 = sum(TUMOR_127N_B4S4_f01_f12),
-NAT_127C_B4S4_f01_f12 = sum(NAT_127C_B4S4_f01_f12),
-NAT_128N_B4S4_f01_f12 = sum(NAT_128N_B4S4_f01_f12),
-TUMOR_128C_B4S4_f01_f12 = sum(TUMOR_128C_B4S4_f01_f12),
-NAT_129N_B4S4_f01_f12 = sum(NAT_129N_B4S4_f01_f12),
-TUMOR_129C_B4S4_f01_f12 = sum(TUMOR_129C_B4S4_f01_f12),
-NAT_130N_B4S4_f01_f12 = sum(NAT_130N_B4S4_f01_f12),
-NAT_130C_B4S4_f01_f12 = sum(NAT_130C_B4S4_f01_f12),
-REF_131_B4S4_f01_f12 = sum(REF_131_B4S4_f01_f12),
-            n.peptides =sum(n.peptides),
-            n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(TUMOR_126_B4S4_f01_f12 = TUMOR_126_B4S4_f01_f12/REF_131_B4S4_f01_f12) %>%
+dat_B4S4_f01_f12 <- batch_B4S4_f01_f12 %>%
+    mutate(TUMOR_126_B4S4_f01_f12 = TUMOR_126_B4S4_f01_f12/REF_131_B4S4_f01_f12) %>%
   mutate(TUMOR_127N_B4S4_f01_f12 = TUMOR_127N_B4S4_f01_f12/REF_131_B4S4_f01_f12) %>%
   mutate(NAT_127C_B4S4_f01_f12 = NAT_127C_B4S4_f01_f12/REF_131_B4S4_f01_f12) %>%
   mutate(NAT_128N_B4S4_f01_f12 = NAT_128N_B4S4_f01_f12/REF_131_B4S4_f01_f12) %>%
@@ -1547,23 +1343,8 @@ REF_131_B4S4_f01_f12 = sum(REF_131_B4S4_f01_f12),
   mutate(NAT_130C_B4S4_f01_f12 = NAT_130C_B4S4_f01_f12/REF_131_B4S4_f01_f12) %>%
   select(-REF_131_B4S4_f01_f12) 
 
-dat_B5S1_f01_f12 <- bind_rows(batch_B5S1_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        NAT_126_B5S1_f01_f12 = sum(NAT_126_B5S1_f01_f12),
-        TUMOR_127N_B5S1_f01_f12 = sum(TUMOR_127N_B5S1_f01_f12),
-        NAT_127C_B5S1_f01_f12 = sum(NAT_127C_B5S1_f01_f12),
-        NAT_128N_B5S1_f01_f12 = sum(NAT_128N_B5S1_f01_f12),
-        NAT_128C_B5S1_f01_f12 = sum(NAT_128C_B5S1_f01_f12),
-        NAT_129N_B5S1_f01_f12 = sum(NAT_129N_B5S1_f01_f12),
-        TUMOR_129C_B5S1_f01_f12 = sum(TUMOR_129C_B5S1_f01_f12),
-        TUMOR_130N_B5S1_f01_f12 = sum(TUMOR_130N_B5S1_f01_f12),
-        TUMOR_130C_B5S1_f01_f12 = sum(TUMOR_130C_B5S1_f01_f12),
-        REF_131_B5S1_f01_f12 = sum(REF_131_B5S1_f01_f12),
-                n.peptides =sum(n.peptides),
-                n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(NAT_126_B5S1_f01_f12 = NAT_126_B5S1_f01_f12/REF_131_B5S1_f01_f12) %>%
+dat_B5S1_f01_f12 <- batch_B5S1_f01_f12 %>%
+    mutate(NAT_126_B5S1_f01_f12 = NAT_126_B5S1_f01_f12/REF_131_B5S1_f01_f12) %>%
   mutate(TUMOR_127N_B5S1_f01_f12 = TUMOR_127N_B5S1_f01_f12/REF_131_B5S1_f01_f12) %>%
   mutate(NAT_127C_B5S1_f01_f12 = NAT_127C_B5S1_f01_f12/REF_131_B5S1_f01_f12) %>%
   mutate(NAT_128N_B5S1_f01_f12 = NAT_128N_B5S1_f01_f12/REF_131_B5S1_f01_f12) %>%
@@ -1574,23 +1355,8 @@ dat_B5S1_f01_f12 <- bind_rows(batch_B5S1_f01_f12) %>%
   mutate(TUMOR_130C_B5S1_f01_f12 = TUMOR_130C_B5S1_f01_f12/REF_131_B5S1_f01_f12) %>%
   select(-REF_131_B5S1_f01_f12) 
 
-dat_B5S2_f01_f12 <- bind_rows(batch_B5S2_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        NAT_126_B5S2_f01_f12 = sum(NAT_126_B5S2_f01_f12),
-        NAT_127N_B5S2_f01_f12 = sum(NAT_127N_B5S2_f01_f12),
-        NAT_127C_B5S2_f01_f12 = sum(NAT_127C_B5S2_f01_f12),
-        TUMOR_128N_B5S2_f01_f12 = sum(TUMOR_128N_B5S2_f01_f12),
-        TUMOR_128C_B5S2_f01_f12 = sum(TUMOR_128C_B5S2_f01_f12),
-        NAT_129N_B5S2_f01_f12 = sum(NAT_129N_B5S2_f01_f12),
-        TUMOR_129C_B5S2_f01_f12 = sum(TUMOR_129C_B5S2_f01_f12),
-        TUMOR_130N_B5S2_f01_f12 = sum(TUMOR_130N_B5S2_f01_f12),
-        NAT_130C_B5S2_f01_f12 = sum(NAT_130C_B5S2_f01_f12),
-        REF_131_B5S2_f01_f12 = sum(REF_131_B5S2_f01_f12),
-                n.peptides =sum(n.peptides),
-                n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(NAT_126_B5S2_f01_f12 = NAT_126_B5S2_f01_f12/REF_131_B5S2_f01_f12) %>%
+dat_B5S2_f01_f12 <- batch_B5S2_f01_f12 %>%
+    mutate(NAT_126_B5S2_f01_f12 = NAT_126_B5S2_f01_f12/REF_131_B5S2_f01_f12) %>%
   mutate(NAT_127N_B5S2_f01_f12 = NAT_127N_B5S2_f01_f12/REF_131_B5S2_f01_f12) %>%
   mutate(NAT_127C_B5S2_f01_f12 = NAT_127C_B5S2_f01_f12/REF_131_B5S2_f01_f12) %>%
   mutate(TUMOR_128N_B5S2_f01_f12 = TUMOR_128N_B5S2_f01_f12/REF_131_B5S2_f01_f12) %>%
@@ -1601,23 +1367,8 @@ dat_B5S2_f01_f12 <- bind_rows(batch_B5S2_f01_f12) %>%
   mutate(NAT_130C_B5S2_f01_f12 = NAT_130C_B5S2_f01_f12/REF_131_B5S2_f01_f12) %>%
   select(-REF_131_B5S2_f01_f12) 
 
-dat_B5S3_f01_f12 <- bind_rows(batch_B5S3_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        TUMOR_126_B5S3_f01_f12 = sum(TUMOR_126_B5S3_f01_f12),
-        TUMOR_127N_B5S3_f01_f12 = sum(TUMOR_127N_B5S3_f01_f12),
-        NAT_127C_B5S3_f01_f12 = sum(NAT_127C_B5S3_f01_f12),
-        NAT_128N_B5S3_f01_f12 = sum(NAT_128N_B5S3_f01_f12),
-        TUMOR_128C_B5S3_f01_f12 = sum(TUMOR_128C_B5S3_f01_f12),
-        TUMOR_129N_B5S3_f01_f12 = sum(TUMOR_129N_B5S3_f01_f12),
-        TUMOR_129C_B5S3_f01_f12 = sum(TUMOR_129C_B5S3_f01_f12),
-        NAT_130N_B5S3_f01_f12 = sum(NAT_130N_B5S3_f01_f12),
-        TUMOR_130C_B5S3_f01_f12 = sum(TUMOR_130C_B5S3_f01_f12),
-        REF_131_B5S3_f01_f12 = sum(REF_131_B5S3_f01_f12),
-            n.peptides =sum(n.peptides),
-            n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(TUMOR_126_B5S3_f01_f12 = TUMOR_126_B5S3_f01_f12/REF_131_B5S3_f01_f12) %>%
+dat_B5S3_f01_f12 <- batch_B5S3_f01_f12 %>%
+    mutate(TUMOR_126_B5S3_f01_f12 = TUMOR_126_B5S3_f01_f12/REF_131_B5S3_f01_f12) %>%
   mutate(TUMOR_127N_B5S3_f01_f12 = TUMOR_127N_B5S3_f01_f12/REF_131_B5S3_f01_f12) %>%
   mutate(NAT_127C_B5S3_f01_f12 = NAT_127C_B5S3_f01_f12/REF_131_B5S3_f01_f12) %>%
   mutate(NAT_128N_B5S3_f01_f12 = NAT_128N_B5S3_f01_f12/REF_131_B5S3_f01_f12) %>%
@@ -1628,23 +1379,8 @@ dat_B5S3_f01_f12 <- bind_rows(batch_B5S3_f01_f12) %>%
   mutate(TUMOR_130C_B5S3_f01_f12 = TUMOR_130C_B5S3_f01_f12/REF_131_B5S3_f01_f12) %>%
   select(-REF_131_B5S3_f01_f12) 
 
-dat_B5S4_f01_f12 <- bind_rows(batch_B5S4_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-        TUMOR_126_B5S4_f01_f12 = sum(TUMOR_126_B5S4_f01_f12),
-        TUMOR_127N_B5S4_f01_f12 = sum(TUMOR_127N_B5S4_f01_f12),
-        TUMOR_127C_B5S4_f01_f12 = sum(TUMOR_127C_B5S4_f01_f12),
-        NAT_128N_B5S4_f01_f12 = sum(NAT_128N_B5S4_f01_f12),
-        TUMOR_128C_B5S4_f01_f12 = sum(TUMOR_128C_B5S4_f01_f12),
-        NAT_129N_B5S4_f01_f12 = sum(NAT_129N_B5S4_f01_f12),
-        NAT_129C_B5S4_f01_f12 = sum(NAT_129C_B5S4_f01_f12),
-        NAT_130N_B5S4_f01_f12 = sum(NAT_130N_B5S4_f01_f12),
-        NAT_130C_B5S4_f01_f12 = sum(NAT_130C_B5S4_f01_f12),
-        REF_131_B5S4_f01_f12 = sum(REF_131_B5S4_f01_f12),
-                n.peptides =sum(n.peptides),
-                n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(TUMOR_126_B5S4_f01_f12 = TUMOR_126_B5S4_f01_f12/REF_131_B5S4_f01_f12) %>%
+dat_B5S4_f01_f12 <- batch_B5S4_f01_f12 %>%
+    mutate(TUMOR_126_B5S4_f01_f12 = TUMOR_126_B5S4_f01_f12/REF_131_B5S4_f01_f12) %>%
   mutate(TUMOR_127N_B5S4_f01_f12 = TUMOR_127N_B5S4_f01_f12/REF_131_B5S4_f01_f12) %>%
   mutate(TUMOR_127C_B5S4_f01_f12 = TUMOR_127C_B5S4_f01_f12/REF_131_B5S4_f01_f12) %>%
   mutate(NAT_128N_B5S4_f01_f12 = NAT_128N_B5S4_f01_f12/REF_131_B5S4_f01_f12) %>%
@@ -1655,23 +1391,8 @@ dat_B5S4_f01_f12 <- bind_rows(batch_B5S4_f01_f12) %>%
   mutate(NAT_130C_B5S4_f01_f12 = NAT_130C_B5S4_f01_f12/REF_131_B5S4_f01_f12) %>%
   select(-REF_131_B5S4_f01_f12) 
 
-dat_B5S5_f01_f12 <- bind_rows(batch_B5S5_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-TUMOR_126_B5S5_f01_f12 = sum(TUMOR_126_B5S5_f01_f12),
-TUMOR_127N_B5S5_f01_f12 = sum(TUMOR_127N_B5S5_f01_f12),
-TUMOR_127C_B5S5_f01_f12 = sum(TUMOR_127C_B5S5_f01_f12),
-NAT_128N_B5S5_f01_f12 = sum(NAT_128N_B5S5_f01_f12),
-NAT_128C_B5S5_f01_f12 = sum(NAT_128C_B5S5_f01_f12),
-TUMOR_129N_B5S5_f01_f12 = sum(TUMOR_129N_B5S5_f01_f12),
-TUMOR_129C_B5S5_f01_f12 = sum(TUMOR_129C_B5S5_f01_f12),
-NAT_130N_B5S5_f01_f12 = sum(NAT_130N_B5S5_f01_f12),
-NAT_130C_B5S5_f01_f12 = sum(NAT_130C_B5S5_f01_f12),
-REF_131_B5S5_f01_f12 = sum(REF_131_B5S5_f01_f12),
-        n.peptides =sum(n.peptides),
-        n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(TUMOR_126_B5S5_f01_f12 = TUMOR_126_B5S5_f01_f12/REF_131_B5S5_f01_f12) %>%
+dat_B5S5_f01_f12 <- batch_B5S5_f01_f12 %>%
+    mutate(TUMOR_126_B5S5_f01_f12 = TUMOR_126_B5S5_f01_f12/REF_131_B5S5_f01_f12) %>%
   mutate(TUMOR_127N_B5S5_f01_f12 = TUMOR_127N_B5S5_f01_f12/REF_131_B5S5_f01_f12) %>%
   mutate(TUMOR_127C_B5S5_f01_f12 = TUMOR_127C_B5S5_f01_f12/REF_131_B5S5_f01_f12) %>%
   mutate(NAT_128N_B5S5_f01_f12 = NAT_128N_B5S5_f01_f12/REF_131_B5S5_f01_f12) %>%
@@ -1682,23 +1403,8 @@ REF_131_B5S5_f01_f12 = sum(REF_131_B5S5_f01_f12),
   mutate(NAT_130C_B5S5_f01_f12 = NAT_130C_B5S5_f01_f12/REF_131_B5S5_f01_f12) %>%
   select(-REF_131_B5S5_f01_f12) 
 
-dat_B5S6_f01_f12 <- bind_rows(batch_B5S6_f01_f12) %>%
-    group_by(Accessions) %>% 
-    summarise(
-TUMOR_126_B5S6_f01_f12 = sum(TUMOR_126_B5S6_f01_f12),
-NAT_127N_B5S6_f01_f12 = sum(NAT_127N_B5S6_f01_f12),
-NAT_127C_B5S6_f01_f12 = sum(NAT_127C_B5S6_f01_f12),
-NAT_128N_B5S6_f01_f12 = sum(NAT_128N_B5S6_f01_f12),
-NAT_128C_B5S6_f01_f12 = sum(NAT_128C_B5S6_f01_f12),
-NAT_129N_B5S6_f01_f12 = sum(NAT_129N_B5S6_f01_f12),
-NAT_129C_B5S6_f01_f12 = sum(NAT_129C_B5S6_f01_f12),
-NAT_130N_B5S6_f01_f12 = sum(NAT_130N_B5S6_f01_f12),
-REF_130C_B5S6_f01_f12 = sum(REF_130C_B5S6_f01_f12),
-REF_131_B5S6_f01_f12 = sum(REF_131_B5S6_f01_f12),
-        n.peptides =sum(n.peptides),
-        n.spectra =sum(n.spectra)
-    ) %>%
-  mutate(TUMOR_126_B5S6_f01_f12 = TUMOR_126_B5S6_f01_f12/REF_131_B5S6_f01_f12) %>%
+dat_B5S6_f01_f12 <- batch_B5S6_f01_f12 %>%
+    mutate(TUMOR_126_B5S6_f01_f12 = TUMOR_126_B5S6_f01_f12/REF_131_B5S6_f01_f12) %>%
   mutate(NAT_127N_B5S6_f01_f12 = NAT_127N_B5S6_f01_f12/REF_131_B5S6_f01_f12) %>%
   mutate(NAT_127C_B5S6_f01_f12 = NAT_127C_B5S6_f01_f12/REF_131_B5S6_f01_f12) %>%
   mutate(NAT_128N_B5S6_f01_f12 = NAT_128N_B5S6_f01_f12/REF_131_B5S6_f01_f12) %>%
@@ -1738,36 +1444,32 @@ all_batches <- list(
 saveRDS(all_batches, file = "/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/all_batches_in_one_list")
 readRDS("/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/all_batches_in_list")
 
-my_merge <- function(df1, df2){                                # Create own merging function
-  merge(df1, df2, by = "Accessions")
-}
-merged.data.frame <- Reduce(function(...) merge(..., by="Accessions", all=TRUE), dat_B1S1_f01_f12)
+
+
+
 
 
 dat <- all_batches %>% 
-  reduce(full_join, by='Accessions') 
+  reduce(full_join, by='Accessions') %>%
+  select(-contains("n.")) 
+  
+  #%>%
+  #drop_na()
 
 
-  rowSums(dat[,c("n.peptides.x","n.peptides.y","n.peptides.x.x","n.peptides.y.y","n.peptides.x.x.x","n.peptides.y.y.y","n.peptides.x.x.x.x","n.peptides.y.y.y.y","n.peptides.x.x.x.x.x","n.peptides.y.y.y.y.y","n.peptides.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y.y.y.y","n.peptides.x.x.x.x.x.x.x.x.x.x.x","n.peptides.y.y.y.y.y.y.y.y.y.y.y")],na.rm=TRUE) %>%
-  rowSums(dat[,c("n.spectra.x","n.spectra.y","n.spectra.x.x","n.spectra.y.y","n.spectra.x.x.x","n.spectra.y.y.y","n.spectra.x.x.x.x","n.spectra.y.y.y.y","n.spectra.x.x.x.x.x","n.spectra.y.y.y.y.y","n.spectra.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y.y.y.y","n.spectra.x.x.x.x.x.x.x.x.x.x.x","n.spectra.y.y.y.y.y.y.y.y.y.y.y")],na.rm=TRUE)
 
-tr <- as.factor(rep(c(2,2,2,2,2,1,1,1,1,1), 3))
-ex <- as.factor(c(rep(1,10), rep(2,10), rep(3,10)))
-
-allez <- dat %>%
-select(-starts_with("n."))
-nrow(is.na(allez))
-str(allez)
-view(allez)
-
-dat <- dat_B1S1_f01_f12
-
-dat <- bind_rows(all_batches)
-view(head(allez))
-dim(dat)
-
+str(dat)
+nrow(dat)
 view(dat)
 dim(dat)
+
+
+dat <- bind_cols(all_batches) %>%
+  group_by(Accessions) %>%
+  summarise(sum(NAT_126_B1S1_f01_f12:NAT_130N_B5S6_f01_f12), na.rm=TRUE)
+view(head(dat))
+dim(dat)
+str(dat)
 
 
 
@@ -1880,7 +1582,7 @@ tum <- c(
 "TUMOR_129C_B5S3_f01_f12", 
 "TUMOR_130C_B5S3_f01_f12", 
 "TUMOR_126_B5S4_f01_f12", 
-"TUMOR_126_B5S4_f01_f12", 
+"TUMOR_127N_B5S4_f01_f12", 
 "TUMOR_127C_B5S4_f01_f12", 
 "TUMOR_128C_B5S4_f01_f12", 
 "TUMOR_126_B5S5_f01_f12", 
@@ -2014,6 +1716,10 @@ str(res.eb)
 dim(res.eb)
 head(res.eb)
 view(res.eb)
+Filter_reseb <- res.eb %>%
+  filter(q.mod <= 0.05) 
+nrow(Filter_reseb)
+view(Filter_reseb)
 
 rx <- c(-1, 1)*max(abs(res.eb$log2FC))*1.1
 ry <- c(0, ceiling(max(-log10(res.eb$p.ord), -log10(res.eb$p.mod))))
@@ -2038,6 +1744,42 @@ axis(1, seq(-2,2,1), paste(c("1/4","1/2","1/1","2/1","4/1")))
 title("volcano plot of moderated p-values")
 
 
+FC <- merge(Filter_reseb, dat, by=0) %>%
+  select(Accessions, log2FC, t.ord, t.mod, p.ord, p.mod, q.ord, q.mod, df.r, df.0, s2.0, s2, s2.post) 
+
+CRC_prot <- c(
+'P25815|
+Q12884|
+P36952|
+P06702|
+P83881|
+Q96CG8|
+P06731|
+P05109|
+Q8NFJ5|
+P50454|
+P80511|
+Q9NR99|
+Q01650|
+P31949|
+P40261|
+P02788|
+O00469|
+P35442|
+O76021|
+P08246|
+P05164|
+Q9NR30|
+P30273|
+Q99715|
+P49913|P52926|
+Q8NCL4|
+O00425|
+P80188|
+P62760|P11388')
 
 
+
+dim(FC)
+view(FC)
 
