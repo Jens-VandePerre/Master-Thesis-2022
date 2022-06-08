@@ -27,6 +27,100 @@ library("remotes")
 library("janitor")
 library("stringr")
 
+
+#Input 
+    #Proteins with their TMT intensities, labelled as TUMOR_batch and NAT_batch
+    #The intensiteis are relative intensities:
+        #Sum of all intensities from 1 sample (= one TMT channel), devided by reference sample
+    #All NAs are removed, to do t.test
+    #2819 quantified proteins remain
+dat_col_ordered <- fread("/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/log2FC_input.txt")
+view(dat_col_ordered)
+dim(dat_col_ordered)
+
+#Function to do t.test, comparing Tumor against NAT
+ttestFunc <- function(df, grp1, grp2) {
+  x = df[grp1]
+  y = df[grp2]
+  x = as.numeric(x)
+  y = as.numeric(y)  
+  results = t.test(x, y)
+  results$p.value
+}
+rawpvalue = apply(dat_col_ordered, 1, ttestFunc, grp1 = c(2:99), grp2 = c(100:198))
+hist(rawpvalue)
+
+#Log2 of tumor TMT relative intensities
+    #followed by zero-centering
+tum <- log2(dat_col_ordered %>%
+    select("TUMOR_127C_B1S1_f01_f12":"TUMOR_126_B5S6_f01_f12")) %>%
+    scale(scale = FALSE) 
+dim(tum)
+
+#Log2 of NAT TMT relative intensities
+    #followed by zero-centering
+nat <- log2(dat_col_ordered %>%
+    select("NAT_126_B1S1_f01_f12":"NAT_130N_B5S6_f01_f12")) %>%
+    scale(scale = FALSE) 
+dim(nat)
+
+#Median of log2 transformed relative intesities
+Tum = apply(tum, 1, median)
+NAT = apply(nat, 1, median) 
+
+#Subtraction for log2FC
+foldchange <- Tum - NAT 
+hist(foldchange, xlab = "log2 Fold Change (NAT vs Tumor)")
+view(foldchange)
+
+#Log2FC is plotted against p.value from t.test
+results = cbind(foldchange, rawpvalue)
+results = as.data.frame(results)
+results$probename <- rownames(results)
+volcano = ggplot(data = results, aes(x = foldchange, y = -1*log10(rawpvalue)))
+volcano + geom_point()
+
+view((dat_col_ordered))
+view((results))
+
+#Log2FC is attached to its Protein.Group.Accessions
+FC <- cbind(dat_col_ordered, results) %>%
+    select(Protein.Group.Accessions, foldchange, rawpvalue)
+FC$BH = p.adjust(FC$rawpvalue, 
+               method = "BH")
+view(FC)
+dim(FC)
+
+#BH filtering of p.values
+FC_BH_filtered <- FC %>%
+filter(rawpvalue < BH)
+view(FC_BH_filtered)
+dim(FC_BH_filtered) #Only 1 removed???
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 mydat <- readRDS("/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/data_before_name_change")
 view(head(mydat[[1]]))
 str(mydat[[1]])
@@ -1005,9 +1099,8 @@ all_batches <- list(
     dat_B5S6_f01_f12
 )
 
-
 dat <- all_batches %>% 
-  reduce(full_join, by='Protein.Group.Accessions') 
+  reduce(full_join, by='Protein.Group.Accessions')
 dim(dat)
 view(dat)
 
@@ -1210,8 +1303,15 @@ colorder <- c("Protein.Group.Accessions",
 "NAT_129C_B5S6_f01_f12", 
 "NAT_130N_B5S6_f01_f12"
 )
+dat_col_ordered <- dat[, colorder] %>%
+    as_data_frame() %>%
+    drop_na()
 
-y <- t.test(input[2,2:99], input[2,100:198])
+fwrite(dat_col_ordered, "/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/log2FC_input.txt")
+dat_col_ordered <- fread("/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/log2FC_input.txt")
+view(dat_col_ordered)
+dim(dat_col_ordered)
+
 ttestFunc <- function(df, grp1, grp2) {
   x = df[grp1]
   y = df[grp2]
@@ -1220,50 +1320,43 @@ ttestFunc <- function(df, grp1, grp2) {
   results = t.test(x, y)
   results$p.value
 }
-rawpvalue = apply(input, 1, ttestFunc, grp1 = c(2:99), grp2 = c(100:198))
+rawpvalue = apply(dat_col_ordered, 1, ttestFunc, grp1 = c(2:99), grp2 = c(100:198))
 hist(rawpvalue)
 
-
-rawpvalue <- list()
-for (row in 1:8681) {
-rawpvalue[[i]] <- t.test(input[row, 2:99], input[row, 100:197])
-}
-
-input <- dat[, colorder] %>%
-    as_data_frame()
-view(input)
-dim(input)
-
-
-tum <- log2(input %>%
+tum <- log2(dat_col_ordered %>%
     select("TUMOR_127C_B1S1_f01_f12":"TUMOR_126_B5S6_f01_f12")) %>%
-    scale(scale = FALSE)
+    scale(scale = FALSE) 
 dim(tum)
 
-nat <- log2(input %>%
-    select("NAT_126_B1S1_f01_f12":"NAT_129C_B5S6_f01_f12")) %>%
-    scale(scale = FALSE)
+nat <- log2(dat_col_ordered %>%
+    select("NAT_126_B1S1_f01_f12":"NAT_130N_B5S6_f01_f12")) %>%
+    scale(scale = FALSE) 
 dim(nat)
 
-library("gtools")
-install.packages("gtools", repos="https://www.freestatistics.org/cran/")
-FC <- foldchange(tum, nat) %>%
-cbind(input$Protein.Group.Accessions)
-view(FC)
 
+Tum = apply(tum, 1, median)
+NAT = apply(nat, 1, median) 
 
-
-
-input = log2(input[,-1])
-
-#calculate the mean of each gene per control group
-Tum = apply(input[,1:98], 1, mean)
-
-#calcuate the mean of each gene per test group
-NAT = apply(input[, 99:197], 1, mean) 
-
-#confirming that we have a vector of numbers
-class(control)
-foldchange <- NAT - Tum 
+foldchange <- Tum - NAT 
 hist(foldchange, xlab = "log2 Fold Change (NAT vs Tumor)")
 view(foldchange)
+
+results = cbind(foldchange, rawpvalue)
+results = as.data.frame(results)
+results$probename <- rownames(results)
+
+library(ggplot2)
+volcano = ggplot(data = results, aes(x = foldchange, y = -1*log10(rawpvalue)))
+volcano + geom_point()
+
+FC <- merge(dat_col_ordered, results, by=0) %>%
+    select(Protein.Group.Accessions, foldchange, rawpvalue, BH)
+FC$BH = p.adjust(FC$rawpvalue, 
+               method = "BH")
+view(FC)
+dim(FC)
+
+FC_BH_filtered <- FC %>%
+filter(rawpvalue < BH)
+view(FC_BH_filtered)
+dim(FC_BH_filtered) #Only 1 removed???

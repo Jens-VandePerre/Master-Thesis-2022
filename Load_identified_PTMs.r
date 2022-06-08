@@ -85,6 +85,7 @@ ALL_seq <- bind_rows(new_col)
 nrow(ALL_seq)
 view(ALL_seq) 
 fwrite(ALL_seq, "/Users/jensvandeperre/Desktop/Outputs/PSM_TMT_linked/PSM_TMT_PTM.csv")
+ALL_seq <- fread("/Users/jensvandeperre/Desktop/Outputs/PSM_TMT_linked/PSM_TMT_PTM.csv")
 
 #Most prevalant PTMs
 Most_PTM <- ALL_seq %>%
@@ -113,7 +114,7 @@ view(Phos)
     #0.984016 monoisotopic
     #0.9848 avg
 Cit <- CRC_PTMs %>%
-  filter(stringr::str_detect(mod_mass, '0.98|0.9848')) %>%
+  filter(stringr::str_detect(mod_mass, '0.98')) %>%
   group_by(mod, mod_mass) %>%
     summarise(Count = sum(count))
 view(Cit)
