@@ -83,9 +83,10 @@ nrow(new_col[[1]])
   #Combine all file into one dataframe
 ALL_seq <- bind_rows(new_col)
 nrow(ALL_seq)
-view(ALL_seq) 
+view(head(ALL_seq)) 
 fwrite(ALL_seq, "/Users/jensvandeperre/Desktop/Outputs/PSM_TMT_linked/PSM_TMT_PTM.csv")
 ALL_seq <- fread("/Users/jensvandeperre/Desktop/Outputs/PSM_TMT_linked/PSM_TMT_PTM.csv")
+dim(ALL_seq)
 
 #Most prevalant PTMs
 Most_PTM <- ALL_seq %>%
@@ -123,23 +124,36 @@ view(Cit)
     #15.994915 monoiso
     #15.9994 avg
 Hyd <- CRC_PTMs %>%
-  filter(stringr::str_detect(mod_mass, '15.99|15.9994')) %>%
+  filter(stringr::str_detect(mod, 'Hydroxylation')) %>%
   group_by(mod, mod_mass) %>%
     summarise(Count = sum(count))
 view(Hyd)
+
+colSums(Hyd[,3])
+str(Hyd)
 
   #Cancer in general
     #Ubiquitination
     #383.228103	monoiso
     #383.4460 avg
-    #Overblijfsel 2xGly
-    #massa 114
+    #Residue GlyGly
+      #mass 114.042927
+
     #Vallen deze samen op zelfde peptdie? als volledige ub
+Ubq_res <- CRC_PTMs %>%
+  filter(stringr::str_detect(mod_mass, '114.04|114.042927')) %>%
+  group_by(mod, mod_mass) %>%
+    summarise(Count = sum(count))
+view(Ubq_res)
 Ubq <- CRC_PTMs %>%
   filter(stringr::str_detect(mod_mass, '383.|383.4460')) %>%
   group_by(mod, mod_mass) %>%
     summarise(Count = sum(count))
-view(Ubq)
+view(Ubq) #Allways on LVLSAQSCFFRSM[147]FTSNLK[357]
+Ubq_seq <- CRC_PTMs %>%
+  filter(stringr::str_detect(sequence.x, 'LVLSAQSCFFRSM')) %>%
+  filter(mod != "No direct match found in Unimod")
+view(Ubq_seq)
 
     #Methylation
     #14.015650 monoiso
@@ -173,9 +187,21 @@ Glyc <- CRC_PTMs %>%
   #Count unique PTMs
 Unique_PTMs <- ALL_seq %>% 
     select(mod) %>%
+    filter(!stringr::str_detect(mod, 'No direct match found in')) %>%
+    filter(!stringr::str_detect(mod, 'Unknown')) %>%
+    filter(mod != "") %>%
     unique()
-nrow(Unique_PTMs) #1413
+dim(Unique_PTMs) #1401 + 2 unknown overlap with known
 view(Unique_PTMs)
+
+Single_PTM <- Most_PTM %>%
+  filter(!stringr::str_detect(mod, '/')) %>%
+  filter(!stringr::str_detect(mod, 'No direct match found in')) %>%
+  filter(mod != "") %>%
+  filter(!stringr::str_detect(mod, 'Unknown')) 
+dim(Single_PTM)
+view(Single_PTM)
+colSums(Single_PTM[,3])
 
 #Most prevalent modified protein
 (file_paths_PIA <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PIA_analysis"))
@@ -224,21 +250,34 @@ view(PRO_PTM_PSM_TMT[[1]])
 nrow(PRO_PTM_PSM_TMT[[1]])
 PRO_PTM_PSM_TMT <- bind_rows(PRO_PTM_PSM_TMT)
 fwrite(PRO_PTM_PSM_TMT, "/Users/jensvandeperre/Desktop/Outputs/PSM_TMT_linked/PRO_PTM_PSM_TMT.csv")
-nrow(PRO_PTM_PSM_TMT)
+PRO_PTM_PSM_TMT <- fread("/Users/jensvandeperre/Desktop/Outputs/PSM_TMT_linked/PRO_PTM_PSM_TMT.csv")
+dim(PRO_PTM_PSM_TMT)
+view(head(PRO_PTM_PSM_TMT, 200))
+
+      #Amount of proteins identified
+prot_idif <- PRO_PTM_PSM_TMT %>%
+  filter(Accessions != "")
+dim(prot_idif) #2889721 
+view(head(prot_idif, 500))
+
       #Most prevalent protein
 Most_prev_pro <- PRO_PTM_PSM_TMT %>%
     group_by(Accessions) %>%
     summarise(Count = sum(count))
 view(Most_prev_pro)
-nrow(Most_prev_pro)
+dim(Most_prev_pro)
 
       #Most prevalent modified protein
 Most_prev_MOD_pro <- PRO_PTM_PSM_TMT %>%
-    group_by(Accessions, mod, mod_mass) %>%
+    filter(!stringr::str_detect(mod, 'No direct match found in')) %>%
+    filter(!stringr::str_detect(mod, 'Unknown')) %>%
+    filter(mod != "") %>%
+    filter(Accessions != "") %>%
+    group_by(Accessions) %>%
     summarise(Count = sum(count))
 view(Most_prev_MOD_pro)
-nrow(Most_prev_MOD_pro)
-
+dim(Most_prev_MOD_pro) #7776
+colSums(Most_prev_MOD_pro[,2])
 
  
 
