@@ -299,9 +299,15 @@ view(OS_prot_distinct)
 write.table(AS_prot_distinct$Protein.Descriptions, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Reanalysis_proteins.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
 write.table(OS_prot_distinct$attrib_name, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_Study_proteins.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
 
+install.packages("mygene", repos="https://cran.rstudio.com")
+library(mygene)
+Genes <- c("AACS", "ACAA2", "ACADM", "ACLY", "ACOT8")
+Protein_IDs <- queryMany(Genes, scopes = "symbol", 
+                              fields = c("name", "uniprot",  "ensemblgene"), 
+                              species = "human", as_dataframe = "True")
 
-
-
+BiocManager::install("biomaRt")
+library(biomaRt)
 
 
 ANN_vs_ORG_unique <- list(
