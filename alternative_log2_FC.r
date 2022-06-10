@@ -185,7 +185,7 @@ for (i in 1:12) {
   B1S4_f01_f12_renamed[[i]] <- B1S4_f01_f12[[i]] %>%
   select(Protein.Group.Accessions, Protein.Descriptions, "126":"131") %>%
   as_tibble() %>%
-  rename(NAT_161_B1S4_f01_f12 = "126") %>%
+  rename(NAT_126_B1S4_f01_f12 = "126") %>%
   rename(TUMOR_127N_B1S4_f01_f12 = "127N") %>%
   rename(NAT_127C_B1S4_f01_f12 = "127C") %>%
   rename(TUMOR_128N_B1S4_f01_f12 = "128N") %>%
@@ -601,7 +601,7 @@ dat_B1S3_f01_f12 <- bind_rows(B1S3_f01_f12_renamed) %>%
 dat_B1S4_f01_f12 <- bind_rows(B1S4_f01_f12_renamed) %>%
     group_by(Protein.Group.Accessions) %>% 
     summarise(
-        NAT_161_B1S4_f01_f12 = sum(NAT_161_B1S4_f01_f12),
+        NAT_126_B1S4_f01_f12 = sum(NAT_126_B1S4_f01_f12),
         TUMOR_127N_B1S4_f01_f12 = sum(TUMOR_127N_B1S4_f01_f12),
         NAT_127C_B1S4_f01_f12 = sum(NAT_127C_B1S4_f01_f12),
         TUMOR_128N_B1S4_f01_f12 = sum(TUMOR_128N_B1S4_f01_f12),
@@ -612,7 +612,7 @@ dat_B1S4_f01_f12 <- bind_rows(B1S4_f01_f12_renamed) %>%
         TUMOR_130C_B1S4_f01_f12 = sum(TUMOR_130C_B1S4_f01_f12),
         REF_131__B1S4_f01_f12 =sum(REF_131__B1S4_f01_f12)
     ) %>%
-  mutate(NAT_161_B1S4_f01_f12 = NAT_161_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
+  mutate(NAT_126_B1S4_f01_f12 = NAT_126_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
   mutate(TUMOR_127N_B1S4_f01_f12 = TUMOR_127N_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
   mutate(NAT_127C_B1S4_f01_f12 = NAT_127C_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
   mutate(TUMOR_128N_B1S4_f01_f12 = TUMOR_128N_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
@@ -1213,7 +1213,7 @@ colorder <- c("Protein.Group.Accessions",
 "NAT_128C_B1S3_f01_f12", 
 "NAT_129N_B1S3_f01_f12", 
 "NAT_129C_B1S3_f01_f12", 
-"NAT_161_B1S4_f01_f12", 
+"NAT_126_B1S4_f01_f12", 
 "NAT_127C_B1S4_f01_f12", 
 "NAT_130N_B1S4_f01_f12", 
 "NAT_128N_B2S1_f01_f12", 

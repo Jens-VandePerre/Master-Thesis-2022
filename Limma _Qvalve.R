@@ -170,7 +170,7 @@ B1S4_f01_f12 <- mydat[37:48]
 B1S4_f01_f12_renamed <- list()
 for (i in 1:12) {
   B1S4_f01_f12_renamed[[i]] <- B1S4_f01_f12[[i]] %>%
-  rename(NAT_161_B1S4_f01_f12 = "126") %>%
+  rename(NAT_126_B1S4_f01_f12 = "126") %>%
   rename(TUMOR_127N_B1S4_f01_f12 = "127N") %>%
   rename(NAT_127C_B1S4_f01_f12 = "127C") %>%
   rename(TUMOR_128N_B1S4_f01_f12 = "128N") %>%
@@ -486,7 +486,7 @@ cha_B1S3_f01_f12 <- c("TUMOR_126_B1S3_f01_f12",
 "TUMOR_130C_B1S3_f01_f12", 
 "REF_131_B1S3_f01_f12"
 )
-cha_B1S4_f01_f12 <- c("NAT_161_B1S4_f01_f12", 
+cha_B1S4_f01_f12 <- c("NAT_126_B1S4_f01_f12", 
 "TUMOR_127N_B1S4_f01_f12", 
 "NAT_127C_B1S4_f01_f12", 
 "TUMOR_128N_B1S4_f01_f12", 
@@ -1188,7 +1188,7 @@ dat_B1S3_f01_f12 <- batch_B1S3_f01_f12 %>%
   select(-REF_131_B1S3_f01_f12) 
 
 dat_B1S4_f01_f12 <- batch_B1S4_f01_f12 %>%
-    mutate(NAT_161_B1S4_f01_f12 = NAT_161_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
+    mutate(NAT_126_B1S4_f01_f12 = NAT_126_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
   mutate(TUMOR_127N_B1S4_f01_f12 = TUMOR_127N_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
   mutate(NAT_127C_B1S4_f01_f12 = NAT_127C_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
   mutate(TUMOR_128N_B1S4_f01_f12 = TUMOR_128N_B1S4_f01_f12/REF_131__B1S4_f01_f12) %>%
@@ -1610,7 +1610,7 @@ nat <- c(
 "NAT_128C_B1S3_f01_f12", 
 "NAT_129N_B1S3_f01_f12", 
 "NAT_129C_B1S3_f01_f12", 
-"NAT_161_B1S4_f01_f12", 
+"NAT_126_B1S4_f01_f12", 
 "NAT_127C_B1S4_f01_f12", 
 "NAT_130N_B1S4_f01_f12", 
 "NAT_128N_B2S1_f01_f12", 
