@@ -273,7 +273,15 @@ ggVennDiagram(ANNMOD_vs_ORG)
     view(head(AS_prot))
     str(AS_prot)
     AS_prot_distinct <- AS_prot %>% 
-    select(Protein.Descriptions) %>%
+    select(Protein.Group.Accessions) %>%
+        unique() 
+dim(AS_prot_distinct)
+ view(AS_prot_distinct)   
+    
+    
+    
+    
+    %>%
     mutate(Protein.Descriptions = trimws(str_remove_all(Protein.Descriptions, "_HUMAN"))) %>% 
     unique() %>%
     remove_rownames()

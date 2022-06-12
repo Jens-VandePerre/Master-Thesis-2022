@@ -26,79 +26,121 @@ library("msdata")
 library("remotes")
 library("janitor")
 library("stringr")
-
+library("proDA")
+library(QFeatures)
+library(msqrob2)
+library(plotly)
+library(gridExtra)
+library("datawizard")
 #Input 
     #Proteins with their TMT intensities, labelled as TUMOR_batch and NAT_batch
     #The intensiteis are relative intensities:
         #Sum of all intensities from 1 sample (= one TMT channel), devided by reference sample
-    #All NAs are removed, to do t.test
+    #All NAs are removed, to do Wilcoxon test
     #2819 quantified proteins remain
 dat_col_ordered <- fread("/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/log2FC_input.txt")
-view(dat_col_ordered)
-dim(dat_col_ordered)
 
-#Function to do t.test, comparing Tumor against NAT
-ttestFunc <- function(df, grp1, grp2) {
+MedianCent <- dat_col_ordered %>%
+  select(starts_with("TUM"), starts_with("NAT")) %>%
+  center(robust=TRUE) #Median centring
+
+
+
+
+#Function to do Wilcox, comparing Tumor against NAT
+WilcoxFunc <- function(df, grp1, grp2) {
   x = df[grp1]
   y = df[grp2]
   x = as.numeric(x)
   y = as.numeric(y)  
-  results = t.test(x, y)
+  results = wilcox.test(x, y)
   results$p.value
 }
-rawpvalue = apply(dat_col_ordered, 1, ttestFunc, grp1 = c(2:99), grp2 = c(100:198))
+rawpvalue = apply(MedianCent, 1, WilcoxFunc, 
+  grp1 = colnames(MedianCent)[grep("TUMOR", colnames(MedianCent))],
+  grp2 = colnames(MedianCent)[grep("NAT", colnames(MedianCent))])
+view(rawpvalue)
 hist(rawpvalue)
 
-#Log2 of tumor TMT relative intensities
-    #followed by zero-centering
-tum <- log2(dat_col_ordered %>%
-    select("TUMOR_127C_B1S1_f01_f12":"TUMOR_126_B5S6_f01_f12")) %>%
-    scale(scale = FALSE) 
+#Log2 of TMT relative intensities
+    #followed by median centering
+log2 <- dat_col_ordered %>%
+  select(starts_with("TUM"), starts_with("NAT")) %>%
+  log2() %>%
+  center(robust=TRUE) #Median centring
+dim(log2)
+#Select tumor samples
+tum <- log2 %>%
+    select(starts_with("TUM"))
 dim(tum)
-
-#Log2 of NAT TMT relative intensities
-    #followed by zero-centering
-nat <- log2(dat_col_ordered %>%
-    select("NAT_126_B1S1_f01_f12":"NAT_130N_B5S6_f01_f12")) %>%
-    scale(scale = FALSE) 
+view(tum)
+#select NAT samples
+nat <- log2 %>%
+    select(starts_with("NAT")) 
 dim(nat)
-
+view(nat)
 #Median of log2 transformed relative intesities
 Tum = apply(tum, 1, median)
-NAT = apply(nat, 1, median) 
+NAT = apply(nat, 1, median)
 
 #Subtraction for log2FC
 foldchange <- Tum - NAT 
-hist(foldchange, xlab = "log2 Fold Change (NAT vs Tumor)")
+hist(foldchange, xlab = "log2 Fold Change (Tumor vs NAT)")
 view(foldchange)
 
 #Log2FC is plotted against p.value from t.test
 results = cbind(foldchange, rawpvalue)
 results = as.data.frame(results)
 results$probename <- rownames(results)
-volcano = ggplot(data = results, aes(x = foldchange, y = -1*log10(rawpvalue)))
-volcano + geom_point()
-
-view((dat_col_ordered))
-view((results))
-
-#Log2FC is attached to its Protein.Group.Accessions
+#Perform BH correction on p-value
 FC <- cbind(dat_col_ordered, results) %>%
     select(Protein.Group.Accessions, foldchange, rawpvalue)
-FC$BH = p.adjust(FC$rawpvalue, 
+FC$BH_adjusted_pval = p.adjust(FC$rawpvalue, 
                method = "BH")
-view(FC)
+#Volcano plot
+  #Legend label
+FC$expression_diff <- "No sig. expression change"
+  # if log2FC > 1 and pvalue < 0.05, set as "Protein sig. up-regulated in Tumor" 
+FC$expression_diff[FC$foldchange > 1 & FC$BH_adjusted_pval < 0.05] <- "Protein sig. up-regulated in Tumor"
+  # if log2Foldchange < -1 and pvalue < 0.05, set as "Protein sig. down-regulated in Tumor"
+FC$expression_diff[FC$foldchange < -1 & FC$BH_adjusted_pval < 0.05] <- "Protein sig. down-regulated in Tumor"
+  #PLOT
+png(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Volcano.png")
+volcano = ggplot(data = FC, aes(x = foldchange, y = -log10(BH_adjusted_pval), col=expression_diff))
+volcano + 
+  geom_point() +
+  labs(x="Median Difference (log2FC, Tumor vs Normal)", y="-log10(BH-adjusted p-value)", title="Protein Expression Change" , 
+        subtitle="Change in protein expression Tumor vs NAT") +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 15),
+        plot.title = element_text(size = 20, face = "bold"),
+        plot.subtitle = element_text(size = 12)) +
+  scale_colour_manual(values = c( "grey", "#3f3ff9", "#ee4444")) +
+  geom_hline(yintercept = -log10(0.05),
+             linetype = "dashed") + 
+  geom_vline(xintercept = c(log2(0.5), log2(2)),
+             linetype = "dashed")   
+dev.off()
+
+
+#Filter out proteins with no significant expression change
+Sig_prot_expr <- FC %>%
+  filter(expression_diff != "No sig. expression change")
+dim(Sig_prot_expr)
 dim(FC)
+view(Sig_prot_expr)
+#Sig upregulated proteins
+Up_regulated <- FC %>%
+  filter(expression_diff == "Protein sig. up-regulated in Tumor")
+dim(Up_regulated)
+view(Up_regulated)
+#Sig down-regultated proteins
+Down_regulated <- FC %>%
+  filter(expression_diff == "Protein sig. down-regulated in Tumor")
+dim(Down_regulated)
 
-#BH filtering of p.values
-FC_BH_filtered <- FC %>%
-filter(rawpvalue < BH)
-view(FC_BH_filtered)
-dim(FC_BH_filtered) #Only 1 removed???
-
-
-
-
+view(FC)
 
 
 
@@ -122,7 +164,7 @@ dim(FC_BH_filtered) #Only 1 removed???
 
 mydat <- readRDS("/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/data_before_name_change")
 view(head(mydat[[1]]))
-str(mydat[[1]])
+dim(mydat[[1]])
 
 B1S1_f01_f12 <- mydat[1:12]
 B1S1_f01_f12_renamed <- list()
@@ -522,6 +564,7 @@ for (i in 1:12) {
   drop_na()
 }
 
+#Calculating relative intensities per batch
 dat_B1S1_f01_f12 <- bind_rows(B1S1_f01_f12_renamed) %>%
   group_by(Protein.Group.Accessions) %>% 
   summarise(NAT_126_B1S1_f01_f12 = sum(NAT_126_B1S1_f01_f12), 
@@ -1073,7 +1116,7 @@ REF_131_B5S6_f01_f12 = sum(REF_131_B5S6_f01_f12)
   select(-REF_130C_B5S6_f01_f12 ) %>%
   select(-REF_131_B5S6_f01_f12 ) 
 
-all_batches <- list(
+all_batches <- bind_rows(
     dat_B1S1_f01_f12,
     dat_B1S2_f01_f12, 
     dat_B1S3_f01_f12, 
@@ -1096,12 +1139,14 @@ all_batches <- list(
     dat_B5S4_f01_f12, 
     dat_B5S5_f01_f12, 
     dat_B5S6_f01_f12
-)
+) %>%
+unique()
 
 dat <- all_batches %>% 
   reduce(full_join, by='Protein.Group.Accessions')
 dim(dat)
 view(dat)
+
 
 colorder <- c("Protein.Group.Accessions",
     "TUMOR_127C_B1S1_f01_f12", 
@@ -1302,12 +1347,12 @@ colorder <- c("Protein.Group.Accessions",
 "NAT_129C_B5S6_f01_f12", 
 "NAT_130N_B5S6_f01_f12"
 )
-dat_col_ordered <- dat[, colorder] %>%
-    as_data_frame() %>%
-    drop_na()
+dat_col_ordered_NA_PRESENT <- dat[, colorder] 
 
 fwrite(dat_col_ordered, "/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/log2FC_input.txt")
 dat_col_ordered <- fread("/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/log2FC_input.txt")
+fwrite(dat_col_ordered_NA_PRESENT, "/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/log2FC_input_NA_PRESENT.txt")
+dat_col_ordered_NA_PRESENT <- fread("/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/log2FC_input_NA_PRESENT.txt")
 view(dat_col_ordered)
 dim(dat_col_ordered)
 
@@ -1331,7 +1376,6 @@ nat <- log2(dat_col_ordered %>%
     select("NAT_126_B1S1_f01_f12":"NAT_130N_B5S6_f01_f12")) %>%
     scale(scale = FALSE) 
 dim(nat)
-
 
 Tum = apply(tum, 1, median)
 NAT = apply(nat, 1, median) 

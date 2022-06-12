@@ -170,8 +170,9 @@ dev.off()
     view(head(AS_prot))
     AS_prot_distinct <- AS_prot %>% 
     select(Protein.Group.Accessions) %>%
-    unique() %>%
-    nrow()
+    unique() 
+    dim(AS_prot)
+    view(AS_prot)
         #ALL original study identifiec proteins
     OS_prot_NAT <- fread(file="/Users/jensvandeperre/Desktop/Inputs/Original_Proteins/Human__CPTAC_COAD__PNNL__Proteome__TMT__03_01_2017__BCM__Gene__PNNL_Normal_TMT_UnsharedLogRatio.cct.txt") %>%
             select(attrib_name)
