@@ -26,6 +26,8 @@ library("msdata")
 library("remotes")
 library("janitor")
 library("stringr")
+library("datawizard")
+
 
 wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab")
 getwd() 
@@ -1091,38 +1093,7 @@ all_batches <- list(
     dat_B5S6_f01_f12
 )
 saveRDS(all_batches, "/Users/jensvandeperre/Desktop/Outputs/PSM_TMT_linked/Differential_PTM_analysis")
-
-CRC_proteins <- c("P25815",
-"Q12884",
-"P36952",
-"P06702",
-"P83881",
-"Q96CG8",
-"P06731",
-"P05109",
-"Q8NFJ5",
-"P50454",
-"P80511",
-"Q9NR99",
-"Q01650",
-"P31949",
-"P40261",
-"P02788",
-"O00469",
-"P35442",
-"O76021",
-"P08246",
-"P05164",
-"Q9NR30",
-"P30273",
-"Q99715",
-"P49913",
-"P52926",
-"Q8NCL4",
-"O00425",
-"P80188",
-"P62760",
-"P11388")
+all_batches <- readRDS("/Users/jensvandeperre/Desktop/Outputs/PSM_TMT_linked/Differential_PTM_analysis")
 
 
 #Load PTMs + peptide seq
@@ -1135,6 +1106,35 @@ dim(ALL_seq)
 
 
 #Loop selecting wanted protein from each list
+  #Create dataframe with all peptide seq for each selected protein
+P05783 <- list()
+for (i in 1:length(all_batches)) {
+  P05783[[i]] <- all_batches[[i]] %>%
+    filter(Protein.Group.Accessions == "P05783") %>%
+    ungroup() %>%
+    select(-Protein.Group.Accessions)
+}
+P05783 <- P05783 %>% 
+  reduce(full_join, by = "sequence") %>% 
+  select_if(~!all(is.na(.))) %>%
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
+view(P05783_med)
+
+  P61626 <- list()
+for (i in 1:length(all_batches)) {
+  P61626[[i]] <- all_batches[[i]] %>%
+    filter(Protein.Group.Accessions == "P61626") %>%
+    ungroup() %>%
+    select(-Protein.Group.Accessions)
+}
+P61626 <- P61626 %>% 
+  reduce(full_join, by = "sequence") %>% 
+  select_if(~!all(is.na(.))) %>%
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
+
+
 P25815 <- list()
 for (i in 1:length(all_batches)) {
   P25815[[i]] <- all_batches[[i]] %>%
@@ -1145,7 +1145,8 @@ for (i in 1:length(all_batches)) {
 P25815 <- P25815 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 Q12884 <- list()
@@ -1158,7 +1159,8 @@ for (i in 1:length(all_batches)) {
 Q12884 <- Q12884 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 P36952 <- list()
@@ -1171,7 +1173,8 @@ for (i in 1:length(all_batches)) {
 P36952 <- P36952 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 P06702 <- list()
@@ -1184,7 +1187,8 @@ for (i in 1:length(all_batches)) {
 P06702 <- P06702 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 P83881 <- list()
@@ -1197,33 +1201,24 @@ for (i in 1:length(all_batches)) {
 P83881 <- P83881 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
-Q96CG8 <- list() #NOT FOUND
+Q96CG8 <- list() #Not Identified
 for (i in 1:length(all_batches)) {
   Q96CG8[[i]] <- all_batches[[i]] %>%
     filter(Protein.Group.Accessions == "Q96CG8") %>%
     ungroup() %>%
     select(-Protein.Group.Accessions)
 }
-Q96CG8 <- Q96CG8 %>% 
-  reduce(full_join, by = "sequence") %>% 
-  select_if(~!all(is.na(.))) %>%
-  as_data_frame()
-
-
-P06731 <- list() #NOT FOUND
+P06731 <- list() #Not Identified
 for (i in 1:length(all_batches)) {
   P06731[[i]] <- all_batches[[i]] %>%
     filter(Protein.Group.Accessions == "P06731") %>%
     ungroup() %>%
     select(-Protein.Group.Accessions)
 }
-P06731 <- P06731 %>% 
-  reduce(full_join, by = "sequence") %>% 
-  select_if(~!all(is.na(.))) %>%
-  as_data_frame()
 
 
 P05109 <- list()
@@ -1236,20 +1231,17 @@ for (i in 1:length(all_batches)) {
 P05109 <- P05109 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
-Q8NFJ5 <- list() #NOT FOUND
+Q8NFJ5 <- list() #Not Identified
 for (i in 1:length(all_batches)) {
   Q8NFJ5[[i]] <- all_batches[[i]] %>%
     filter(Protein.Group.Accessions == "Q8NFJ5") %>%
     ungroup() %>%
     select(-Protein.Group.Accessions)
 }
-Q8NFJ5 <- Q8NFJ5 %>% 
-  reduce(full_join, by = "sequence") %>% 
-  select_if(~!all(is.na(.))) %>%
-  as_data_frame()
 
 
 P50454 <- list()
@@ -1262,7 +1254,8 @@ for (i in 1:length(all_batches)) {
 P50454 <- P50454 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 P80511 <- list()
@@ -1275,7 +1268,8 @@ for (i in 1:length(all_batches)) {
 P80511 <- P80511 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 Q9NR99 <- list()
@@ -1288,7 +1282,8 @@ for (i in 1:length(all_batches)) {
 Q9NR99 <- Q9NR99 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 Q01650 <- list()
@@ -1301,7 +1296,8 @@ for (i in 1:length(all_batches)) {
 Q01650 <- Q01650 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 P31949 <- list()
@@ -1314,7 +1310,8 @@ for (i in 1:length(all_batches)) {
 P31949 <- P31949 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 P40261 <- list()
@@ -1327,7 +1324,8 @@ for (i in 1:length(all_batches)) {
 P40261 <- P40261 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 P02788 <- list()
@@ -1340,7 +1338,8 @@ for (i in 1:length(all_batches)) {
 P02788 <- P02788 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 O00469 <- list()
@@ -1353,7 +1352,8 @@ for (i in 1:length(all_batches)) {
 O00469 <- O00469 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 P35442 <- list()
@@ -1366,7 +1366,8 @@ for (i in 1:length(all_batches)) {
 P35442 <- P35442 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 O76021 <- list()
@@ -1379,7 +1380,8 @@ for (i in 1:length(all_batches)) {
 O76021 <- O76021 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 P08246 <- list()
@@ -1392,8 +1394,9 @@ for (i in 1:length(all_batches)) {
 P08246 <- P08246 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
-
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
+view(P08246)
 
 P05164 <- list()
 for (i in 1:length(all_batches)) {
@@ -1405,7 +1408,8 @@ for (i in 1:length(all_batches)) {
 P05164 <- P05164 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 Q9NR30 <- list()
@@ -1418,7 +1422,8 @@ for (i in 1:length(all_batches)) {
 Q9NR30 <- Q9NR30 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 P30273 <- list()
@@ -1431,7 +1436,8 @@ for (i in 1:length(all_batches)) {
 P30273 <- P30273 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 Q99715 <- list()
@@ -1444,20 +1450,17 @@ for (i in 1:length(all_batches)) {
 Q99715 <- Q99715 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
-P49913 <- list() #NOT FOUND
+P49913 <- list() #Not Identified
 for (i in 1:length(all_batches)) {
   P49913[[i]] <- all_batches[[i]] %>%
     filter(Protein.Group.Accessions == "P49913") %>%
     ungroup() %>%
     select(-Protein.Group.Accessions)
 }
-P49913 <- P49913 %>% 
-  reduce(full_join, by = "sequence") %>% 
-  select_if(~!all(is.na(.))) %>%
-  as_data_frame()
 
 P52926 <- list()
 for (i in 1:length(all_batches)) {
@@ -1469,7 +1472,8 @@ for (i in 1:length(all_batches)) {
 P52926 <- P52926 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 Q8NCL4 <- list()
@@ -1482,7 +1486,8 @@ for (i in 1:length(all_batches)) {
 Q8NCL4 <- Q8NCL4 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 O00425 <- list()
@@ -1495,7 +1500,8 @@ for (i in 1:length(all_batches)) {
 O00425 <- O00425 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 P80188 <- list()
@@ -1508,7 +1514,8 @@ for (i in 1:length(all_batches)) {
 P80188 <- P80188 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 P62760 <- list()
@@ -1521,7 +1528,8 @@ for (i in 1:length(all_batches)) {
 P62760 <- P62760 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 P11388 <- list()
@@ -1534,425 +1542,674 @@ for (i in 1:length(all_batches)) {
 P11388 <- P11388 %>% 
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
-  as_data_frame()
+  as_data_frame() %>%
+  center(robust=TRUE, exclude = "sequence") #Median centring 
 
 
 
 #Merge, based on modified peptide sequence
-#Differential expression in analyis
-  #Define sig difference in TMT intensities for all PTMs of a protein
-    #Bind t-test results to PTMs + BH correction
-ttestFunc <- function(df, grp1, grp2) {
+#Differential expression analyis
+  #Define sig difference in TMT intensities for select PTMs of a protein
+    #Bind wilcox.test results to PTMs + BH correction
+WilcoxFunc <- function(df, grp1, grp2) {
   x = df[grp1]
   y = df[grp2]
   x = as.numeric(x)
   y = as.numeric(y)  
-  results = t.test(x, y, na.action=na.omit)
+  results = wilcox.test(x, y)
   results$p.value
 }
+
+
+
+
+P05783_PTM <- merge(P05783, ALL_seq, by="sequence", all.x=TRUE) %>%
+  unique()%>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P05783_PTMrawpvalue = apply(P05783_PTM, 1, WilcoxFunc, grp1 = colnames(P05783_PTM)[grep("TUMOR",colnames(P05783_PTM))]
+, grp2 = colnames(P05783_PTM)[grep("NAT",colnames(P05783_PTM))])
+P05783_PTM_T_test <- cbind(P05783_PTM, P05783_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P05783_PTMrawpvalue) 
+P05783_PTM_T_test$BH_adjusted_pval = p.adjust(P05783_PTMrawpvalue, 
+               method = "BH")
+P05783_PTM_T_test$expression_diff <- "No sig. expression difference"
+P05783_PTM_T_test$expression_diff[P05783_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+P05783_PTM_T_test <- P05783_PTM_T_test %>%
+  filter(expression_diff == "Sig. expression difference") %>%
+  filter(
+      stringr::str_detect(mod, 'Phospho|phospho') | #phosphorylation
+      stringr::str_detect(mod_mass, '0.98') | #Citru
+      stringr::str_detect(mod, 'Hydroxylation') |#Hyd
+      stringr::str_detect(mod_mass, '114.04|114.042927') |#Ub residue
+      stringr::str_detect(mod_mass, '383.|383.4460') | #Ub full
+      stringr::str_detect(mod_mass, '14.01|14.0266') |  #Methyl
+      stringr::str_detect(mod_mass, '42.01|42.0367') #Acetyl
+  ) %>% drop_na()
+view(P05783_PTM_T_test)
+
+P61626_PTM <- merge(P61626, ALL_seq, by="sequence", all.x=TRUE) %>%
+  unique()%>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P61626_PTMrawpvalue = apply(P61626_PTM, 1, WilcoxFunc, grp1 = colnames(P61626_PTM)[grep("TUMOR",colnames(P61626_PTM))]
+, grp2 = colnames(P61626_PTM)[grep("NAT",colnames(P61626_PTM))])
+P61626_PTM_T_test <- cbind(P61626_PTM, P61626_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P61626_PTMrawpvalue) 
+P61626_PTM_T_test$BH_adjusted_pval = p.adjust(P61626_PTMrawpvalue, 
+               method = "BH")
+P61626_PTM_T_test$expression_diff <- "No sig. expression difference"
+P61626_PTM_T_test$expression_diff[P61626_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+P61626_PTM_T_test <- P61626_PTM_T_test %>%
+  filter(expression_diff == "Sig. expression difference") %>%
+  filter(
+      stringr::str_detect(mod, 'Phospho|phospho') |
+      stringr::str_detect(mod_mass, '0.98') | #Citru
+      stringr::str_detect(mod, 'Hydroxylation') |#Hyd
+      stringr::str_detect(mod_mass, '114.04|114.042927') |#Ub residue
+      stringr::str_detect(mod_mass, '383.|383.4460') | #Ub full
+      stringr::str_detect(mod_mass, '14.01|14.0266') |  #Methyl
+      stringr::str_detect(mod_mass, '42.01|42.0367') #Acetyl
+  ) %>% drop_na() 
+view(P61626_PTM_T_test)
+
+
+
 
 P25815_PTM <- merge(P25815, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P25815_PTMrawpvalue = apply(P25815_PTM, 1, ttestFunc, grp1 = colnames(P25815_PTM)[grep("TUMOR",colnames(P25815_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P25815_PTMrawpvalue = apply(P25815_PTM, 1, WilcoxFunc, grp1 = colnames(P25815_PTM)[grep("TUMOR",colnames(P25815_PTM))]
 , grp2 = colnames(P25815_PTM)[grep("NAT",colnames(P25815_PTM))])
-P25815_PTM_t_test <- cbind(P25815_PTM, P25815_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P25815_PTM_T_test <- cbind(P25815_PTM, P25815_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P25815_PTMrawpvalue) 
+ P25815_PTM_T_test$BH_adjusted_pval = p.adjust(P25815_PTMrawpvalue, 
                method = "BH")
+P25815_PTM_T_test$expression_diff <- "No sig. expression difference"
+P25815_PTM_T_test$expression_diff[P25815_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
 Q12884_PTM <- merge(Q12884, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-Q12884_PTMrawpvalue = apply(Q12884_PTM, 1, ttestFunc, grp1 = colnames(Q12884_PTM)[grep("TUMOR",colnames(Q12884_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+Q12884_PTMrawpvalue = apply(Q12884_PTM, 1, WilcoxFunc, grp1 = colnames(Q12884_PTM)[grep("TUMOR",colnames(Q12884_PTM))]
 , grp2 = colnames(Q12884_PTM)[grep("NAT",colnames(Q12884_PTM))])
-Q12884_PTM_t_test <- cbind(Q12884_PTM, Q12884_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+Q12884_PTM_T_test <- cbind(Q12884_PTM, Q12884_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, Q12884_PTMrawpvalue) 
+Q12884_PTM_T_test$BH_adjusted_pval = p.adjust(Q12884_PTMrawpvalue, 
                method = "BH")
+Q12884_PTM_T_test$expression_diff <- "No sig. expression difference"
+Q12884_PTM_T_test$expression_diff[Q12884_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
+#PROBLEM
 P36952_PTM <- merge(P36952, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P36952_PTMrawpvalue = apply(P36952_PTM, 1, ttestFunc, grp1 = colnames(P36952_PTM)[grep("TUMOR",colnames(P36952_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    drop_na %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P36952_PTMrawpvalue = apply(P36952_PTM, 1, WilcoxFunc, grp1 = colnames(P36952_PTM)[grep("TUMOR",colnames(P36952_PTM))]
 , grp2 = colnames(P36952_PTM)[grep("NAT",colnames(P36952_PTM))])
-P36952_PTM_t_test <- cbind(P36952_PTM, P36952_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P36952_PTM_T_test <- cbind(P36952_PTM, P36952_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P36952_PTMrawpvalue) 
+ P36952_PTM_T_test$BH_adjusted_pval = p.adjust(P36952_PTMrawpvalue, 
                method = "BH")
+P36952_PTM_T_test$expression_diff <- "No sig. expression difference"
+P36952_PTM_T_test$expression_diff[P36952_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+P36952_PTM_T_test <- P36952_PTM_T_test %>%
+  filter(expression_diff == "Sig. expression difference") %>%
+  filter(
+      stringr::str_detect(mod, 'Phospho|phospho') |
+      stringr::str_detect(mod_mass, '0.98') | #Citru
+      stringr::str_detect(mod, 'Hydroxylation') |#Hyd
+      stringr::str_detect(mod_mass, '114.04|114.042927') |#Ub residue
+      stringr::str_detect(mod_mass, '383.|383.4460') | #Ub full
+      stringr::str_detect(mod_mass, '14.01|14.0266') |  #Methyl
+      stringr::str_detect(mod_mass, '42.01|42.0367') #Acetyl
+  ) 
+view(P36952_PTM_T_test)
+view(drop_na(P36952))
+
 
 P06702_PTM <- merge(P06702, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P06702_PTMrawpvalue = apply(P06702_PTM, 1, ttestFunc, grp1 = colnames(P06702_PTM)[grep("TUMOR",colnames(P06702_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P06702_PTMrawpvalue = apply(P06702_PTM, 1, WilcoxFunc, grp1 = colnames(P06702_PTM)[grep("TUMOR",colnames(P06702_PTM))]
 , grp2 = colnames(P06702_PTM)[grep("NAT",colnames(P06702_PTM))])
-P06702_PTM_t_test <- cbind(P06702_PTM, P06702_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P06702_PTM_T_test <- cbind(P06702_PTM, P06702_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P06702_PTMrawpvalue) 
+ P06702_PTM_T_test$BH_adjusted_pval = p.adjust(P06702_PTMrawpvalue, 
                method = "BH")
+P06702_PTM_T_test$expression_diff <- "No sig. expression difference"
+P06702_PTM_T_test$expression_diff[P06702_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+P06702_PTM_T_test <- P06702_PTM_T_test %>%
+  filter(expression_diff == "Sig. expression difference") %>%
+  filter(
+      stringr::str_detect(mod, 'Phospho|phospho') |
+      stringr::str_detect(mod_mass, '0.98') | #Citru
+      stringr::str_detect(mod, 'Hydroxylation') |#Hyd
+      stringr::str_detect(mod_mass, '114.04|114.042927') |#Ub residue
+      stringr::str_detect(mod_mass, '383.|383.4460') | #Ub full
+      stringr::str_detect(mod_mass, '14.01|14.0266') |  #Methyl
+      stringr::str_detect(mod_mass, '42.01|42.0367') #Acetyl
+  ) %>% drop_na() 
+view(P06702_PTM_T_test)
+
 
 P83881_PTM <- merge(P83881, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P83881_PTMrawpvalue = apply(P83881_PTM, 1, ttestFunc, grp1 = colnames(P83881_PTM)[grep("TUMOR",colnames(P83881_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P83881_PTMrawpvalue = apply(P83881_PTM, 1, WilcoxFunc, grp1 = colnames(P83881_PTM)[grep("TUMOR",colnames(P83881_PTM))]
 , grp2 = colnames(P83881_PTM)[grep("NAT",colnames(P83881_PTM))])
-P83881_PTM_t_test <- cbind(P83881_PTM, P83881_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
-               method = "BH")
-
-Q96CG8_PTM <- merge(Q96CG8, ALL_seq, by="sequence", all.x=TRUE) %>%
-  unique()%>%
+P83881_PTM_T_test <- cbind(P83881_PTM, P83881_PTMrawpvalue) %>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-Q96CG8_PTMrawpvalue = apply(Q96CG8_PTM, 1, ttestFunc, grp1 = colnames(Q96CG8_PTM)[grep("TUMOR",colnames(Q96CG8_PTM))]
-, grp2 = colnames(Q96CG8_PTM)[grep("NAT",colnames(Q96CG8_PTM))])
-Q96CG8_PTM_t_test <- cbind(Q96CG8_PTM, Q96CG8_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P83881_PTMrawpvalue) 
+ P83881_PTM_T_test$BH_adjusted_pval = p.adjust(P83881_PTMrawpvalue, 
                method = "BH")
+P83881_PTM_T_test$expression_diff <- "No sig. expression difference"
+P83881_PTM_T_test$expression_diff[P83881_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
-P06731_PTM <- merge(P06731, ALL_seq, by="sequence", all.x=TRUE) %>%
-  unique()%>%
-  select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P06731_PTMrawpvalue = apply(P06731_PTM, 1, ttestFunc, grp1 = colnames(P06731_PTM)[grep("TUMOR",colnames(P06731_PTM))]
-, grp2 = colnames(P06731_PTM)[grep("NAT",colnames(P06731_PTM))])
-P06731_PTM_t_test <- cbind(P06731_PTM, P06731_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
-               method = "BH")
-
+#PROBLEM
 P05109_PTM <- merge(P05109, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P05109_PTMrawpvalue = apply(P05109_PTM, 1, ttestFunc, grp1 = colnames(P05109_PTM)[grep("TUMOR",colnames(P05109_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P05109_PTMrawpvalue = apply(P05109_PTM, 1, WilcoxFunc, grp1 = colnames(P05109_PTM)[grep("TUMOR",colnames(P05109_PTM))]
 , grp2 = colnames(P05109_PTM)[grep("NAT",colnames(P05109_PTM))])
-P05109_PTM_t_test <- cbind(P05109_PTM, P05109_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
-               method = "BH")
-
-Q8NFJ5_PTM <- merge(Q8NFJ5, ALL_seq, by="sequence", all.x=TRUE) %>%
-  unique()%>%
+P05109_PTM_T_test <- cbind(P05109_PTM, P05109_PTMrawpvalue) %>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-Q8NFJ5_PTMrawpvalue = apply(Q8NFJ5_PTM, 1, ttestFunc, grp1 = colnames(Q8NFJ5_PTM)[grep("TUMOR",colnames(Q8NFJ5_PTM))]
-, grp2 = colnames(Q8NFJ5_PTM)[grep("NAT",colnames(Q8NFJ5_PTM))])
-Q8NFJ5_PTM_t_test <- cbind(Q8NFJ5_PTM, Q8NFJ5_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P05109_PTMrawpvalue) 
+P05109_PTM_T_test$BH_adjusted_pval = p.adjust(P05109_PTMrawpvalue, 
                method = "BH")
+P05109_PTM_T_test$expression_diff <- "No sig. expression difference"
+P05109_PTM_T_test$expression_diff[P05109_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+P05109_PTM_T_test <- P05109_PTM_T_test %>%
+  filter(expression_diff == "Sig. expression difference") %>%
+  filter(
+      stringr::str_detect(mod, 'Phospho|phospho') |
+      stringr::str_detect(mod_mass, '0.98') | #Citru
+      stringr::str_detect(mod, 'Hydroxylation') |#Hyd
+      stringr::str_detect(mod_mass, '114.04|114.042927') |#Ub residue
+      stringr::str_detect(mod_mass, '383.|383.4460') | #Ub full
+      stringr::str_detect(mod_mass, '14.01|14.0266') |  #Methyl
+      stringr::str_detect(mod_mass, '42.01|42.0367') #Acetyl
+  )  
+view(P05109_PTM_T_test)
+
+
 
 P50454_PTM <- merge(P50454, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P50454_PTMrawpvalue = apply(P50454_PTM, 1, ttestFunc, grp1 = colnames(P50454_PTM)[grep("TUMOR",colnames(P50454_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P50454_PTMrawpvalue = apply(P50454_PTM, 1, WilcoxFunc, grp1 = colnames(P50454_PTM)[grep("TUMOR",colnames(P50454_PTM))]
 , grp2 = colnames(P50454_PTM)[grep("NAT",colnames(P50454_PTM))])
-P50454_PTM_t_test <- cbind(P50454_PTM, P50454_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P50454_PTM_T_test <- cbind(P50454_PTM, P50454_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P50454_PTMrawpvalue) 
+ P50454_PTM_T_test$BH_adjusted_pval = p.adjust(P50454_PTMrawpvalue, 
                method = "BH")
+P50454_PTM_T_test$expression_diff <- "No sig. expression difference"
+P50454_PTM_T_test$expression_diff[P50454_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+P50454_PTM_T_test <- P50454_PTM_T_test %>%
+  filter(expression_diff == "Sig. expression difference") %>%
+  filter(
+      stringr::str_detect(mod, 'Phospho|phospho') |
+      stringr::str_detect(mod_mass, '0.98') | #Citru
+      stringr::str_detect(mod, 'Hydroxylation') |#Hyd
+      stringr::str_detect(mod_mass, '114.04|114.042927') |#Ub residue
+      stringr::str_detect(mod_mass, '383.|383.4460') | #Ub full
+      stringr::str_detect(mod_mass, '14.01|14.0266') |  #Methyl
+      stringr::str_detect(mod_mass, '42.01|42.0367') #Acetyl
+  ) %>% drop_na() 
+view(P50454_PTM_T_test)
+
 
 P80511_PTM <- merge(P80511, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P80511_PTMrawpvalue = apply(P80511_PTM, 1, ttestFunc, grp1 = colnames(P80511_PTM)[grep("TUMOR",colnames(P80511_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P80511_PTMrawpvalue = apply(P80511_PTM, 1, WilcoxFunc, grp1 = colnames(P80511_PTM)[grep("TUMOR",colnames(P80511_PTM))]
 , grp2 = colnames(P80511_PTM)[grep("NAT",colnames(P80511_PTM))])
-P80511_PTM_t_test <- cbind(P80511_PTM, P80511_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P80511_PTM_T_test <- cbind(P80511_PTM, P80511_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P80511_PTMrawpvalue) 
+ P80511_PTM_T_test$BH_adjusted_pval = p.adjust(P80511_PTMrawpvalue, 
                method = "BH")
+P80511_PTM_T_test$expression_diff <- "No sig. expression difference"
+P80511_PTM_T_test$expression_diff[P80511_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
+#PROBLEM
 Q9NR99_PTM <- merge(Q9NR99, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-Q9NR99_PTMrawpvalue = apply(Q9NR99_PTM, 1, ttestFunc, grp1 = colnames(Q9NR99_PTM)[grep("TUMOR",colnames(Q9NR99_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+Q9NR99_PTMrawpvalue = apply(Q9NR99_PTM, 1, WilcoxFunc, grp1 = colnames(Q9NR99_PTM)[grep("TUMOR",colnames(Q9NR99_PTM))]
 , grp2 = colnames(Q9NR99_PTM)[grep("NAT",colnames(Q9NR99_PTM))])
-Q9NR99_PTM_t_test <- cbind(Q9NR99_PTM, Q9NR99_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+Q9NR99_PTM_T_test <- cbind(Q9NR99_PTM, Q9NR99_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, Q9NR99_PTMrawpvalue) 
+Q9NR99_PTM_T_test$BH_adjusted_pval = p.adjust(Q9NR99_PTMrawpvalue, 
                method = "BH")
+Q9NR99_PTM_T_test$expression_diff <- "No sig. expression difference"
+Q9NR99_PTM_T_test$expression_diff[Q9NR99_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
 Q01650_PTM <- merge(Q01650, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-Q01650_PTMrawpvalue = apply(Q01650_PTM, 1, ttestFunc, grp1 = colnames(Q01650_PTM)[grep("TUMOR",colnames(Q01650_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+Q01650_PTMrawpvalue = apply(Q01650_PTM, 1, WilcoxFunc, grp1 = colnames(Q01650_PTM)[grep("TUMOR",colnames(Q01650_PTM))]
 , grp2 = colnames(Q01650_PTM)[grep("NAT",colnames(Q01650_PTM))])
-Q01650_PTM_t_test <- cbind(Q01650_PTM, Q01650_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+Q01650_PTM_T_test <- cbind(Q01650_PTM, Q01650_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, Q01650_PTMrawpvalue) 
+Q01650_PTM_T_test$BH_adjusted_pval = p.adjust(Q01650_PTMrawpvalue, 
                method = "BH")
+Q01650_PTM_T_test$expression_diff <- "No sig. expression difference"
+Q01650_PTM_T_test$expression_diff[Q01650_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
 P31949_PTM <- merge(P31949, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P31949_PTMrawpvalue = apply(P31949_PTM, 1, ttestFunc, grp1 = colnames(P31949_PTM)[grep("TUMOR",colnames(P31949_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P31949_PTMrawpvalue = apply(P31949_PTM, 1, WilcoxFunc, grp1 = colnames(P31949_PTM)[grep("TUMOR",colnames(P31949_PTM))]
 , grp2 = colnames(P31949_PTM)[grep("NAT",colnames(P31949_PTM))])
-P31949_PTM_t_test <- cbind(P31949_PTM, P31949_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P31949_PTM_T_test <- cbind(P31949_PTM, P31949_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P31949_PTMrawpvalue) 
+ P31949_PTM_T_test$BH_adjusted_pval = p.adjust(P31949_PTMrawpvalue, 
                method = "BH")
+P31949_PTM_T_test$expression_diff <- "No sig. expression difference"
+P31949_PTM_T_test$expression_diff[P31949_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+P31949_PTM_T_test <- P31949_PTM_T_test %>%
+  filter(expression_diff == "Sig. expression difference") %>%
+  filter(
+      stringr::str_detect(mod, 'Phospho|phospho') |
+      stringr::str_detect(mod_mass, '0.98') | #Citru
+      stringr::str_detect(mod, 'Hydroxylation') |#Hyd
+      stringr::str_detect(mod_mass, '114.04|114.042927') |#Ub residue
+      stringr::str_detect(mod_mass, '383.|383.4460') | #Ub full
+      stringr::str_detect(mod_mass, '14.01|14.0266') |  #Methyl
+      stringr::str_detect(mod_mass, '42.01|42.0367') #Acetyl
+  ) %>% drop_na() 
+view(P31949_PTM_T_test)
 
+
+#PROBLEM
 P40261_PTM <- merge(P40261, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P40261_PTMrawpvalue = apply(P40261_PTM, 1, ttestFunc, grp1 = colnames(P40261_PTM)[grep("TUMOR",colnames(P40261_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P40261_PTMrawpvalue = apply(P40261_PTM, 1, WilcoxFunc, grp1 = colnames(P40261_PTM)[grep("TUMOR",colnames(P40261_PTM))]
 , grp2 = colnames(P40261_PTM)[grep("NAT",colnames(P40261_PTM))])
-P40261_PTM_t_test <- cbind(P40261_PTM, P40261_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P40261_PTM_T_test <- cbind(P40261_PTM, P40261_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P40261_PTMrawpvalue) 
+ P40261_PTM_T_test$BH_adjusted_pval = p.adjust(P40261_PTMrawpvalue, 
                method = "BH")
+P40261_PTM_T_test$expression_diff <- "No sig. expression difference"
+P40261_PTM_T_test$expression_diff[P40261_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
 P02788_PTM <- merge(P02788, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P02788_PTMrawpvalue = apply(P02788_PTM, 1, ttestFunc, grp1 = colnames(P02788_PTM)[grep("TUMOR",colnames(P02788_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P02788_PTMrawpvalue = apply(P02788_PTM, 1, WilcoxFunc, grp1 = colnames(P02788_PTM)[grep("TUMOR",colnames(P02788_PTM))]
 , grp2 = colnames(P02788_PTM)[grep("NAT",colnames(P02788_PTM))])
-P02788_PTM_t_test <- cbind(P02788_PTM, P02788_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P02788_PTM_T_test <- cbind(P02788_PTM, P02788_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P02788_PTMrawpvalue) 
+ P02788_PTM_T_test$BH_adjusted_pval = p.adjust(P02788_PTMrawpvalue, 
                method = "BH")
+P02788_PTM_T_test$expression_diff <- "No sig. expression difference"
+P02788_PTM_T_test$expression_diff[P02788_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+P02788_PTM_T_test <- P02788_PTM_T_test %>%
+  filter(expression_diff == "Sig. expression difference") %>%
+  filter(
+      stringr::str_detect(mod, 'Phospho|phospho') |
+      stringr::str_detect(mod_mass, '0.98') | #Citru
+      stringr::str_detect(mod, 'Hydroxylation') |#Hyd
+      stringr::str_detect(mod_mass, '114.04|114.042927') |#Ub residue
+      stringr::str_detect(mod_mass, '383.|383.4460') | #Ub full
+      stringr::str_detect(mod_mass, '14.01|14.0266') |  #Methyl
+      stringr::str_detect(mod_mass, '42.01|42.0367') #Acetyl
+  ) %>% drop_na() 
+view(P02788_PTM_T_test)
 
+
+#TOO MUCH NA
 O00469_PTM <- merge(O00469, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-O00469_PTMrawpvalue = apply(O00469_PTM, 1, ttestFunc, grp1 = colnames(O00469_PTM)[grep("TUMOR",colnames(O00469_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat) 
+O00469_PTMrawpvalue = apply(O00469_PTM, 1, WilcoxFunc, grp1 = colnames(O00469_PTM)[grep("TUMOR",colnames(O00469_PTM))]
 , grp2 = colnames(O00469_PTM)[grep("NAT",colnames(O00469_PTM))])
-O00469_PTM_t_test <- cbind(O00469_PTM, O00469_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+O00469_PTM_T_test <- cbind(O00469_PTM, O00469_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, O00469_PTMrawpvalue) 
+ O00469_PTM_T_test$BH_adjusted_pval = p.adjust(O00469_PTMrawpvalue, 
                method = "BH")
+O00469_PTM_T_test$expression_diff <- "No sig. expression difference"
+O00469_PTM_T_test$expression_diff[O00469_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+O00469_PTM_T_test$expression_diff[O00469_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
+#PROBLEM
 P35442_PTM <- merge(P35442, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P35442_PTMrawpvalue = apply(P35442_PTM, 1, ttestFunc, grp1 = colnames(P35442_PTM)[grep("TUMOR",colnames(P35442_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P35442_PTMrawpvalue = apply(P35442_PTM, 1, WilcoxFunc, grp1 = colnames(P35442_PTM)[grep("TUMOR",colnames(P35442_PTM))]
 , grp2 = colnames(P35442_PTM)[grep("NAT",colnames(P35442_PTM))])
-P35442_PTM_t_test <- cbind(P35442_PTM, P35442_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P35442_PTM_T_test <- cbind(P35442_PTM, P35442_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P35442_PTMrawpvalue) 
+ P35442_PTM_T_test$BH_adjusted_pval = p.adjust(P35442_PTMrawpvalue, 
                method = "BH")
+P35442_PTM_T_test$expression_diff <- "No sig. expression difference"
+P35442_PTM_T_test$expression_diff[P35442_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
+#PROBLEM
 O76021_PTM <- merge(O76021, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-O76021_PTMrawpvalue = apply(O76021_PTM, 1, ttestFunc, grp1 = colnames(O76021_PTM)[grep("TUMOR",colnames(O76021_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+O76021_PTMrawpvalue = apply(O76021_PTM, 1, WilcoxFunc, grp1 = colnames(O76021_PTM)[grep("TUMOR",colnames(O76021_PTM))]
 , grp2 = colnames(O76021_PTM)[grep("NAT",colnames(O76021_PTM))])
-O76021_PTM_t_test <- cbind(O76021_PTM, O76021_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+O76021_PTM_T_test <- cbind(O76021_PTM, O76021_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, O76021_PTMrawpvalue) 
+ O76021_PTM_T_test$BH_adjusted_pval = p.adjust(O76021_PTMrawpvalue, 
                method = "BH")
+O76021_PTM_T_test$expression_diff <- "No sig. expression difference"
+O76021_PTM_T_test$expression_diff[O76021_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
+#PROBLEM
 P08246_PTM <- merge(P08246, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P08246_PTMrawpvalue = apply(P08246_PTM, 1, ttestFunc, grp1 = colnames(P08246_PTM)[grep("TUMOR",colnames(P08246_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P08246_PTMrawpvalue = apply(P08246_PTM, 1, WilcoxFunc, grp1 = colnames(P08246_PTM)[grep("TUMOR",colnames(P08246_PTM))]
 , grp2 = colnames(P08246_PTM)[grep("NAT",colnames(P08246_PTM))])
-P08246_PTM_t_test <- cbind(P08246_PTM, P08246_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P08246_PTM_T_test <- cbind(P08246_PTM, P08246_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P08246_PTMrawpvalue) 
+ P08246_PTM_T_test$BH_adjusted_pval = p.adjust(P08246_PTMrawpvalue, 
                method = "BH")
+P08246_PTM_T_test$expression_diff <- "No sig. expression difference"
+P08246_PTM_T_test$expression_diff[P08246_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
+#PROBLEM
 P05164_PTM <- merge(P05164, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P05164_PTMrawpvalue = apply(P05164_PTM, 1, ttestFunc, grp1 = colnames(P05164_PTM)[grep("TUMOR",colnames(P05164_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P05164_PTMrawpvalue = apply(P05164_PTM, 1, WilcoxFunc, grp1 = colnames(P05164_PTM)[grep("TUMOR",colnames(P05164_PTM))]
 , grp2 = colnames(P05164_PTM)[grep("NAT",colnames(P05164_PTM))])
-P05164_PTM_t_test <- cbind(P05164_PTM, P05164_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P05164_PTM_T_test <- cbind(P05164_PTM, P05164_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P05164_PTMrawpvalue) 
+ P05164_PTM_T_test$BH_adjusted_pval = p.adjust(P05164_PTMrawpvalue, 
                method = "BH")
+P05164_PTM_T_test$expression_diff <- "No sig. expression difference"
+P05164_PTM_T_test$expression_diff[P05164_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+P05164_PTM_T_test <- P05164_PTM_T_test %>%
+  filter(expression_diff == "Sig. expression difference") %>%
+  filter(
+      stringr::str_detect(mod, 'Phospho|phospho') |
+      stringr::str_detect(mod_mass, '0.98') | #Citru
+      stringr::str_detect(mod, 'Hydroxylation') |#Hyd
+      stringr::str_detect(mod_mass, '114.04|114.042927') |#Ub residue
+      stringr::str_detect(mod_mass, '383.|383.4460') | #Ub full
+      stringr::str_detect(mod_mass, '14.01|14.0266') |  #Methyl
+      stringr::str_detect(mod_mass, '42.01|42.0367') #Acetyl
+  ) %>% drop_na() 
+view(P05164_PTM_T_test)
+
 
 Q9NR30_PTM <- merge(Q9NR30, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-Q9NR30_PTMrawpvalue = apply(Q9NR30_PTM, 1, ttestFunc, grp1 = colnames(Q9NR30_PTM)[grep("TUMOR",colnames(Q9NR30_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+Q9NR30_PTMrawpvalue = apply(Q9NR30_PTM, 1, WilcoxFunc, grp1 = colnames(Q9NR30_PTM)[grep("TUMOR",colnames(Q9NR30_PTM))]
 , grp2 = colnames(Q9NR30_PTM)[grep("NAT",colnames(Q9NR30_PTM))])
-Q9NR30_PTM_t_test <- cbind(Q9NR30_PTM, Q9NR30_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+Q9NR30_PTM_T_test <- cbind(Q9NR30_PTM, Q9NR30_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, Q9NR30_PTMrawpvalue) 
+ Q9NR30_PTM_T_test$BH_adjusted_pval = p.adjust(Q9NR30_PTMrawpvalue, 
                method = "BH")
+Q9NR30_PTM_T_test$expression_diff <- "No sig. expression difference"
+Q9NR30_PTM_T_test$expression_diff[Q9NR30_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
 P30273_PTM <- merge(P30273, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P30273_PTMrawpvalue = apply(P30273_PTM, 1, ttestFunc, grp1 = colnames(P30273_PTM)[grep("TUMOR",colnames(P30273_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P30273_PTMrawpvalue = apply(P30273_PTM, 1, WilcoxFunc, grp1 = colnames(P30273_PTM)[grep("TUMOR",colnames(P30273_PTM))]
 , grp2 = colnames(P30273_PTM)[grep("NAT",colnames(P30273_PTM))])
-P30273_PTM_t_test <- cbind(P30273_PTM, P30273_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P30273_PTM_T_test <- cbind(P30273_PTM, P30273_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P30273_PTMrawpvalue) 
+ P30273_PTM_T_test$BH_adjusted_pval = p.adjust(P30273_PTMrawpvalue, 
                method = "BH")
+P30273_PTM_T_test$expression_diff <- "No sig. expression difference"
+P30273_PTM_T_test$expression_diff[P30273_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
 Q99715_PTM <- merge(Q99715, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-Q99715_PTMrawpvalue = apply(Q99715_PTM, 1, ttestFunc, grp1 = colnames(Q99715_PTM)[grep("TUMOR",colnames(Q99715_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+Q99715_PTMrawpvalue = apply(Q99715_PTM, 1, WilcoxFunc, grp1 = colnames(Q99715_PTM)[grep("TUMOR",colnames(Q99715_PTM))]
 , grp2 = colnames(Q99715_PTM)[grep("NAT",colnames(Q99715_PTM))])
-Q99715_PTM_t_test <- cbind(Q99715_PTM, Q99715_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
-               method = "BH")
-
-P49913_PTM <- merge(P49913, ALL_seq, by="sequence", all.x=TRUE) %>%
-  unique()%>%
+Q99715_PTM_T_test <- cbind(Q99715_PTM, Q99715_PTMrawpvalue) %>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P49913_PTMrawpvalue = apply(P49913_PTM, 1, ttestFunc, grp1 = colnames(P49913_PTM)[grep("TUMOR",colnames(P49913_PTM))]
-, grp2 = colnames(P49913_PTM)[grep("NAT",colnames(P49913_PTM))])
-P49913_PTM_t_test <- cbind(P49913_PTM, P49913_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, Q99715_PTMrawpvalue) 
+ Q99715_PTM_T_test$BH_adjusted_pval = p.adjust(Q99715_PTMrawpvalue, 
                method = "BH")
+Q99715_PTM_T_test$expression_diff <- "No sig. expression difference"
+Q99715_PTM_T_test$expression_diff[Q99715_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+Q99715_PTM_T_test <- Q99715_PTM_T_test %>%
+  filter(expression_diff == "Sig. expression difference") %>%
+  filter(
+      stringr::str_detect(mod, 'Phospho|phospho') |
+      stringr::str_detect(mod_mass, '0.98') | #Citru
+      stringr::str_detect(mod, 'Hydroxylation') |#Hyd
+      stringr::str_detect(mod_mass, '114.04|114.042927') |#Ub residue
+      stringr::str_detect(mod_mass, '383.|383.4460') | #Ub full
+      stringr::str_detect(mod_mass, '14.01|14.0266') |  #Methyl
+      stringr::str_detect(mod_mass, '42.01|42.0367') #Acetyl
+  ) %>% drop_na() 
+view(Q99715_PTM_T_test)
 
+
+#PROBLEM
 P52926_PTM <- merge(P52926, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P52926_PTMrawpvalue = apply(P52926_PTM, 1, ttestFunc, grp1 = colnames(P52926_PTM)[grep("TUMOR",colnames(P52926_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P52926_PTMrawpvalue = apply(P52926_PTM, 1, WilcoxFunc, grp1 = colnames(P52926_PTM)[grep("TUMOR",colnames(P52926_PTM))]
 , grp2 = colnames(P52926_PTM)[grep("NAT",colnames(P52926_PTM))])
-P52926_PTM_t_test <- cbind(P52926_PTM, P52926_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P52926_PTM_T_test <- cbind(P52926_PTM, P52926_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P52926_PTMrawpvalue) 
+ P52926_PTM_T_test$BH_adjusted_pval = p.adjust(P52926_PTMrawpvalue, 
                method = "BH")
+P52926_PTM_T_test$expression_diff <- "No sig. expression difference"
+P52926_PTM_T_test$expression_diff[P52926_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+P52926_PTM_T_test$expression_diff[P52926_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
 Q8NCL4_PTM <- merge(Q8NCL4, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-Q8NCL4_PTMrawpvalue = apply(Q8NCL4_PTM, 1, ttestFunc, grp1 = colnames(Q8NCL4_PTM)[grep("TUMOR",colnames(Q8NCL4_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+Q8NCL4_PTMrawpvalue = apply(Q8NCL4_PTM, 1, WilcoxFunc, grp1 = colnames(Q8NCL4_PTM)[grep("TUMOR",colnames(Q8NCL4_PTM))]
 , grp2 = colnames(Q8NCL4_PTM)[grep("NAT",colnames(Q8NCL4_PTM))])
-Q8NCL4_PTM_t_test <- cbind(Q8NCL4_PTM, Q8NCL4_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+Q8NCL4_PTM_T_test <- cbind(Q8NCL4_PTM, Q8NCL4_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, Q8NCL4_PTMrawpvalue) 
+ Q8NCL4_PTM_T_test$BH_adjusted_pval = p.adjust(Q8NCL4_PTMrawpvalue, 
                method = "BH")
+Q8NCL4_PTM_T_test$expression_diff <- "No sig. expression difference"
+Q8NCL4_PTM_T_test$expression_diff[Q8NCL4_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+Q8NCL4_PTM_T_test$expression_diff[Q8NCL4_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
+#PROBLEM
 O00425_PTM <- merge(O00425, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-O00425_PTMrawpvalue = apply(O00425_PTM, 1, ttestFunc, grp1 = colnames(O00425_PTM)[grep("TUMOR",colnames(O00425_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+O00425_PTMrawpvalue = apply(O00425_PTM, 1, WilcoxFunc, grp1 = colnames(O00425_PTM)[grep("TUMOR",colnames(O00425_PTM))]
 , grp2 = colnames(O00425_PTM)[grep("NAT",colnames(O00425_PTM))])
-O00425_PTM_t_test <- cbind(O00425_PTM, O00425_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+O00425_PTM_T_test <- cbind(O00425_PTM, O00425_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, O00425_PTMrawpvalue) 
+ O00425_PTM_T_test$BH_adjusted_pval = p.adjust(O00425_PTMrawpvalue, 
                method = "BH")
+O00425_PTM_T_test$expression_diff <- "No sig. expression difference"
+O00425_PTM_T_test$expression_diff[O00425_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+O00425_PTM_T_test$expression_diff[O00425_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
+#PROBLEM
 P80188_PTM <- merge(P80188, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P80188_PTMrawpvalue = apply(P80188_PTM, 1, ttestFunc, grp1 = colnames(P80188_PTM)[grep("TUMOR",colnames(P80188_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P80188_PTMrawpvalue = apply(P80188_PTM, 1, WilcoxFunc, grp1 = colnames(P80188_PTM)[grep("TUMOR",colnames(P80188_PTM))]
 , grp2 = colnames(P80188_PTM)[grep("NAT",colnames(P80188_PTM))])
-P80188_PTM_t_test <- cbind(P80188_PTM, P80188_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P80188_PTM_T_test <- cbind(P80188_PTM, P80188_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P80188_PTMrawpvalue) 
+ P80188_PTM_T_test$BH_adjusted_pval = p.adjust(P80188_PTMrawpvalue, 
                method = "BH")
+P80188_PTM_T_test$expression_diff <- "No sig. expression difference"
+P80188_PTM_T_test$expression_diff[P80188_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+P80188_PTM_T_test$expression_diff[P80188_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
+#PROBLEM
 P62760_PTM <- merge(P62760, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P62760_PTMrawpvalue = apply(P62760_PTM, 1, ttestFunc, grp1 = colnames(P62760_PTM)[grep("TUMOR",colnames(P62760_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P62760_PTMrawpvalue = apply(P62760_PTM, 1, WilcoxFunc, grp1 = colnames(P62760_PTM)[grep("TUMOR",colnames(P62760_PTM))]
 , grp2 = colnames(P62760_PTM)[grep("NAT",colnames(P62760_PTM))])
-P62760_PTM_t_test <- cbind(P62760_PTM, P62760_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P62760_PTM_T_test <- cbind(P62760_PTM, P62760_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P62760_PTMrawpvalue) 
+ P62760_PTM_T_test$BH_adjusted_pval = p.adjust(P62760_PTMrawpvalue, 
                method = "BH")
+P62760_PTM_T_test$expression_diff <- "No sig. expression difference"
+P62760_PTM_T_test$expression_diff[P62760_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+P62760_PTM_T_test$expression_diff[P62760_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
+#TOO MUCH NA
 P11388_PTM <- merge(P11388, ALL_seq, by="sequence", all.x=TRUE) %>%
   unique()%>%
   select(sequence, sequence_no_mod, 
-    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count)
-P11388_PTMrawpvalue = apply(P11388_PTM, 1, ttestFunc, grp1 = colnames(P11388_PTM)[grep("TUMOR",colnames(P11388_PTM))]
+    mod, mod_mass, starts_with("TUM"), starts_with("NAT"), count) %>%
+    mutate(Mean_tumor = rowMeans(.[grep("^TUM", names(.))])) %>%
+    mutate(Mean_nat = rowMeans(.[grep("^NAT", names(.))])) %>%
+    mutate(Difference_Tum_vs_Nat = Mean_tumor - Mean_nat)
+P11388_PTMrawpvalue = apply(P11388_PTM, 1, WilcoxFunc, grp1 = colnames(P11388_PTM)[grep("TUMOR",colnames(P11388_PTM))]
 , grp2 = colnames(P11388_PTM)[grep("NAT",colnames(P11388_PTM))])
-P11388_PTM_t_test <- cbind(P11388_PTM, P11388_PTMrawpvalue) %>%
-  select(index_filename, sequence, sequence_no_mod, 
-    mod, mod_mass, count, x) %>%
-  rename(p.value = x) %>%
-  BH = p.adjust(p.value, 
+P11388_PTM_T_test <- cbind(P11388_PTM, P11388_PTMrawpvalue) %>%
+  select(sequence, sequence_no_mod, 
+    mod, mod_mass, count, Mean_tumor, Mean_nat, Difference_Tum_vs_Nat, P11388_PTMrawpvalue) 
+ P11388_PTM_T_test$BH_adjusted_pval = p.adjust(P11388_PTMrawpvalue, 
                method = "BH")
+P11388_PTM_T_test$expression_diff <- "No sig. expression difference"
+P11388_PTM_T_test$expression_diff[P11388_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
+P11388_PTM_T_test$expression_diff[P11388_PTM_T_test$BH_adjusted_pval < 0.05] <- "Sig. expression difference"
 
 
 

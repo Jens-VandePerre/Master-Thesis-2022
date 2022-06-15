@@ -29,9 +29,6 @@ library("stringr")
 library("ggvenn")
 library("ggVennDiagram")
 library("VennDiagram")
-library("ComplexHeatmap") #If you use it in published research, please cite:
-#Gu, Z. Complex heatmaps reveal patterns and correlations in multidimensional 
-  #genomic data. Bioinformatics 2016.
 
 
 
@@ -49,18 +46,21 @@ length(file_names_short)
 (file_paths_ori_study <- fs::dir_ls("/Users/jensvandeperre/Desktop/Inputs/Orig_study_PSMs"))
 ori_study <- list()
 for (i in seq_along(file_paths_ori_study)) {
-    ori_study[[i]] <- read.csv(file_paths_ori_study[[i]], header = FALSE, sep = "\t")
+    ori_study[[i]] <- fread(file_paths_ori_study[[i]])
 }
+view(ori_study[[1]])
+length(ori_study)
     #Select sequences
 orig <- list()
 for (i in 1:264) {
 orig[[i]] <- ori_study[[i]] %>%
         as_tibble() %>%
         row_to_names(row_number = 1) %>%
-        select(PeptideSequence) %>%
+        select(PeptideSequence, ) %>%
         mutate(sequence = trimws(str_remove_all(PeptideSequence, "[[:digit:]]+"))) %>%
         mutate(sequence = trimws(str_remove_all(sequence, "[+.]"))) %>%
-        select(sequence)
+        mutate(PSM = paste(sequence, , sep="_")) %>%
+        select(PSM)
 }
 Ori_Stud <- set_names(orig, paste("Original_study_", file_names_short, sep = "")) #names each file by file_names_short
 view(Ori_Stud[[1]])
@@ -77,13 +77,18 @@ write.table(Original_study_unique, file="/Users/jensvandeperre/Desktop/Inputs/Ve
 
 #ANN-SoLo PSMs 
     #Load list of dataframes, all identifed peptides
-PSM <- readRDS("/Users/jensvandeperre/Desktop/Outputs/PSMs/ALL_PSMs_4.5.22")
+PSM <- readRDS("~/Desktop/Outputs/PSM_TMT_linked/ALL_PSM_TMT_Linked")
+view(PSM[[1]])
+str(PSM[[1]])
     #Select sequences
 annsolo <- list()
 for (i in 1:264) {
     annsolo[[i]] <- PSM[[i]] %>%
-        select(sequence_no_mod)
+        select(sequence_no_mod, namemzml) %>%
+        mutate(PSM = paste(sequence_no_mod, namemzml, sep="_")) %>%
+        select(PSM)
 }
+view(annsolo[[1]])
 ANN_SoLo_no_mod <- bind_rows(annsolo)
 ANN_SoLo_no_mod_unique <- ANN_SoLo_no_mod %>% distinct()
 nrow(ANN_SoLo_no_mod) #Over 4.5 million peptides identified
@@ -95,47 +100,18 @@ write.table(ANN_SoLo_no_mod_unique, file="/Users/jensvandeperre/Desktop/Inputs/V
 
 
 AS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod.txt", header=FALSE) %>%
-    as_tibble %>% 
-	pull(V1) 
-AS <- list(AS)
+    as_tibble 
+view(head(AS))
+
+
 OS <- fread("/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Original_study.txt", header=FALSE) %>%
-    as_tibble %>% 
-	pull(V1) 
+    as_tibble 
+view(head(AS))
+
+
+AS <- list(AS)
 OS <- list(OS)
 view(AS)
-
-
-                #Load dataframes, only modified peptides
-            file_paths_annsolo_mod <- fs::dir_ls("/Users/jensvandeperre/Desktop/Outputs/PTM_identification_tol_10")
-            PSM_only_mod <- list()
-            for (i in seq_along(file_paths_annsolo_mod)) {
-                PSM_only_mod[[i]] <- read.csv(file_paths_annsolo_mod[[i]], header = FALSE, sep = ",") 
-            }
-            view(PSM_only_mod[[1]])
-            str(PSM_only_mod[[1]])
-                #Select sequences
-            annsolo_mod <- list()
-            for (i in 1:264) {
-                annsolo_mod[[i]] <- PSM_only_mod[[i]] %>%
-                filter(PSM_only_mod[[i]]$V12 != "No direct match found in Unimod") %>%
-                row_to_names(row_number = 1) %>%
-                dplyr::select(sequence) %>%
-                mutate(sequence = trimws(str_remove_all(sequence, "n"))) %>% #remove n
-                mutate(sequence = trimws(str_remove_all(sequence, "[0123456789]"))) %>% # remove numbers
-                mutate(sequence = trimws(str_remove_all(sequence, "\\[|\\]"))) 
-            }
-            view(annsolo_mod[[1]])
-            ANN_SoLo_only_mod <- bind_rows(annsolo_mod)
-            nrow(ANN_SoLo_only_mod)
-
-
-
-set1 <- paste(rep("word_" , 200) , sample(c(1:1000) , 200 , replace=F) , sep="")
-set2 <- paste(rep("word_" , 200) , sample(c(1:1000) , 200 , replace=F) , sep="")
-
-rownames(AS)<-NULL
-rownames(OS)<-NULL
-
 
 venn.diagram(
   x = list(AS, OS),
@@ -144,74 +120,31 @@ venn.diagram(
   output=TRUE
 )
 
-
-
-
-
-
-
-
-
-
-
-#	Create a binary matrix -----------------------------------------------------------------------------------------------------------
-list_ppi <- list(
-	"Original analysis" = OS,
-	"Reanalysis" = AS
+ANN_vs_ORG_unique <- list(
+    `Reanalysis` = AS_prot_distinct$Protein.Descriptions,
+    `Original Study` = OS_prot_distinct$attrib_name
 )
-matrix_ppi <- list_to_matrix(list_ppi)
-
-#	Create a combinarion matrix ------------------------------------------------------------------------------------------------------
-matrix_ppi_combination <- make_comb_mat(matrix_ppi, top_n_sets = 3) # mode = "intersect")
-set_size(matrix_ppi_combination)
-set_name(matrix_ppi_combination)
-matrix_ppi_combination <- matrix_ppi_combination[comb_degree(matrix_ppi_combination) > 0]
-
-pdf(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/upset_plot.pdf", height = 3.4, width = 10)
-ss = set_size(matrix_ppi_combination)
-cs = comb_size(matrix_ppi_combination)
-ht = UpSet(matrix_ppi_combination, 
-	set_order = order(ss),
-	comb_order = order(comb_degree(matrix_ppi_combination), -cs),
-	top_annotation = HeatmapAnnotation(
-		"PPI intersection size" = anno_barplot(cs, 
-			ylim = c(0, max(cs)*1.1),
-			border = FALSE, 
-			gp = gpar(fill = "black"), 
-			height = unit(4, "cm")
-		), 
-		annotation_name_gp= gpar(fontsize = 9),
-		annotation_name_side = "left", 
-		annotation_name_rot = 90),
-	left_annotation = rowAnnotation(
-		"Set size" = anno_barplot(-ss, 
-			baseline = 0,
-			axis_param = list(
-				at = c(0, -100, -200, -300),
-				labels = c(0, 100, 200, 300, 400, 500, 600, 700),
-				labels_rot = 0),
-			border = FALSE, 
-			gp = gpar(fill = "black"), 
-			width = unit(3, "cm")),
-		set_name = anno_text(set_name(matrix_ppi_combination), 
-			location = 0.5, 
-			just = "center",
-			width = max_text_width(set_name(matrix_ppi_combination)) + unit(-11, "mm"),
-			gp= gpar(fontsize = 8)
-			),
-			annotation_name_gp= gpar(fontsize = 9)
-			),
-	right_annotation = NULL,
-	show_row_names = FALSE)
-
-ht = draw(ht)
-od = column_order(ht)
-decorate_annotation("PPI intersection size", {
-	grid.text(cs[od], x = seq_along(cs), y = unit(cs[od], "native") + unit(2, "pt"), 
-		default.units = "native", just = c("center", "bottom"), 
-		gp = gpar(fontsize = 6, col = "#404040"))
-})
+Pro_Venn <- ggvenn(ANN_vs_ORG_unique, c("Reanalysis", "Original Study"),
+        fill_color = c("blue", "yellow"),
+        stroke_color = FALSE) +
+    labs(title="Comparison Unique Identified Protein Genes") +
+  theme_void() +
+  theme(plot.title = element_text(size = 20, face = "bold"))
+Pro_Venn
+png(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Protein_Gene_Venn.png")
+   Pro_Venn
 dev.off()
+
+
+
+
+
+
+
+
+
+
+
 
 
 #Creating Venn Diagram 
@@ -318,21 +251,64 @@ BiocManager::install("biomaRt")
 library(biomaRt)
 
 
-ANN_vs_ORG_unique <- list(
-    `Reanalysis` = AS_prot_distinct$Protein.Descriptions,
-    `Original Study` = OS_prot_distinct$attrib_name
+
+
+
+#	Create a binary matrix -----------------------------------------------------------------------------------------------------------
+list_ppi <- list(
+	"Original analysis" = OS,
+	"Reanalysis" = AS
 )
-Pro_Venn <- ggvenn(ANN_vs_ORG_unique, c("Reanalysis", "Original Study"),
-        fill_color = c("blue", "yellow"),
-        stroke_color = FALSE) +
-    labs(title="Comparison Unique Identified Protein Genes") +
-  theme_void() +
-  theme(plot.title = element_text(size = 20, face = "bold"))
-Pro_Venn
-png(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Protein_Gene_Venn.png")
-   Pro_Venn
+matrix_ppi <- list_to_matrix(list_ppi)
+
+#	Create a combinarion matrix ------------------------------------------------------------------------------------------------------
+matrix_ppi_combination <- make_comb_mat(matrix_ppi, top_n_sets = 3) # mode = "intersect")
+set_size(matrix_ppi_combination)
+set_name(matrix_ppi_combination)
+matrix_ppi_combination <- matrix_ppi_combination[comb_degree(matrix_ppi_combination) > 0]
+
+pdf(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/upset_plot.pdf", height = 3.4, width = 10)
+ss = set_size(matrix_ppi_combination)
+cs = comb_size(matrix_ppi_combination)
+ht = UpSet(matrix_ppi_combination, 
+	set_order = order(ss),
+	comb_order = order(comb_degree(matrix_ppi_combination), -cs),
+	top_annotation = HeatmapAnnotation(
+		"PPI intersection size" = anno_barplot(cs, 
+			ylim = c(0, max(cs)*1.1),
+			border = FALSE, 
+			gp = gpar(fill = "black"), 
+			height = unit(4, "cm")
+		), 
+		annotation_name_gp= gpar(fontsize = 9),
+		annotation_name_side = "left", 
+		annotation_name_rot = 90),
+	left_annotation = rowAnnotation(
+		"Set size" = anno_barplot(-ss, 
+			baseline = 0,
+			axis_param = list(
+				at = c(0, -100, -200, -300),
+				labels = c(0, 100, 200, 300, 400, 500, 600, 700),
+				labels_rot = 0),
+			border = FALSE, 
+			gp = gpar(fill = "black"), 
+			width = unit(3, "cm")),
+		set_name = anno_text(set_name(matrix_ppi_combination), 
+			location = 0.5, 
+			just = "center",
+			width = max_text_width(set_name(matrix_ppi_combination)) + unit(-11, "mm"),
+			gp= gpar(fontsize = 8)
+			),
+			annotation_name_gp= gpar(fontsize = 9)
+			),
+	right_annotation = NULL,
+	show_row_names = FALSE)
+
+ht = draw(ht)
+od = column_order(ht)
+decorate_annotation("PPI intersection size", {
+	grid.text(cs[od], x = seq_along(cs), y = unit(cs[od], "native") + unit(2, "pt"), 
+		default.units = "native", just = c("center", "bottom"), 
+		gp = gpar(fontsize = 6, col = "#404040"))
+})
 dev.off()
-
-
-
-
