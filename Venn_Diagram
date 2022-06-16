@@ -48,25 +48,23 @@ ori_study <- list()
 for (i in seq_along(file_paths_ori_study)) {
     ori_study[[i]] <- fread(file_paths_ori_study[[i]])
 }
-view(ori_study[[1]])
+str(ori_study[[1]])
 length(ori_study)
     #Select sequences
 orig <- list()
 for (i in 1:264) {
 orig[[i]] <- ori_study[[i]] %>%
         as_tibble() %>%
-        row_to_names(row_number = 1) %>%
-        select(PeptideSequence, ) %>%
-        mutate(sequence = trimws(str_remove_all(PeptideSequence, "[[:digit:]]+"))) %>%
+        mutate(sequence = trimws(str_remove_all(RTAtPrecursorHalfElution, "[[:digit:]]+"))) %>%
         mutate(sequence = trimws(str_remove_all(sequence, "[+.]"))) %>%
-        mutate(PSM = paste(sequence, , sep="_")) %>%
+        add_column(file_name = rep(file_names_short[[i]])) %>%
+        mutate(PSM = paste(sequence, FileName, file_name, sep="_")) %>%
         select(PSM)
 }
-Ori_Stud <- set_names(orig, paste("Original_study_", file_names_short, sep = "")) #names each file by file_names_short
-view(Ori_Stud[[1]])
+view(orig[[1]])
     #Turn into 1 dataframe
-Original_study <- bind_rows(Ori_Stud)
-Original_study_unique <- Original_study %>% distinct()
+OS_PSM <- bind_rows(Ori_Stud)
+OS_PSM_unique <- Original_study %>% distinct()
 nrow(Original_study) #over 3 million peptides identified
 nrow(Original_study_unique) #Over 20000 unique peptides identified
         #Save as input for online Venny tool
@@ -74,23 +72,24 @@ write.table(Original_study, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diag
 write.table(Original_study_unique, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Original_study_unique.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
 
 
-
-#ANN-SoLo PSMs 
-    #Load list of dataframes, all identifed peptides
-PSM <- readRDS("~/Desktop/Outputs/PSM_TMT_linked/ALL_PSM_TMT_Linked")
-view(PSM[[1]])
-str(PSM[[1]])
-    #Select sequences
-annsolo <- list()
-for (i in 1:264) {
-    annsolo[[i]] <- PSM[[i]] %>%
-        select(sequence_no_mod, namemzml) %>%
-        mutate(PSM = paste(sequence_no_mod, namemzml, sep="_")) %>%
-        select(PSM)
+#Load PSMs 
+PSM_all <- readRDS(file = "~/Desktop/Outputs/PSMs/ALL_PSMs_4.5.22") 
+view(PSM_all[[1]]) 
+length(PSM_all)
+  #Create column no_mod
+psm <- list() #empty list
+for (i in seq_along(PSM_all)) {
+  psm[[i]] <- PSM_all[[i]] %>%
+  as_tibble() %>% 
+  mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 controllerNumber=1 scan="))) %>% 
+    add_column(file_name = rep(file_names_short[[i]])) %>%
+    mutate(PSM = paste(sequence_no_mod, index, file_name, sep="_")) %>%
+    select(PSM)
 }
-view(annsolo[[1]])
-ANN_SoLo_no_mod <- bind_rows(annsolo)
-ANN_SoLo_no_mod_unique <- ANN_SoLo_no_mod %>% distinct()
+view(psm[[1]])
+
+AS_PSM <- bind_rows(psm)
+AS_PSM_unique <- ANN_SoLo_no_mod %>% distinct()
 nrow(ANN_SoLo_no_mod) #Over 4.5 million peptides identified
 nrow(ANN_SoLo_no_mod_unique) #Over 20000 unique peptides identified
         #Save as input for online Venny tool
