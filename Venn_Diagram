@@ -29,8 +29,10 @@ library("stringr")
 library("ggvenn")
 library("ggVennDiagram")
 library("VennDiagram")
+library("venn")
 
 
+install.packages("venn", repos="https://www.freestatistics.org/cran/")
 
 wd <- setwd("/Users/jensvandeperre/Desktop/Inputs/ALL_mzTab")
 getwd() 
@@ -57,19 +59,18 @@ orig[[i]] <- ori_study[[i]] %>%
         as_tibble() %>%
         mutate(sequence = trimws(str_remove_all(RTAtPrecursorHalfElution, "[[:digit:]]+"))) %>%
         mutate(sequence = trimws(str_remove_all(sequence, "[+.]"))) %>%
-        add_column(file_name = rep(file_names_short[[i]])) %>%
-        mutate(PSM = paste(sequence, FileName, file_name, sep="_")) %>%
+        mutate(PSM = paste(sequence, FileName, sep="_")) %>%
         select(PSM)
 }
 view(orig[[1]])
     #Turn into 1 dataframe
-OS_PSM <- bind_rows(Ori_Stud)
-OS_PSM_unique <- Original_study %>% distinct()
-nrow(Original_study) #over 3 million peptides identified
-nrow(Original_study_unique) #Over 20000 unique peptides identified
+OS_PSM <- bind_rows(orig)
+OS_PSM_unique <- OS_PSM %>% distinct()
+nrow(OS_PSM) #over 3 million peptides identified
+nrow(OS_PSM_unique) #Over 20000 unique peptides identified
         #Save as input for online Venny tool
-write.table(Original_study, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Original_study.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
-write.table(Original_study_unique, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Original_study_unique.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
+write.table(OS_PSM, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Original_study.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
+write.table(OS_PSM_unique, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/Original_study/Original_study_unique.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
 
 
 #Load PSMs 
@@ -82,19 +83,18 @@ for (i in seq_along(PSM_all)) {
   psm[[i]] <- PSM_all[[i]] %>%
   as_tibble() %>% 
   mutate(index = trimws(str_remove_all(PSM_ID, "controllerType=0 controllerNumber=1 scan="))) %>% 
-    add_column(file_name = rep(file_names_short[[i]])) %>%
-    mutate(PSM = paste(sequence_no_mod, index, file_name, sep="_")) %>%
+    mutate(PSM = paste(sequence_no_mod, index, sep="_")) %>%
     select(PSM)
 }
 view(psm[[1]])
 
 AS_PSM <- bind_rows(psm)
-AS_PSM_unique <- ANN_SoLo_no_mod %>% distinct()
-nrow(ANN_SoLo_no_mod) #Over 4.5 million peptides identified
-nrow(ANN_SoLo_no_mod_unique) #Over 20000 unique peptides identified
+AS_PSM_unique <- AS_PSM %>% distinct()
+nrow(AS_PSM) #Over 4.5 million peptides identified
+nrow(AS_PSM_unique) #Over 20000 unique peptides identified
         #Save as input for online Venny tool
-write.table(ANN_SoLo_no_mod, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
-write.table(ANN_SoLo_no_mod_unique, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod_unique.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
+write.table(AS_PSM, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
+write.table(AS_PSM_unique, file="/Users/jensvandeperre/Desktop/Inputs/Venn_diagram/ANN_SoLo/ANN_SoLo_no_mod_unique.txt", sep="\t", row.names=FALSE, quote=FALSE, col.names = FALSE)
 
 
 
@@ -112,8 +112,11 @@ AS <- list(AS)
 OS <- list(OS)
 view(AS)
 
+
+venn(3)
+
 venn.diagram(
-  x = list(AS, OS),
+  x = list(AS_PSM, OS_PSM),
   category.names = c("ANN-SoLo", "Original Study"),
   filename = '/Users/jensvandeperre/Desktop/Outputs/Plots/venn_diagramm.png',
   output=TRUE
