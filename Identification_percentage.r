@@ -94,13 +94,13 @@ DIFF <- AS_count - OS_count
   #input tibble
 AS_count_no_PTM <- AS_count-PTM_count
 Study_IP <- c("Original Study", "ANN-SoLo")
-Non_modified_IP <- c(OS_count, AS_count_no_PTM)
+Unmodified_IP <- c(OS_count, AS_count_no_PTM)
 Modified_IP <- c(NA, PTM_count)
 Total_spectra <- TMT_count
-df_IP <- data.frame(Study_IP, Non_modified_IP, Modified_IP, Total_spectra) %>%
+df_IP <- data.frame(Study_IP, Unmodified_IP, Modified_IP, Total_spectra) %>%
   mutate(Modified = Modified_IP/Total_spectra*100) %>%
-  mutate(Non_modified = Non_modified_IP/Total_spectra*100)
-tbl_Identification_IP <- pivot_longer(df_IP, Modified:Non_modified, names_to = "Spectra_Type", 
+  mutate(Unmodified = Unmodified_IP/Total_spectra*100)
+tbl_Identification_IP <- pivot_longer(df_IP, Modified:Unmodified, names_to = "Spectra_Type", 
     values_to = "Identification_percentage") %>%
       mutate(Label = c(NA, "36.05%", "25.82%", "22.92%")) 
 view(tbl_Identification_IP)
@@ -134,10 +134,10 @@ PTM_count
 AS_count_no_PTM <- AS_count-PTM_count
 
 Study <- c("Original Study", "ANN-SoLo")
-Non_modified <- c(OS_count, AS_count_no_PTM)
+Unmodified <- c(OS_count, AS_count_no_PTM)
 Modified <- c(NA,PTM_count)
-df_IT <- data.frame(Study, Non_modified, Modified)
-tbl_Identification_total <- pivot_longer(df_IT, Non_modified:Modified, names_to = "Spectra_Type", 
+df_IT <- data.frame(Study, Unmodified, Modified)
+tbl_Identification_total <- pivot_longer(df_IT, Unmodified:Modified, names_to = "Spectra_Type", 
     values_to = "Identification_count")
 tbl_Identification_total
   #Plot
