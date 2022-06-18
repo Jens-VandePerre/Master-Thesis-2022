@@ -68,10 +68,9 @@ for (i in 1:264) {
 view(PTM[[1]])
 nrow(PTM[[1]])
 length(PTM)
-PTM_count <- bind_rows(PTM) %>%
-filter(mod != "No direct match found in Unimod")
+PTM_count <- bind_rows(PTM)
 nrow(PTM_count)
-PTM_count <- 1665076
+PTM_count <- 2464841
 
 
 
@@ -103,7 +102,7 @@ df_IP <- data.frame(Study_IP, Non_modified_IP, Modified_IP, Total_spectra) %>%
   mutate(Non_modified = Non_modified_IP/Total_spectra*100)
 tbl_Identification_IP <- pivot_longer(df_IP, Modified:Non_modified, names_to = "Spectra_Type", 
     values_to = "Identification_percentage") %>%
-      mutate(Label = c(NA, "36.05%", "17.44%", "31.29%")) 
+      mutate(Label = c(NA, "36.05%", "25.82%", "22.92%")) 
 view(tbl_Identification_IP)
 str(tbl_Identification_IP)
   #Plot
@@ -113,8 +112,7 @@ pep_IP <- ggplot(tbl_Identification_IP,
   geom_text(size = 3.5, position = position_stack(vjust = 0.5)) +
   scale_y_continuous(labels = function(x) paste0(x, "%")) +
   scale_color_manual(labels=c("Non-modified","Modified")) +
-  labs(x="Study", y="Percentage Identified Spectra", title="Peptide Identification Percentage" , 
-        subtitle="Comparing ANN-SoLo and the Original Study") +
+  labs(x="Study", y="Percentage Identified Spectra") +
   labs(fill="Spectra Type") +
   theme_minimal() +
   theme(axis.text = element_text(size = 12),
@@ -123,7 +121,7 @@ pep_IP <- ggplot(tbl_Identification_IP,
         plot.subtitle = element_text(size = 12))
   #Print pep_IP
 pep_IP
-png(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Peptide_Identification_Percentage.png")
+pdf(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Peptide_Identification_Percentage.pdf")
    pep_IP
 dev.off()
 
@@ -148,9 +146,7 @@ pep_IT <- ggplot(tbl_Identification_total,
     geom_bar(position="stack", stat="identity", width = 0.65) +
     geom_text(size = 3.5, position = position_stack(vjust = 0.5)) +
     scale_color_manual(labels=c("Non-modified","Modified")) +
-    labs(x = "Study", y = "Identified Peptides", 
-        title = "Total Identified Peptides", 
-        subtitle = "Comparing ANN-SoLo and the Original Study") +
+    labs(x = "Study", y = "Identified Peptides") +
     labs(fill='Spectra Type') +
     theme_minimal() +
   theme(axis.text = element_text(size = 12),
@@ -159,7 +155,7 @@ pep_IT <- ggplot(tbl_Identification_total,
         plot.subtitle = element_text(size = 12))
   #Print pep_IP
 pep_IT
-png(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Total_Identified_Peptides.png")
+pdf(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Total_Identified_Peptides.pdf")
    pep_IT
 dev.off()
 
@@ -192,9 +188,7 @@ tbl_pro_Identification_total
   #Plot
 pro_IT <- ggplot(tbl_pro_Identification_total, aes(x= Study , y= Identification_count)) +
   geom_col(width = 0.45, fill = "#0071b2d2") +
-  labs(x = "Study", y = "Identified Proteins",
-        title = "Unique Identified Proteins",
-        subtitle = "Comparing ANN-SoLo and Original Study ") +
+  labs(x = "Study", y = "Identified Proteins") +
   geom_text(aes(label=c(OS_pro_count, AS_pro_count)),
         position = position_dodge(width = 0.9), vjust = -0.25, size = 3.5) +
   theme_minimal() +
@@ -203,45 +197,34 @@ pro_IT <- ggplot(tbl_pro_Identification_total, aes(x= Study , y= Identification_
         plot.title = element_text(size = 20, face = "bold"),
         plot.subtitle = element_text(size = 12))
 pro_IT
-png(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Unique_Identified_Proteins.png")
+pdf(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Unique_Identified_Proteins.pdf")
    pro_IT
 dev.off()
 
-#Comparing amount of unique peptides found
+#PTM identification
+ptm_ip <- PTM_count %>%
+  filter(mod != "No direct match found in Unimod")
+dim(ptm_ip)
+  head(ptm_ip)
 
-#Most common PTM
 
-#Most found protein
+mod <- 1665076
+mod_notfound <- 2464841 - 1665076
 
-#Identification percentage of proteins
-      #ANN-Solo identification %
-      ANN_SoLo <- (AS_count/TMT_count)*100
-      #Original Study identification %
-      Original_study <- (OS_count/TMT_count)*100
-      #Making tibble 
-    tbl_Identification_percentage <- tibble(Study=c("ANN-SoLo", "Original Study") , Identification_Percentage=c(ANN_SoLo, Original_study))
-    tbl_Identification_percentage
-      #Plot
-    pro_IP <- ggplot(tbl_Identification_percentage, aes(x= Study , y= Identification_Percentage)) +
-      geom_col(width = 0.45, fill = c("#E69F00", "#56B4E9")) +
-      labs(x="Study", y="Percentage Identified Proteins (%)", title="Protein Identification Percentage" , 
-            subtitle="Comparing the protein identification percentages of ANN-SoLo and the Original Study") +
-      geom_text(aes(label=round(Identification_Percentage, digits = 1)), 
-                  position=position_dodge(width=0.9), vjust=-0.25, size = 3.5) +
-      theme(axis.text = element_text(size = 12),
-            axis.title = element_text(size = 15),
-            plot.title = element_text(size = 18)) 
-      
-      #Print pep_IP
-    pro_IP
-    pdf(file = )
-      pro_IP
-    dev.off()
-
-#Metrics
-  #PSMs
-    #mod
-    #non-mod
-  #Proteins
-    #mod
-    #non-mod
+tbl_PTM <- tibble(Modfied_Peptide_Sepctra=c("PTM identified", "PTM not identified") , Spectral_Count=c(mod, mod_notfound)) 
+tbl_PTM
+  #Plot
+PTM_plot <- ggplot(tbl_PTM, aes(x= Modfied_Peptide_Sepctra , y= Spectral_Count)) +
+  geom_col(width = 0.45, fill = "#0071b2d2") +
+  labs(x= "Modfied Peptide Sepctra", y = "Spectral Count") +
+  geom_text(aes(label=c(mod, mod_notfound)),
+        position = position_dodge(width = 0.9), vjust = -0.25, size = 3.5) +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 12),
+        axis.title = element_text(size = 15),
+        plot.title = element_text(size = 20, face = "bold"),
+        plot.subtitle = element_text(size = 12))
+PTM_plot
+pdf(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/PTM_idif.pdf")
+   PTM_plot
+dev.off()
