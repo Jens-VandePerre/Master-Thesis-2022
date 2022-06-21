@@ -1198,7 +1198,7 @@ for (i in 1:length(all_batches)) {
     ungroup() %>%
     select(-Protein.Group.Accessions)
 }
-P83881 <- P83881 %>% 
+P83881 <- P83881 %>%
   reduce(full_join, by = "sequence") %>% 
   select_if(~!all(is.na(.))) %>%
   as_data_frame() %>%
