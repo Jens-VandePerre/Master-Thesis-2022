@@ -165,7 +165,7 @@ Meth <- CRC_PTMs %>%
 view(Meth)
 
     #Acetylation
-    #42.010565 monoiso
+    #42.010565 monoiso 
     #42.0367 avg
 Acet <- CRC_PTMs %>%
   filter(stringr::str_detect(mod_mass, '42.01|42.0367')) %>%
