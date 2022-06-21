@@ -187,7 +187,7 @@ tbl_pro_Identification_total <- tibble(Study=c("Original Study", "ANN-SoLo") , I
 tbl_pro_Identification_total
   #Plot
 pro_IT <- ggplot(tbl_pro_Identification_total, aes(x= Study , y= Identification_count)) +
-  geom_col(width = 0.45, fill = "#0071b2d2") +
+  geom_col(width = 0.45, fill = "#0071b2") +
   labs(x = "Study", y = "Identified Proteins") +
   geom_text(aes(label=c(OS_pro_count, AS_pro_count)),
         position = position_dodge(width = 0.9), vjust = -0.25, size = 3.5) +
@@ -202,29 +202,24 @@ pdf(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Unique_Identified_Protei
 dev.off()
 
 #PTM identification
-ptm_ip <- PTM_count %>%
-  filter(mod != "No direct match found in Unimod")
-dim(ptm_ip)
-  head(ptm_ip)
-
-
 mod <- 1665076
 mod_notfound <- 2464841 - 1665076
-
-tbl_PTM <- tibble(Modfied_Peptide_Sepctra=c("PTM identified", "PTM not identified") , Spectral_Count=c(mod, mod_notfound)) 
+mod + mod_notfound
+mod_notfound/2464841
+ptm_label <- c("Indentified", "Not identified")
+tbl_PTM <- tibble(Modfied_Peptide_Sepctra="Modfied Peptide Sepctra" , Spectral_Count=c(mod, mod_notfound), ptm_label) 
 tbl_PTM
   #Plot
-PTM_plot <- ggplot(tbl_PTM, aes(x= Modfied_Peptide_Sepctra , y= Spectral_Count)) +
-  geom_col(width = 0.45, fill = "#0071b2d2") +
-  labs(x= "Modfied Peptide Sepctra", y = "Spectral Count") +
-  geom_text(aes(label=c(mod, mod_notfound)),
-        position = position_dodge(width = 0.9), vjust = -0.25, size = 3.5) +
+PLOTPTM <- ggplot(tbl_PTM, aes(x = Modfied_Peptide_Sepctra, y = Spectral_Count, fill = ptm_label)) +
+  geom_col(position = "stack", width = 0.65) +
+  labs(y = "Spectra Count", x="") +
+  labs(fill='Post Translational Modifications') +
   theme_minimal() +
-  theme(axis.text = element_text(size = 12),
-        axis.title = element_text(size = 15),
-        plot.title = element_text(size = 20, face = "bold"),
-        plot.subtitle = element_text(size = 12))
-PTM_plot
+  theme(axis.text.y = element_text(size = 12),
+        axis.text.x = element_text(size = 15),
+        axis.title.y = element_text(size = 15)) +
+  geom_text(label=c("1665076 (67.55%)", "799765 (32.45%)"), size = 3.5, vjust = 5) 
+PLOTPTM
 pdf(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/PTM_idif.pdf")
-   PTM_plot
+   PLOTPTM
 dev.off()
