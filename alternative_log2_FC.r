@@ -39,13 +39,9 @@ library("datawizard")
     #All NAs are removed, to do Wilcoxon test
     #2819 quantified proteins remain
 dat_col_ordered <- fread("/Users/jensvandeperre/Desktop/Inputs/Limm_Qvalve/log2FC_input.txt")
-
 MedianCent <- dat_col_ordered %>%
   select(starts_with("TUM"), starts_with("NAT")) %>%
   center(robust=TRUE) #Median centring
-
-
-
 
 #Function to do Wilcox, comparing Tumor against NAT
 WilcoxFunc <- function(df, grp1, grp2) {
@@ -105,12 +101,12 @@ FC$expression_diff[FC$foldchange > 1 & FC$BH_adjusted_pval < 0.05] <- "Protein s
   # if log2Foldchange < -1 and pvalue < 0.05, set as "Protein sig. down-regulated in Tumor"
 FC$expression_diff[FC$foldchange < -1 & FC$BH_adjusted_pval < 0.05] <- "Protein sig. down-regulated in Tumor"
   #PLOT
-png(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Volcano.png")
+pdf(file = "/Users/jensvandeperre/Desktop/Outputs/Plots/Volcano.pdf")
 volcano = ggplot(data = FC, aes(x = foldchange, y = -log10(BH_adjusted_pval), col=expression_diff))
 volcano + 
   geom_point() +
-  labs(x="Median Difference (log2FC, Tumor vs Normal)", y="-log10(BH-adjusted p-value)", title="Protein Expression Change" , 
-        subtitle="Change in protein expression Tumor vs NAT") +
+  labs(x="Median Difference (log2FC, Tumor vs Normal)", y="-log10(BH-adjusted p-value)") +
+  labs(col='Expression Difference') +
   theme_minimal() +
   theme(axis.text = element_text(size = 12),
         axis.title = element_text(size = 15),
